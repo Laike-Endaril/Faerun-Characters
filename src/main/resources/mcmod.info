@@ -1,0 +1,16 @@
+[
+{
+  "modid": "faeruncharacters",
+  "name": "Faerun Characters",
+  "description": "A character customization and handling mod specifically for the Faerun Heroes modpack",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Laike_Endaril"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
