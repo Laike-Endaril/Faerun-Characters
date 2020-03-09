@@ -224,10 +224,10 @@ public class Race
         boolean pool = false;
         for (String skinString : skinStrings)
         {
-            if (skinString.substring(0, 5).equals("pool:"))
+            if (skinString.substring(0, 5).equals("folder:"))
             {
                 pool = true;
-                skinString = skinString.replace("pool:", "");
+                skinString = skinString.replace("folder:", "");
             }
 
             skinString = Tools.fixFileSeparators(skinString.trim());
