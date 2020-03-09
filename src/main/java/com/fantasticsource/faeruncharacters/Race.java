@@ -17,6 +17,7 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class Race
 {
     public static final LinkedHashMap<String, Race> RACES = new LinkedHashMap<>();
+    public static final LinkedHashMap<String, Race> RACES_PREMIUM = new LinkedHashMap<>();
 
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
 
@@ -31,7 +32,7 @@ public class Race
     public Color bloodColor = new Color(255, 0, 0, 255);
 
     //Body
-    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>();
+    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), arms = new HashSet<>();
     public HashSet<Color> skinColors = new HashSet<>();
     public HashSet<String> chestSizes = new HashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
@@ -111,6 +112,10 @@ public class Race
 
             case "tail":
                 loadSkins(tails, Tools.fixedSplit(value, ","));
+                break;
+
+            case "arms":
+                loadSkins(arms, Tools.fixedSplit(value, ","));
                 break;
 
             case "skin color":
@@ -216,16 +221,32 @@ public class Race
 
     protected void loadSkins(HashSet<String> skinSet, String[] skinStrings)
     {
+        boolean pool = false;
         for (String skinString : skinStrings)
         {
+            if (skinString.substring(0, 5).equals("pool:"))
+            {
+                pool = true;
+                skinString = skinString.replace("pool:", "");
+            }
+
             skinString = Tools.fixFileSeparators(skinString.trim());
 
             File skinFile = new File(AW_SKIN_LIBRARY_DIR + skinString);
 
-            if (skinFile.isDirectory())
+            if (!pool)
             {
+                if (!skinFile.exists() || skinFile.isDirectory()) continue;
+
+                skinSet.add(skinString);
+            }
+            else
+            {
+                if (!skinFile.isDirectory()) continue;
+
                 File[] subFiles = skinFile.listFiles();
                 if (subFiles == null || subFiles.length == 0) continue;
+
 
                 String[] subSkinStrings = new String[subFiles.length];
                 int i = 0;
@@ -236,7 +257,6 @@ public class Race
 
                 loadSkins(skinSet, subSkinStrings);
             }
-            else skinSet.add(skinString);
         }
     }
 
@@ -247,7 +267,13 @@ public class Race
 
 
         //Load
+        boolean premium = false;
         File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races" + File.separator + name + ".txt");
+        if (!file.exists() || file.isDirectory())
+        {
+            premium = true;
+            file = new File(MCTools.getConfigDir() + MODID + File.separator + "racesPremium" + File.separator + name + ".txt");
+        }
         if (!file.exists() || file.isDirectory()) return;
 
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -274,7 +300,8 @@ public class Race
 
 
         //Save and return
-        RACES.put(name, race);
+        if (premium) RACES_PREMIUM.put(name, race);
+        else RACES.put(name, race);
     }
 
 
