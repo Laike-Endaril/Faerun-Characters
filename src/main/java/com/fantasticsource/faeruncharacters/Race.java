@@ -31,23 +31,24 @@ public class Race
     public boolean renderLegArmor = true, renderFootArmor = true, renderCape = true, skinColorSetsHairColor = false;
     public Color bloodColor = new Color(255, 0, 0, 255);
 
+
     //Body
-    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), arms = new HashSet<>();
+    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>();
     public HashSet<Color> skinColors = new HashSet<>();
     public HashSet<String> chestSizes = new HashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
 
+
     //Head
-    public HashSet<String> hair = new HashSet<>(), premiumHair = new HashSet<>();
-    public HashSet<String> hairParts = new HashSet<>(), premiumHairParts = new HashSet<>();
+    public HashSet<String> hairBase = new HashSet<>(), premiumHairBase = new HashSet<>();
+    public HashSet<String> hairFront = new HashSet<>(), premiumHairFront = new HashSet<>();
+    public HashSet<String> hairBack = new HashSet<>(), premiumHairBack = new HashSet<>();
+    public HashSet<String> hairTop = new HashSet<>(), premiumHairTop = new HashSet<>();
     public HashSet<Color> hairColors = new HashSet<>();
+
     public HashSet<String> eyes = new HashSet<>(), premiumEyes = new HashSet<>();
     public HashSet<Color> eyeColors = new HashSet<>();
 
-    //Accessories
-    public HashSet<String> headAccessories = new HashSet<>(), premiumHeadAccessories = new HashSet<>();
-    public HashSet<String> bodyAccessories = new HashSet<>(), premiumBodyAccessories = new HashSet<>();
-    public HashSet<Color> accessoriesColors1 = new HashSet<>(), accessoriesColors2 = new HashSet<>();
 
     //Other
 //  TODO Voice = Voice/Normal
@@ -62,11 +63,14 @@ public class Race
         if (chestSizes.size() == 0) return false;
 
         //Head
-        if (hair.size() + premiumHair.size() + hairParts.size() + premiumHairParts.size() > 0 && !skinColorSetsHairColor && hairColors != null && hairColors.size() == 0) return false;
+        if (!skinColorSetsHairColor && hairColors != null && hairColors.size() == 0)
+        {
+            for (HashSet<String> hairSet : new HashSet[]{hairBase, premiumHairBase, hairFront, premiumHairFront, hairBack, premiumHairBack, hairTop, premiumHairTop})
+            {
+                if (hairSet.size() > 0) return false;
+            }
+        }
         if (eyes.size() + premiumEyes.size() > 0 && eyeColors != null && eyeColors.size() == 0) return false;
-
-        //Accessories
-        if (headAccessories.size() + premiumHeadAccessories.size() + bodyAccessories.size() + premiumBodyAccessories.size() > 0 && ((accessoriesColors1 != null && accessoriesColors1.size() == 0) || (accessoriesColors2 != null && accessoriesColors2.size() == 0))) return false;
 
         //Other
         //TODO
@@ -114,10 +118,6 @@ public class Race
                 loadSkins(tails, Tools.fixedSplit(value, ","));
                 break;
 
-            case "arms":
-                loadSkins(arms, Tools.fixedSplit(value, ","));
-                break;
-
             case "skin color":
                 skinColors = loadColors(skinColors, Tools.fixedSplit(value, ","));
                 break;
@@ -141,19 +141,35 @@ public class Race
 
             //Head
             case "hair":
-                loadSkins(hair, Tools.fixedSplit(value, ","));
+                loadSkins(hairBase, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair":
-                loadSkins(premiumHair, Tools.fixedSplit(value, ","));
+                loadSkins(premiumHairBase, Tools.fixedSplit(value, ","));
                 break;
 
-            case "hair parts":
-                loadSkins(hairParts, Tools.fixedSplit(value, ","));
+            case "hair front":
+                loadSkins(hairFront, Tools.fixedSplit(value, ","));
                 break;
 
-            case "premium hair parts":
-                loadSkins(premiumHairParts, Tools.fixedSplit(value, ","));
+            case "premium hair front":
+                loadSkins(premiumHairFront, Tools.fixedSplit(value, ","));
+                break;
+
+            case "hair back":
+                loadSkins(hairBack, Tools.fixedSplit(value, ","));
+                break;
+
+            case "premium hair back":
+                loadSkins(premiumHairBack, Tools.fixedSplit(value, ","));
+                break;
+
+            case "hair top":
+                loadSkins(hairTop, Tools.fixedSplit(value, ","));
+                break;
+
+            case "premium hair top":
+                loadSkins(premiumHairTop, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair color":
@@ -170,32 +186,6 @@ public class Race
 
             case "eye color":
                 eyeColors = loadColors(eyeColors, Tools.fixedSplit(value, ","));
-                break;
-
-
-            //Accessories
-            case "head accessories":
-                loadSkins(headAccessories, Tools.fixedSplit(value, ","));
-                break;
-
-            case "premium head accessories":
-                loadSkins(premiumHeadAccessories, Tools.fixedSplit(value, ","));
-                break;
-
-            case "body accessories":
-                loadSkins(bodyAccessories, Tools.fixedSplit(value, ","));
-                break;
-
-            case "premium body accessories":
-                loadSkins(premiumBodyAccessories, Tools.fixedSplit(value, ","));
-                break;
-
-            case "accessories color 1":
-                accessoriesColors1 = loadColors(accessoriesColors1, Tools.fixedSplit(value, ","));
-                break;
-
-            case "accessories color 2":
-                accessoriesColors2 = loadColors(accessoriesColors2, Tools.fixedSplit(value, ","));
                 break;
 
 
@@ -300,6 +290,7 @@ public class Race
 
 
         //Save and return
+        race.name = name;
         if (premium) RACES_PREMIUM.put(name, race);
         else RACES.put(name, race);
     }
