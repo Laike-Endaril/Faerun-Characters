@@ -31,7 +31,7 @@ public class Race
     public Color bloodColor = new Color(255, 0, 0, 255);
 
     //Body
-    public HashSet<String> raceVariations = new HashSet<>(), premiumRaceVariations = new HashSet<>(), tails = new HashSet<>();
+    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>();
     public HashSet<Color> skinColors = new HashSet<>();
     public HashSet<String> chestSizes = new HashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
@@ -56,7 +56,7 @@ public class Race
     protected boolean valid()
     {
         //Body
-        if (raceVariations.size() + premiumRaceVariations.size() == 0) return false;
+        if (raceVariants.size() + premiumRaceVariants.size() == 0) return false;
         if (skinColors != null && skinColors.size() == 0) return false;
         if (chestSizes.size() == 0) return false;
 
@@ -101,12 +101,12 @@ public class Race
 
 
             //Body
-            case "race variation":
-                loadSkins(raceVariations, Tools.fixedSplit(value, ","));
+            case "race variant":
+                loadSkins(raceVariants, Tools.fixedSplit(value, ","));
                 break;
 
-            case "premium race variation":
-                loadSkins(premiumRaceVariations, Tools.fixedSplit(value, ","));
+            case "premium race variant":
+                loadSkins(premiumRaceVariants, Tools.fixedSplit(value, ","));
                 break;
 
             case "tail":
