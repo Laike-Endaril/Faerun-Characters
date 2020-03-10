@@ -58,19 +58,39 @@ public class Race
     protected boolean valid()
     {
         //Body
-        if (raceVariants.size() + premiumRaceVariants.size() == 0) return false;
-        if (skinColors != null && skinColors.size() == 0) return false;
-        if (chestSizes.size() == 0) return false;
+        if (raceVariants.size() + premiumRaceVariants.size() == 0)
+        {
+            System.err.println("No variants found for race: " + name);
+            return false;
+        }
+        if (skinColors != null && skinColors.size() == 0)
+        {
+            System.err.println("No skin colors found for race: " + name);
+            return false;
+        }
+        if (chestSizes.size() == 0)
+        {
+            System.err.println("No chest sizes found for race: " + name);
+            return false;
+        }
 
         //Head
         if (!skinColorSetsHairColor && hairColors != null && hairColors.size() == 0)
         {
             for (HashSet<String> hairSet : new HashSet[]{hairBase, premiumHairBase, hairFront, premiumHairFront, hairBack, premiumHairBack, hairTop, premiumHairTop})
             {
-                if (hairSet.size() > 0) return false;
+                if (hairSet.size() > 0)
+                {
+                    System.err.println("Found hair, but no hair colors for race: " + name);
+                    return false;
+                }
             }
         }
-        if (eyes.size() + premiumEyes.size() > 0 && eyeColors != null && eyeColors.size() == 0) return false;
+        if (eyes.size() + premiumEyes.size() > 0 && eyeColors != null && eyeColors.size() == 0)
+        {
+            System.err.println("Found eyes, but no eye colors for race: " + name);
+            return false;
+        }
 
         //Other
         //TODO
@@ -191,6 +211,10 @@ public class Race
 
             //Other
             //TODO
+
+
+            default:
+                System.err.println("Unknown key/value pair: <" + key + ">, <" + value + ">\nFor race: " + name);
         }
     }
 
@@ -214,7 +238,7 @@ public class Race
         boolean pool = false;
         for (String skinString : skinStrings)
         {
-            if (skinString.substring(0, 5).equals("folder:"))
+            if (skinString.substring(0, 7).equals("folder:"))
             {
                 pool = true;
                 skinString = skinString.replace("folder:", "");
@@ -226,7 +250,9 @@ public class Race
 
             if (!pool)
             {
-                if (!skinFile.exists() || skinFile.isDirectory()) continue;
+                if (!skinFile.exists()) skinFile = new File(AW_SKIN_LIBRARY_DIR + skinString + ".armour");
+
+                if (!skinFile.exists()) continue;
 
                 skinSet.add(skinString);
             }
@@ -254,6 +280,7 @@ public class Race
     public static void addRace(String name) throws IOException
     {
         Race race = new Race();
+        race.name = name;
 
 
         //Load
@@ -270,7 +297,9 @@ public class Race
         String line = br.readLine();
         while (line != null)
         {
-            line = line.substring(0, line.indexOf('#'));
+            int commentIndex = line.indexOf('#');
+            if (commentIndex != -1) line = line.substring(0, commentIndex);
+
             String[] tokens = Tools.fixedSplit(line, "=");
             if (tokens.length == 2)
             {
@@ -282,15 +311,10 @@ public class Race
 
 
         //Validate
-        if (!race.valid())
-        {
-            System.err.println("Malformed race file: " + file.getAbsolutePath());
-            return;
-        }
+        if (!race.valid()) return;
 
 
         //Save and return
-        race.name = name;
         if (premium) RACES_PREMIUM.put(name, race);
         else RACES.put(name, race);
     }
