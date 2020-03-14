@@ -28,12 +28,6 @@ public class CharacterCreationGUI extends GUIScreen
     }
 
 
-    @Override
-    protected void init()
-    {
-    }
-
-
     @SubscribeEvent
     public static void mouseClick(GUILeftClickEvent event)
     {
@@ -50,6 +44,14 @@ public class CharacterCreationGUI extends GUIScreen
                 }
             }
         }
+    }
+
+
+    @Override
+    public void onClosed()
+    {
+        super.onClosed();
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCreation.DIMTYPE_CHARACTER_CREATION) Minecraft.getMinecraft().displayGuiScreen(this);
     }
 
     @Override
