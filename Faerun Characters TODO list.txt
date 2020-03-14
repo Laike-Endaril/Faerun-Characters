@@ -1,13 +1,8 @@
-Character customization configs
-
-
-
 Character customization GUI
 
 
 
 Systems for all standard render modes, for NPCs as well as players
-* Tails; switch to alternate mode when a cape is equipped and cape render mode is "on"
 
 
 

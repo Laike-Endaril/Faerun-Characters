@@ -3,7 +3,6 @@ package com.fantasticsource.faeruncharacters;
 import com.fantasticsource.mctools.gui.GUILeftClickEvent;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
-import com.fantasticsource.mctools.gui.element.other.GUIDarkenedBackground;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,17 +10,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CharacterCreationGUI extends GUIScreen
 {
-//    static
-//    {
-//        MinecraftForge.EVENT_BUS.register(CharacterCreationGUI.class);
-//    }
-//
-//    public static void show(Network.PersonalPortalGUIPacket packet)
-//    {
-//        CharacterCreationGUI gui = new CharacterCreationGUI();
-//
-//        Minecraft.getMinecraft().displayGuiScreen(gui);
-//    }
+    static
+    {
+        MinecraftForge.EVENT_BUS.register(CharacterCreationGUI.class);
+    }
+
+    public CharacterCreationGUI(Network.CharacterCreationGUIPacket packet)
+    {
+        Minecraft.getMinecraft().displayGuiScreen(this);
+    }
 
 
     @Override
@@ -34,8 +31,6 @@ public class CharacterCreationGUI extends GUIScreen
     @Override
     protected void init()
     {
-        //Background
-        root.add(new GUIDarkenedBackground(this));
     }
 
 
@@ -55,5 +50,11 @@ public class CharacterCreationGUI extends GUIScreen
                 }
             }
         }
+    }
+
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
     }
 }
