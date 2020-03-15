@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.fantasticlib.api.FLibAPI;
+import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,6 +37,16 @@ public class FaerunCharacters
     public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
     {
         if (event.getModID().equals(MODID)) ConfigManager.sync(MODID, Config.Type.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void applyConfig(ConfigChangedEvent.PostConfigChangedEvent event)
+    {
+        if (!event.getModID().equals(MODID)) return;
+
+        CharacterCreationGUI.activeButtonColor = new Color(FaerunCharactersConfig.activeButtonColor, true);
+        CharacterCreationGUI.hoverButtonColor = new Color(FaerunCharactersConfig.hoverButtonColor, true);
+        CharacterCreationGUI.idleButtonColor = new Color(FaerunCharactersConfig.idleButtonColor, true);
     }
 
 

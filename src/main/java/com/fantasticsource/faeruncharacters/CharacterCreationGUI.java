@@ -19,6 +19,11 @@ public class CharacterCreationGUI extends GUIScreen
 {
     public static final double INTERNAL_SCALING = 0.5;
 
+    public static Color
+            activeButtonColor = new Color(FaerunCharactersConfig.activeButtonColor, true),
+            hoverButtonColor = new Color(FaerunCharactersConfig.hoverButtonColor, true),
+            idleButtonColor = new Color(FaerunCharactersConfig.idleButtonColor, true);
+
     public static final ResourceLocation
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
             TEX_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_hover.png"),
@@ -59,22 +64,22 @@ public class CharacterCreationGUI extends GUIScreen
     protected void addTabs()
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double tabRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
+        double buttonRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
 
-        double yy = (1 - tabRelH * TAB_NAMES.length) / 2;
+        double yy = (1 - buttonRelH * TAB_NAMES.length) / 2;
         for (int i = 0; i < TAB_NAMES.length; i++)
         {
             String tabName = TAB_NAMES[i];
-            GUIButton button = makeButton(0, yy, tabName, Color.ORANGE);
+            GUIButton button = makeButton(0, yy, tabName);
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
                 recalc();
-                button.setActive(true);
             });
+            if (tabName.equals(selectedTab)) button.setActive(true);
 
             root.add(button);
-            yy += tabRelH;
+            yy += buttonRelH;
         }
     }
 
@@ -82,8 +87,8 @@ public class CharacterCreationGUI extends GUIScreen
     protected void addOptions()
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double tabRelW = (double) BUTTON_TEX_W * INTERNAL_SCALING * guiScale / pxWidth;
-        double tabRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
+        double buttonRelW = (double) BUTTON_TEX_W * INTERNAL_SCALING * guiScale / pxWidth;
+        double buttonRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
         ArrayList<String> options = new ArrayList<>();
 
 
@@ -123,37 +128,37 @@ public class CharacterCreationGUI extends GUIScreen
         }
 
 
-        double yy = (1 - tabRelH * options.size()) / 2;
+        double yy = (1 - buttonRelH * options.size()) / 2;
         for (int i = 0; i < options.size(); i++)
         {
             String optionName = options.get(i);
-            GUIButton button = makeButton(tabRelW, yy, optionName, Color.ORANGE);
+            GUIButton button = makeButton(buttonRelW, yy, optionName);
             button.addClickActions(() ->
             {
                 selectedOption = optionName;
                 recalc();
-                button.setActive(true);
             });
+            if (optionName.equals(selectedOption)) button.setActive(true);
 
             root.add(button);
-            yy += tabRelH;
+            yy += buttonRelH;
         }
     }
 
 
-    protected GUIButton makeButton(double x, double y, String text, Color activeColor)
+    protected GUIButton makeButton(double x, double y, String text)
     {
-        GUIImage idle = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_IDLE);
-        idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        idle.add(new GUIText(this, text, getIdleColor(activeColor), INTERNAL_SCALING));
+        GUIImage active = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_ACTIVE);
+        active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+        active.add(new GUIText(this, text, activeButtonColor, INTERNAL_SCALING));
 
         GUIImage hover = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_HOVER);
         hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        hover.add(new GUIText(this, text, getHoverColor(activeColor), INTERNAL_SCALING));
+        hover.add(new GUIText(this, text, hoverButtonColor, INTERNAL_SCALING));
 
-        GUIImage active = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_ACTIVE);
-        active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        active.add(new GUIText(this, text, activeColor, INTERNAL_SCALING));
+        GUIImage idle = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_IDLE);
+        idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+        idle.add(new GUIText(this, text, idleButtonColor, INTERNAL_SCALING));
 
         return new GUIButton(this, x, y, idle, hover, active, true);
     }
