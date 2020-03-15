@@ -2,12 +2,18 @@ package com.fantasticsource.faeruncharacters;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
@@ -25,14 +31,58 @@ public class Network
 
     public static class CharacterCreationGUIPacket implements IMessage
     {
+        public boolean isPremium;
+        public LinkedHashMap<String, CRace> races;
+        public LinkedHashMap<String, CRace> racesPremium;
+
+        public CharacterCreationGUIPacket()
+        {
+            //Required
+        }
+
+        public CharacterCreationGUIPacket(EntityPlayerMP player)
+        {
+            isPremium = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getWhitelistedPlayers().isWhitelisted(player.getGameProfile());
+        }
+
         @Override
         public void toBytes(ByteBuf buf)
         {
+            buf.writeBoolean(isPremium);
+
+            buf.writeInt(CRace.RACES.size());
+            for (Map.Entry<String, CRace> entry : CRace.RACES.entrySet())
+            {
+                ByteBufUtils.writeUTF8String(buf, entry.getKey());
+                entry.getValue().write(buf);
+            }
+
+            buf.writeInt(CRace.RACES_PREMIUM.size());
+            for (Map.Entry<String, CRace> entry : CRace.RACES_PREMIUM.entrySet())
+            {
+                ByteBufUtils.writeUTF8String(buf, entry.getKey());
+                entry.getValue().write(buf);
+            }
         }
 
         @Override
         public void fromBytes(ByteBuf buf)
         {
+            isPremium = buf.readBoolean();
+
+            int size = buf.readInt();
+            races = new LinkedHashMap<>(size);
+            for (int i = 0; i < size; i++)
+            {
+                races.put(ByteBufUtils.readUTF8String(buf), new CRace().read(buf));
+            }
+
+            size = buf.readInt();
+            racesPremium = new LinkedHashMap<>(size);
+            for (int i = 0; i < size; i++)
+            {
+                racesPremium.put(ByteBufUtils.readUTF8String(buf), new CRace().read(buf));
+            }
         }
     }
 

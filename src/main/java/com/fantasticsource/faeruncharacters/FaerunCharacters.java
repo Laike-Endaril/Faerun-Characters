@@ -29,7 +29,7 @@ public class FaerunCharacters
 
         FLibAPI.attachNBTCapToEntityIf(MODID, entity -> entity instanceof EntityLivingBase);
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);
-        Race.init(event);
+        CRace.init(event);
     }
 
     @SubscribeEvent
