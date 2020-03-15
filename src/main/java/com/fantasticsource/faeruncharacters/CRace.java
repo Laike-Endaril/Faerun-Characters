@@ -449,7 +449,7 @@ public class CRace extends Component
         else
         {
             skinColors = new HashSet<>();
-            for (int i = buf.readInt(); i > 0; i++) skinColors.add(new Color(buf.readInt()));
+            for (int i = buf.readInt(); i > 0; i--) skinColors.add(new Color(buf.readInt()));
         }
 
         chestSizes.clear();
@@ -488,7 +488,7 @@ public class CRace extends Component
         else
         {
             hairColors = new HashSet<>();
-            for (int i = buf.readInt(); i > 0; i++) hairColors.add(new Color(buf.readInt()));
+            for (int i = buf.readInt(); i > 0; i--) hairColors.add(new Color(buf.readInt()));
         }
 
         eyes.clear();
@@ -501,7 +501,7 @@ public class CRace extends Component
         else
         {
             eyeColors = new HashSet<>();
-            for (int i = buf.readInt(); i > 0; i++) eyeColors.add(new Color(buf.readInt()));
+            for (int i = buf.readInt(); i > 0; i--) eyeColors.add(new Color(buf.readInt()));
         }
 
 
