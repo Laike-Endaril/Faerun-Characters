@@ -1,5 +1,6 @@
 package com.fantasticsource.faeruncharacters;
 
+import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.mctools.MCTools;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ public class Network
         public boolean isPremium;
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
+        public HashSet<String> bareArms, faceAccessories, headAccessories;
 
         public CharacterCustomizationGUIPacket()
         {
@@ -49,6 +52,15 @@ public class Network
         public void toBytes(ByteBuf buf)
         {
             buf.writeBoolean(isPremium);
+
+            buf.writeInt(FaerunCharactersConfig.server.bareArmSkinSet.size());
+            for (String bareArmSkin : FaerunCharactersConfig.server.bareArmSkinSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+
+            buf.writeInt(FaerunCharactersConfig.server.faceAccessorySet.size());
+            for (String bareArmSkin : FaerunCharactersConfig.server.faceAccessorySet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+
+            buf.writeInt(FaerunCharactersConfig.server.headAccessorySet.size());
+            for (String bareArmSkin : FaerunCharactersConfig.server.headAccessorySet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
 
             buf.writeInt(CRace.RACES.size());
             for (Map.Entry<String, CRace> entry : CRace.RACES.entrySet())
@@ -69,6 +81,15 @@ public class Network
         public void fromBytes(ByteBuf buf)
         {
             isPremium = buf.readBoolean();
+
+            bareArms = new HashSet<>();
+            for (int i = buf.readInt(); i > 0; i--) bareArms.add(ByteBufUtils.readUTF8String(buf));
+
+            faceAccessories = new HashSet<>();
+            for (int i = buf.readInt(); i > 0; i--) faceAccessories.add(ByteBufUtils.readUTF8String(buf));
+
+            headAccessories = new HashSet<>();
+            for (int i = buf.readInt(); i > 0; i--) headAccessories.add(ByteBufUtils.readUTF8String(buf));
 
             int size = buf.readInt();
             races = new LinkedHashMap<>(size);
