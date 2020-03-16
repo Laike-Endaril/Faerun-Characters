@@ -46,7 +46,7 @@ public class CharacterCustomization
             if (race == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Race Variant"), race.raceVariants, race.premiumRaceVariants)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
-            if (!Tools.contains(FaerunCharactersConfig.server.bareArms, ccCompound.getString("Bare Arms"))) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
@@ -67,7 +67,7 @@ public class CharacterCustomization
 
 
             //Accessories
-            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;
@@ -80,7 +80,7 @@ public class CharacterCustomization
             if (race == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Race Variant"), race.raceVariants)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
-            if (!Tools.contains(FaerunCharactersConfig.server.bareArms, ccCompound.getString("Bare Arms"))) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
@@ -101,7 +101,7 @@ public class CharacterCustomization
 
 
             //Accessories
-            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;

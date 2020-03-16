@@ -44,7 +44,7 @@ public class Network
         public boolean isPremium;
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
-        public HashSet<String> bareArms, faceAccessories, headAccessories;
+        public HashSet<String> bareArms, markings, faceAccessories, headAccessories;
         public NBTTagCompound ccCompound;
 
         public CharacterCustomizationGUIPacket()
@@ -67,6 +67,9 @@ public class Network
 
             buf.writeInt(FaerunCharactersConfig.server.bareArmSkinSet.size());
             for (String bareArmSkin : FaerunCharactersConfig.server.bareArmSkinSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+
+            buf.writeInt(FaerunCharactersConfig.server.markingsSet.size());
+            for (String bareArmSkin : FaerunCharactersConfig.server.markingsSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
 
             buf.writeInt(FaerunCharactersConfig.server.faceAccessorySet.size());
             for (String bareArmSkin : FaerunCharactersConfig.server.faceAccessorySet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
@@ -106,6 +109,9 @@ public class Network
 
             bareArms = new HashSet<>();
             for (int i = buf.readInt(); i > 0; i--) bareArms.add(ByteBufUtils.readUTF8String(buf));
+
+            markings = new HashSet<>();
+            for (int i = buf.readInt(); i > 0; i--) markings.add(ByteBufUtils.readUTF8String(buf));
 
             faceAccessories = new HashSet<>();
             for (int i = buf.readInt(); i > 0; i--) faceAccessories.add(ByteBufUtils.readUTF8String(buf));

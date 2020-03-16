@@ -205,32 +205,32 @@ public class CharacterCustomizationGUI extends GUIScreen
                 switch (selectedOption)
                 {
                     case "Race":
-                        addStringSelector("Race", true, packet.races.keySet(), packet.racesPremium.keySet());
+                        addStringSelector(selectedOption, true, packet.races.keySet(), packet.racesPremium.keySet());
                         break;
 
                     case "Race Variant":
                         if (race == null) break;
-                        addStringSelector("Race Variant", true, race.raceVariants, race.premiumRaceVariants);
+                        addStringSelector(selectedOption, true, race.raceVariants, race.premiumRaceVariants);
                         break;
 
                     case "Tail":
                         if (race == null) break;
-                        addStringSelector("Tail", true, race.tails);
+                        addStringSelector(selectedOption, true, race.tails);
                         break;
 
                     case "Bare Arms":
                         if (race == null) break;
-                        addStringSelector("Bare Arms", true, packet.bareArms);
+                        addStringSelector(selectedOption, true, packet.bareArms);
                         break;
 
                     case "Body Type":
                         if (race == null) break;
-                        addStringSelector("Body Type", false, bodyTypes);
+                        addStringSelector(selectedOption, false, bodyTypes);
                         break;
 
                     case "Chest":
                         if (race == null) break;
-                        addStringSelector("Chest Type", false, race.chestSizes);
+                        addStringSelector(selectedOption, false, race.chestSizes);
                         break;
 
 
@@ -256,27 +256,28 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //String selectors
                     case "Hair (Base)":
                         if (race == null) break;
-                        addStringSelector("Hair (Base)", true, race.hairBase, race.premiumHairBase);
+                        addStringSelector(selectedOption, true, race.hairBase, race.premiumHairBase);
                         break;
 
                     case "Hair (Front)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, race.hairFront, race.premiumHairFront);
                         break;
 
                     case "Hair (Back)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, race.hairBack, race.premiumHairBack);
                         break;
 
                     case "Hair (Top/Overall 1)":
-                        //TODO
-                        break;
-
                     case "Hair (Top/Overall 2)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, race.hairBase, race.premiumHairBase);
                         break;
 
                     case "Eyes":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, race.eyes, race.premiumEyes);
                         break;
 
 
@@ -297,15 +298,18 @@ public class CharacterCustomizationGUI extends GUIScreen
                 {
                     //String selectors
                     case "Markings":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, packet.markings);
                         break;
 
                     case "Accessory (Head)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, packet.headAccessories);
                         break;
 
                     case "Accessory (Face)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector(selectedOption, true, packet.faceAccessories);
                         break;
 
 

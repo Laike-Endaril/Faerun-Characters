@@ -50,6 +50,8 @@ public class FaerunCharacters
 
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
         loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
+        FaerunCharactersConfig.server.markingsSet.clear();
+        loadSkins(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
         FaerunCharactersConfig.server.headAccessorySet.clear();
         loadSkins(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
         FaerunCharactersConfig.server.faceAccessorySet.clear();
@@ -70,6 +72,8 @@ public class FaerunCharacters
 
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
         loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
+        FaerunCharactersConfig.server.markingsSet.clear();
+        loadSkins(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
         FaerunCharactersConfig.server.headAccessorySet.clear();
         loadSkins(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
         FaerunCharactersConfig.server.faceAccessorySet.clear();
