@@ -32,9 +32,9 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
             TEX_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_hover.png"),
             TEX_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_active.png"),
-            TEX_PREMIUMBUTTON_IDLE = new ResourceLocation(MODID, "image/premium_button_idle.png"),
-            TEX_PREMIUMBUTTON_HOVER = new ResourceLocation(MODID, "image/premium_button_hover.png"),
-            TEX_PREMIUMBUTTON_ACTIVE = new ResourceLocation(MODID, "image/premium_button_active.png");
+            TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/premium_button_idle.png"),
+            TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/premium_button_hover.png"),
+            TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/premium_button_active.png");
 
     public static final int BUTTON_TEX_W = 128, BUTTON_TEX_H = 16;
 
@@ -229,17 +229,22 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected GUIButton makeButton(double x, double y, String text)
     {
-        GUIImage active = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_ACTIVE);
+        return makeButton(x, y, text, false);
+    }
+
+    protected GUIButton makeButton(double x, double y, String text, boolean premium)
+    {
+        GUIImage active = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
         active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        active.add(new GUIText(this, text, activeButtonColor, INTERNAL_SCALING));
+        active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, INTERNAL_SCALING));
 
-        GUIImage hover = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_HOVER);
+        GUIImage hover = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
         hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        hover.add(new GUIText(this, text, hoverButtonColor, INTERNAL_SCALING));
+        hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, INTERNAL_SCALING));
 
-        GUIImage idle = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, TEX_BUTTON_IDLE);
+        GUIImage idle = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
         idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        idle.add(new GUIText(this, text, idleButtonColor, INTERNAL_SCALING));
+        idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, INTERNAL_SCALING));
 
         return new GUIButton(this, x, y, idle, hover, active, true);
     }

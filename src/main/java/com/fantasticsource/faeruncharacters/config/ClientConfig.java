@@ -14,11 +14,11 @@ public class ClientConfig
     public String idleButtonColor = "777777";
 
     @Config.Name("Premium Button Text Color (Active)")
-    public String activePremiumButtonColor = "FFBB00";
+    public String activePremiumButtonColor = "FFFFFF";
 
     @Config.Name("Premium Button Text Color (Hover)")
-    public String hoverPremiumButtonColor = "DDAA00";
+    public String hoverPremiumButtonColor = "BBBBBB";
 
     @Config.Name("Premium Button Text Color (Idle)")
-    public String idlePremiumButtonColor = "BB7700";
+    public String idlePremiumButtonColor = "777777";
 }
