@@ -20,9 +20,6 @@ public class CRace extends Component
     public static final LinkedHashMap<String, CRace> RACES = new LinkedHashMap<>();
     public static final LinkedHashMap<String, CRace> RACES_PREMIUM = new LinkedHashMap<>();
 
-    public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
-
-
     public String name;
 
     //For skins, the strings are the library file paths (eg. official/Arbalest)
@@ -128,15 +125,15 @@ public class CRace extends Component
 
             //Body
             case "race variant":
-                loadSkins(raceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(raceVariants, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium race variant":
-                loadSkins(premiumRaceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumRaceVariants, Tools.fixedSplit(value, ","));
                 break;
 
             case "tail":
-                loadSkins(tails, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(tails, Tools.fixedSplit(value, ","));
                 break;
 
             case "skin color":
@@ -162,35 +159,35 @@ public class CRace extends Component
 
             //Head
             case "hair":
-                loadSkins(hairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(hairBase, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair":
-                loadSkins(premiumHairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumHairBase, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair front":
-                loadSkins(hairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(hairFront, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair front":
-                loadSkins(premiumHairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumHairFront, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair back":
-                loadSkins(hairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(hairBack, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair back":
-                loadSkins(premiumHairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumHairBack, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair top":
-                loadSkins(hairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(hairTop, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair top":
-                loadSkins(premiumHairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumHairTop, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair color":
@@ -198,11 +195,11 @@ public class CRace extends Component
                 break;
 
             case "eyes":
-                loadSkins(eyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(eyes, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium eyes":
-                loadSkins(premiumEyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkins(premiumEyes, Tools.fixedSplit(value, ","));
                 break;
 
             case "eye color":
@@ -232,49 +229,6 @@ public class CRace extends Component
         }
 
         return colorSet;
-    }
-
-    protected void loadSkins(HashSet<String> skinSet, String[] skinStrings)
-    {
-        boolean pool = false;
-        for (String skinString : skinStrings)
-        {
-            if (skinString.substring(0, 7).equals("folder:"))
-            {
-                pool = true;
-                skinString = skinString.replace("folder:", "");
-            }
-
-            skinString = Tools.fixFileSeparators(skinString.trim());
-
-            File skinFile = new File(AW_SKIN_LIBRARY_DIR + skinString);
-
-            if (!pool)
-            {
-                if (!skinFile.exists()) skinFile = new File(AW_SKIN_LIBRARY_DIR + skinString + ".armour");
-
-                if (!skinFile.exists()) continue;
-
-                skinSet.add(skinString);
-            }
-            else
-            {
-                if (!skinFile.isDirectory()) continue;
-
-                File[] subFiles = skinFile.listFiles();
-                if (subFiles == null || subFiles.length == 0) continue;
-
-
-                String[] subSkinStrings = new String[subFiles.length];
-                int i = 0;
-                for (File subFile : subFiles)
-                {
-                    subSkinStrings[i++] = subFile.getAbsolutePath().replace(AW_SKIN_LIBRARY_DIR, "").replace(".armour", "");
-                }
-
-                loadSkins(skinSet, subSkinStrings);
-            }
-        }
     }
 
 

@@ -1,11 +1,8 @@
-package com.fantasticsource.faeruncharacters;
+package com.fantasticsource.faeruncharacters.config;
 
 import net.minecraftforge.common.config.Config;
 
-import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
-
-@Config(modid = MODID)
-public class FaerunCharactersConfig
+public class ClientConfig
 {
     @Config.Name("Button Color (Active)")
     public static String activeButtonColor = "00FFFF";

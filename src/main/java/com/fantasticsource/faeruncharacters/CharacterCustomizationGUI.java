@@ -1,5 +1,6 @@
 package com.fantasticsource.faeruncharacters;
 
+import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
@@ -15,14 +16,14 @@ import java.util.ArrayList;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
-public class CharacterCreationGUI extends GUIScreen
+public class CharacterCustomizationGUI extends GUIScreen
 {
     public static final double INTERNAL_SCALING = 0.5;
 
     public static Color
-            activeButtonColor = new Color(FaerunCharactersConfig.activeButtonColor, true),
-            hoverButtonColor = new Color(FaerunCharactersConfig.hoverButtonColor, true),
-            idleButtonColor = new Color(FaerunCharactersConfig.idleButtonColor, true);
+            activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
+            hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverButtonColor, true),
+            idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true);
 
     public static final ResourceLocation
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
@@ -36,15 +37,15 @@ public class CharacterCreationGUI extends GUIScreen
 
     static
     {
-        MinecraftForge.EVENT_BUS.register(CharacterCreationGUI.class);
+        MinecraftForge.EVENT_BUS.register(CharacterCustomizationGUI.class);
     }
 
 
-    protected Network.CharacterCreationGUIPacket packet;
+    protected Network.CharacterCustomizationGUIPacket packet;
     protected String selectedTab = "Body", selectedOption = "Race";
 
 
-    public CharacterCreationGUI(Network.CharacterCreationGUIPacket packet)
+    public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
     {
         this.packet = packet;
 
@@ -87,6 +88,9 @@ public class CharacterCreationGUI extends GUIScreen
 
     protected void addOptions()
     {
+        if (selectedTab == null) return;
+
+
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         double buttonRelW = (double) BUTTON_TEX_W * INTERNAL_SCALING * guiScale / pxWidth;
         double buttonRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
@@ -150,26 +154,29 @@ public class CharacterCreationGUI extends GUIScreen
 
     protected void addControls()
     {
+        if (selectedTab == null || selectedOption == null) return;
+
+
         switch (selectedTab)
         {
             case "Body":
                 switch (selectedOption)
                 {
                     case "Race":
-                        break;
                     case "Race Variant":
-                        break;
                     case "Tail":
-                        break;
                     case "Bare Arms":
-                        break;
-                    case "Skin Color":
-                        break;
                     case "Body Type":
-                        break;
                     case "Chest":
+                        //TODO selector
                         break;
+
+                    case "Skin Color":
+                        //TODO selector or HSV sliders, depending on race
+                        break;
+
                     case "Scale":
+                        //TODO slider
                         break;
                 }
                 break;
@@ -179,20 +186,17 @@ public class CharacterCreationGUI extends GUIScreen
                 switch (selectedOption)
                 {
                     case "Hair (Base)":
-                        break;
                     case "Hair (Front)":
-                        break;
                     case "Hair (Back)":
-                        break;
                     case "Hair (Top/Overall 1)":
-                        break;
                     case "Hair (Top/Overall 2)":
-                        break;
-                    case "Hair Color":
-                        break;
                     case "Eyes":
+                        //TODO selector
                         break;
+
+                    case "Hair Color":
                     case "Eye Color":
+                        //TODO selector or HSV sliders, depending on race
                         break;
                 }
                 break;
@@ -202,14 +206,14 @@ public class CharacterCreationGUI extends GUIScreen
                 switch (selectedOption)
                 {
                     case "Markings":
-                        break;
                     case "Accessory (Head)":
-                        break;
                     case "Accessory (Face)":
+                        //TODO selector
                         break;
+
                     case "Color 1":
-                        break;
                     case "Color 2":
+                        //TODO selector or HSV sliders, depending on race
                         break;
                 }
                 break;
@@ -258,7 +262,7 @@ public class CharacterCreationGUI extends GUIScreen
     public void onClosed()
     {
         super.onClosed();
-        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCreation.DIMTYPE_CHARACTER_CREATION) Minecraft.getMinecraft().displayGuiScreen(this);
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) Minecraft.getMinecraft().displayGuiScreen(this);
     }
 
     @Override

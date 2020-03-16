@@ -1,9 +1,9 @@
 package com.fantasticsource.faeruncharacters;
 
+import com.fantasticsource.mctools.MCTools;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -24,25 +24,25 @@ public class Network
 
     public static void init()
     {
-        WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCreationGUIPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
 //        WRAPPER.registerMessage(PersonalPortalPacketHandler.class, PersonalPortalPacket.class, discriminator++, Side.SERVER);
     }
 
 
-    public static class CharacterCreationGUIPacket implements IMessage
+    public static class CharacterCustomizationGUIPacket implements IMessage
     {
         public boolean isPremium;
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
 
-        public CharacterCreationGUIPacket()
+        public CharacterCustomizationGUIPacket()
         {
             //Required
         }
 
-        public CharacterCreationGUIPacket(EntityPlayerMP player)
+        public CharacterCustomizationGUIPacket(EntityPlayerMP player)
         {
-            isPremium = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getWhitelistedPlayers().isWhitelisted(player.getGameProfile());
+            isPremium = MCTools.isWhitelisted(player);
         }
 
         @Override
@@ -86,13 +86,13 @@ public class Network
         }
     }
 
-    public static class PersonalPortalGUIPacketHandler implements IMessageHandler<CharacterCreationGUIPacket, IMessage>
+    public static class PersonalPortalGUIPacketHandler implements IMessageHandler<CharacterCustomizationGUIPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(CharacterCreationGUIPacket packet, MessageContext ctx)
+        public IMessage onMessage(CharacterCustomizationGUIPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> new CharacterCreationGUI(packet));
+            Minecraft.getMinecraft().addScheduledTask(() -> new CharacterCustomizationGUI(packet));
             return null;
         }
     }
