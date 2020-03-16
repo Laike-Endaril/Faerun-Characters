@@ -6,6 +6,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.textured.GUIImage;
+import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -18,7 +19,10 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
 public class CharacterCustomizationGUI extends GUIScreen
 {
-    public static final int BUTTON_W = 128, BUTTON_H = 16;
+    public static final int
+            BUTTON_W = 128, BUTTON_H = 16,
+            SCROLLBAR_W = 16, SCROLLBAR_H = 256,
+            SCROLLBUTTON_W = 16, SCROLLBUTTON_H = 16;
 
     public static double internalScaling;
 
@@ -48,7 +52,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     protected Network.CharacterCustomizationGUIPacket packet;
-    protected String selectedTab = "Body", selectedOption = "Race";
+    protected String selectedTab = "Body", selectedOption = null;
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
@@ -64,8 +68,10 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected void addAll()
     {
         //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
+        int totalW = BUTTON_W * 3 + SCROLLBAR_W;
+        int totalH = SCROLLBAR_H;
         int scaling = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = 0.5d * pxWidth / (BUTTON_W * 3 * scaling);
+        internalScaling = Tools.min(0.5d * pxWidth / (totalW * scaling), (double) pxHeight / (totalH * scaling));
         double internalScaling2 = Math.floor(scaling * internalScaling) / scaling;
         if (internalScaling2 != 0) internalScaling = internalScaling2;
 
@@ -88,6 +94,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
+                selectedOption = null;
                 recalc();
             });
             if (tabName.equals(selectedTab)) button.setActive(true);
