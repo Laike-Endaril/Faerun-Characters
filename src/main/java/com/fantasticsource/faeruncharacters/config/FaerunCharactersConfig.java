@@ -8,8 +8,8 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class FaerunCharactersConfig
 {
     @Config.Name("Client Configs")
-    public static ClientConfig client;
+    public static ClientConfig client = new ClientConfig();
 
     @Config.Name("Server Configs")
-    public static ServerConfig server;
+    public static ServerConfig server = new ServerConfig();
 }

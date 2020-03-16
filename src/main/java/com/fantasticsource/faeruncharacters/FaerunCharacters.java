@@ -64,6 +64,9 @@ public class FaerunCharacters
         CharacterCustomizationGUI.activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true);
         CharacterCustomizationGUI.hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverButtonColor, true);
         CharacterCustomizationGUI.idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true);
+        CharacterCustomizationGUI.activeButtonColor = new Color(FaerunCharactersConfig.client.activePremiumButtonColor, true);
+        CharacterCustomizationGUI.hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverPremiumButtonColor, true);
+        CharacterCustomizationGUI.idleButtonColor = new Color(FaerunCharactersConfig.client.idlePremiumButtonColor, true);
 
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
         loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);

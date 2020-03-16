@@ -23,12 +23,18 @@ public class CharacterCustomizationGUI extends GUIScreen
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
             hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverButtonColor, true),
-            idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true);
+            idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true),
+            activePremiumButtonColor = new Color(FaerunCharactersConfig.client.activePremiumButtonColor, true),
+            hoverPremiumButtonColor = new Color(FaerunCharactersConfig.client.hoverPremiumButtonColor, true),
+            idlePremiumButtonColor = new Color(FaerunCharactersConfig.client.idlePremiumButtonColor, true);
 
     public static final ResourceLocation
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
             TEX_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_hover.png"),
-            TEX_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_active.png");
+            TEX_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_active.png"),
+            TEX_PREMIUMBUTTON_IDLE = new ResourceLocation(MODID, "image/premium_button_idle.png"),
+            TEX_PREMIUMBUTTON_HOVER = new ResourceLocation(MODID, "image/premium_button_hover.png"),
+            TEX_PREMIUMBUTTON_ACTIVE = new ResourceLocation(MODID, "image/premium_button_active.png");
 
     public static final int BUTTON_TEX_W = 128, BUTTON_TEX_H = 16;
 

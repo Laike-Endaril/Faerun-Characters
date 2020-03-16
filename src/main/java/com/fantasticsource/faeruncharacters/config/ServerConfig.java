@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 public class ServerConfig
 {
+    @Config.Ignore
     public HashSet<String>
             bareArmSkinSet = new HashSet<>(),
             headAccessorySet = new HashSet<>(),
