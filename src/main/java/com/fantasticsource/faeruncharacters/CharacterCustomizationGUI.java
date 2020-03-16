@@ -19,10 +19,7 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
 public class CharacterCustomizationGUI extends GUIScreen
 {
-    public static final int
-            BUTTON_W = 128, BUTTON_H = 16,
-            SCROLLBAR_W = 16, SCROLLBAR_H = 256,
-            SCROLLBUTTON_W = 16, SCROLLBUTTON_H = 16;
+    public static final int BUTTON_W = 128, BUTTON_H = 16;
 
     public static double internalScaling;
 
@@ -52,7 +49,8 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     protected Network.CharacterCustomizationGUIPacket packet;
-    protected String selectedTab = "Body", selectedOption = null;
+    protected String selectedTab = "Body", selectedOption = null, stringSelection = null; //stringSelection is used for skin name selectors
+    protected double doubleSelection1, doubleSelection2, doubleSelection3; //These are used for horizontal slider controls; just the first for basic ones, all 3 for full HSV.  First is also used for color selectors
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
@@ -68,8 +66,8 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected void addAll()
     {
         //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
-        int totalW = BUTTON_W * 3 + SCROLLBAR_W;
-        int totalH = SCROLLBAR_H;
+        int totalW = BUTTON_W * 4;
+        int totalH = BUTTON_H * 15;
         int scaling = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         internalScaling = Tools.min(0.5d * pxWidth / (totalW * scaling), (double) pxHeight / (totalH * scaling));
         double internalScaling2 = Math.floor(scaling * internalScaling) / scaling;
@@ -187,11 +185,11 @@ public class CharacterCustomizationGUI extends GUIScreen
                     case "Bare Arms":
                     case "Body Type":
                     case "Chest":
-                        //TODO selector
+                        //TODO string selector
                         break;
 
                     case "Skin Color":
-                        //TODO selector or HSV sliders, depending on race
+                        //TODO color selector or HSV sliders, depending on race
                         break;
 
                     case "Scale":
@@ -210,12 +208,12 @@ public class CharacterCustomizationGUI extends GUIScreen
                     case "Hair (Top/Overall 1)":
                     case "Hair (Top/Overall 2)":
                     case "Eyes":
-                        //TODO selector
+                        //TODO string selector
                         break;
 
                     case "Hair Color":
                     case "Eye Color":
-                        //TODO selector or HSV sliders, depending on race
+                        //TODO color selector or HSV sliders, depending on race
                         break;
                 }
                 break;
@@ -227,12 +225,12 @@ public class CharacterCustomizationGUI extends GUIScreen
                     case "Markings":
                     case "Accessory (Head)":
                     case "Accessory (Face)":
-                        //TODO selector
+                        //TODO string selector
                         break;
 
                     case "Color 1":
                     case "Color 2":
-                        //TODO selector or HSV sliders, depending on race
+                        //TODO color selector or HSV sliders, depending on race
                         break;
                 }
                 break;
