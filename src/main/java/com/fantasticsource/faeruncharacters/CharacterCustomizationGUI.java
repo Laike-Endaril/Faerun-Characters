@@ -334,6 +334,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             {
                 if (buttonText.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setString(key, buttonText);
+                Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
                 recalc();
             });
             if (buttonText.equals(current)) button.setActive(true);
