@@ -58,6 +58,7 @@ public class CharacterCreationGUI extends GUIScreen
     {
         addTabs();
         addOptions();
+        addControls();
     }
 
 
@@ -135,13 +136,83 @@ public class CharacterCreationGUI extends GUIScreen
             GUIButton button = makeButton(buttonRelW, yy, optionName);
             button.addClickActions(() ->
             {
-                selectedOption = optionName;
+                if (optionName.equals(selectedOption)) selectedOption = null;
+                else selectedOption = optionName;
                 recalc();
             });
             if (optionName.equals(selectedOption)) button.setActive(true);
 
             root.add(button);
             yy += buttonRelH;
+        }
+    }
+
+
+    protected void addControls()
+    {
+        switch (selectedTab)
+        {
+            case "Body":
+                switch (selectedOption)
+                {
+                    case "Race":
+                        break;
+                    case "Race Variant":
+                        break;
+                    case "Tail":
+                        break;
+                    case "Bare Arms":
+                        break;
+                    case "Skin Color":
+                        break;
+                    case "Body Type":
+                        break;
+                    case "Chest":
+                        break;
+                    case "Scale":
+                        break;
+                }
+                break;
+
+
+            case "Head":
+                switch (selectedOption)
+                {
+                    case "Hair (Base)":
+                        break;
+                    case "Hair (Front)":
+                        break;
+                    case "Hair (Back)":
+                        break;
+                    case "Hair (Top/Overall 1)":
+                        break;
+                    case "Hair (Top/Overall 2)":
+                        break;
+                    case "Hair Color":
+                        break;
+                    case "Eyes":
+                        break;
+                    case "Eye Color":
+                        break;
+                }
+                break;
+
+
+            case "Accessories":
+                switch (selectedOption)
+                {
+                    case "Markings":
+                        break;
+                    case "Accessory (Head)":
+                        break;
+                    case "Accessory (Face)":
+                        break;
+                    case "Color 1":
+                        break;
+                    case "Color 2":
+                        break;
+                }
+                break;
         }
     }
 
