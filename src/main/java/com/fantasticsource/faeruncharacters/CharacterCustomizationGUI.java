@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -198,22 +199,22 @@ public class CharacterCustomizationGUI extends GUIScreen
                 switch (selectedOption)
                 {
                     case "Race":
-                        addStringSelector("Race", packet.races.keySet(), packet.racesPremium.keySet());
+                        addStringSelector("Race", true, packet.races.keySet(), packet.racesPremium.keySet());
                         break;
 
                     case "Race Variant":
                         if (race == null) break;
-                        addStringSelector("Race Variant", race.raceVariants, race.premiumRaceVariants);
+                        addStringSelector("Race Variant", true, race.raceVariants, race.premiumRaceVariants);
                         break;
 
                     case "Tail":
                         if (race == null) break;
-                        addStringSelector("Tail", race.tails);
+                        addStringSelector("Tail", true, race.tails);
                         break;
 
                     case "Bare Arms":
                         if (race == null) break;
-                        addStringSelector("Bare Arms", packet.bareArms);
+                        addStringSelector("Bare Arms", true, packet.bareArms);
                         break;
 
                     case "Body Type":
@@ -310,7 +311,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-    protected void addStringSelector(String key, Collection<String>... selections)
+    protected void addStringSelector(String key, boolean fileNames, Collection<String>... selections)
     {
         String current = ccCompound.getString(key);
         ArrayList<String> options = new ArrayList<>();
@@ -321,7 +322,14 @@ public class CharacterCustomizationGUI extends GUIScreen
         for (int i = 0; i < options.size(); i++)
         {
             String buttonText = options.get(i);
-            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 : buttonRelW * 3, yy, buttonText);
+            String buttonShortText = buttonText;
+            if (fileNames)
+            {
+                buttonShortText = Tools.fixFileSeparators(buttonShortText);
+                buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
+            }
+
+            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 : buttonRelW * 3, yy, buttonShortText);
             button.addClickActions(() ->
             {
                 if (buttonText.equals(current)) ccCompound.removeTag(key);
