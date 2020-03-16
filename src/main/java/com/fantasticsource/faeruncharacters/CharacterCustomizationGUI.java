@@ -18,7 +18,9 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
 public class CharacterCustomizationGUI extends GUIScreen
 {
-    public static final double INTERNAL_SCALING = 0.5;
+    public static final int BUTTON_W = 128, BUTTON_H = 16;
+
+    public static double internalScaling;
 
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
@@ -35,8 +37,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/premium_button_idle.png"),
             TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/premium_button_hover.png"),
             TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/premium_button_active.png");
-
-    public static final int BUTTON_TEX_W = 128, BUTTON_TEX_H = 16;
 
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
 
@@ -63,6 +63,12 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addAll()
     {
+        //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
+        int scaling = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
+        internalScaling = 0.5d * pxWidth / (BUTTON_W * 3 * scaling);
+        double internalScaling2 = Math.floor(scaling * internalScaling) / scaling;
+        if (internalScaling2 != 0) internalScaling = internalScaling2;
+
         addTabs();
         addOptions();
         addControls();
@@ -72,7 +78,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected void addTabs()
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double buttonRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
+        double buttonRelH = (double) BUTTON_H * internalScaling * guiScale / pxHeight;
 
         double yy = (1 - buttonRelH * TAB_NAMES.length) / 2;
         for (int i = 0; i < TAB_NAMES.length; i++)
@@ -98,8 +104,8 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double buttonRelW = (double) BUTTON_TEX_W * INTERNAL_SCALING * guiScale / pxWidth;
-        double buttonRelH = (double) BUTTON_TEX_H * INTERNAL_SCALING * guiScale / pxHeight;
+        double buttonRelW = (double) BUTTON_W * internalScaling * guiScale / pxWidth;
+        double buttonRelH = (double) BUTTON_H * internalScaling * guiScale / pxHeight;
         ArrayList<String> options = new ArrayList<>();
 
 
@@ -234,17 +240,17 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected GUIButton makeButton(double x, double y, String text, boolean premium)
     {
-        GUIImage active = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
+        GUIImage active = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
         active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, INTERNAL_SCALING));
+        active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, internalScaling));
 
-        GUIImage hover = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
+        GUIImage hover = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
         hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, INTERNAL_SCALING));
+        hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, internalScaling));
 
-        GUIImage idle = new GUIImage(this, BUTTON_TEX_W * INTERNAL_SCALING, BUTTON_TEX_H * INTERNAL_SCALING, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
+        GUIImage idle = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
         idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, INTERNAL_SCALING));
+        idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, internalScaling));
 
         return new GUIButton(this, x, y, idle, hover, active, true);
     }
