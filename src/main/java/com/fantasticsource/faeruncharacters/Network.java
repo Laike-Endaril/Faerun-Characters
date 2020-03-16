@@ -3,6 +3,7 @@ package com.fantasticsource.faeruncharacters;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.mctools.MCTools;
+import com.fantasticsource.mctools.aw.RenderModes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,6 +34,8 @@ public class Network
     {
         WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(SetCCPacketHandler.class, SetCCPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetBodyTypePacketHandler.class, SetBodyTypePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetChestTypePacketHandler.class, SetChestTypePacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -178,6 +181,82 @@ public class Network
         public IMessage onMessage(SetCCPacket packet, MessageContext ctx)
         {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> CharacterTags.setCC(ctx.getServerHandler().player, packet.ccCompound));
+            return null;
+        }
+    }
+
+
+    public static class SetBodyTypePacket implements IMessage
+    {
+        public String type;
+
+        public SetBodyTypePacket()
+        {
+            //Required
+        }
+
+        public SetBodyTypePacket(String type)
+        {
+            this.type = type;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, type);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            type = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class SetBodyTypePacketHandler implements IMessageHandler<SetBodyTypePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetBodyTypePacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> RenderModes.setRenderMode(ctx.getServerHandler().player, "Body", packet.type));
+            return null;
+        }
+    }
+
+
+    public static class SetChestTypePacket implements IMessage
+    {
+        public String type;
+
+        public SetChestTypePacket()
+        {
+            //Required
+        }
+
+        public SetChestTypePacket(String type)
+        {
+            this.type = type;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, type);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            type = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class SetChestTypePacketHandler implements IMessageHandler<SetChestTypePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetChestTypePacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> RenderModes.setRenderMode(ctx.getServerHandler().player, "Chest", packet.type));
             return null;
         }
     }

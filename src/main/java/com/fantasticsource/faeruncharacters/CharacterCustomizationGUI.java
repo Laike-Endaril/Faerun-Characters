@@ -17,14 +17,22 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
 public class CharacterCustomizationGUI extends GUIScreen
 {
-    public static final int BUTTON_W = 128, BUTTON_H = 16;
+    public static final int
+            BUTTON_W = 128, BUTTON_H = 16, GAP_W = 4,
 
-    public static double internalScaling, buttonRelW, buttonRelH;
+    //Definitions for what we want to allow for
+    TOTAL_W = BUTTON_W * 4 + GAP_W,
+            TOTAL_H = BUTTON_H * 15;
+
+
+    public static final HashSet<String> bodyTypes = new HashSet<>();
+    public static double internalScaling, buttonRelW, buttonRelH, gapRelW;
 
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
@@ -38,9 +46,9 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
             TEX_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_hover.png"),
             TEX_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_active.png"),
-            TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/premium_button_idle.png"),
-            TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/premium_button_hover.png"),
-            TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/premium_button_active.png");
+            TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_premium_idle.png"),
+            TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_premium_hover.png"),
+            TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png");
 
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
 
@@ -48,6 +56,8 @@ public class CharacterCustomizationGUI extends GUIScreen
     static
     {
         MinecraftForge.EVENT_BUS.register(CharacterCustomizationGUI.class);
+        bodyTypes.add("Masculine");
+        bodyTypes.add("Feminine");
     }
 
 
@@ -71,14 +81,9 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void preCalc()
     {
-        //Definitions for what we want to allow for
-        int totalW = BUTTON_W * 4;
-        int totalH = BUTTON_H * 15;
-
-
         //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
         int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = Tools.min(0.5d * pxWidth / (totalW * mcScale), (double) pxHeight / (totalH * mcScale));
+        internalScaling = Tools.min(0.5d * pxWidth / (TOTAL_W * mcScale), (double) pxHeight / (TOTAL_H * mcScale));
         double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
         if (internalScaling2 != 0) internalScaling = internalScaling2;
 
@@ -86,6 +91,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         //Calc relative button size
         buttonRelW = (double) BUTTON_W * internalScaling * mcScale / pxWidth;
         buttonRelH = (double) BUTTON_H * internalScaling * mcScale / pxHeight;
+        gapRelW = (double) GAP_W * internalScaling * mcScale / pxWidth;
     }
 
     protected void addAll()
@@ -218,22 +224,26 @@ public class CharacterCustomizationGUI extends GUIScreen
                         break;
 
                     case "Body Type":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector("Body Type", false, bodyTypes);
                         break;
 
                     case "Chest":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector("Chest Type", false, race.chestSizes);
                         break;
 
 
                     //Color selectors or HSV sliders, depending on race
                     case "Skin Color":
+                        if (race == null) break;
                         //TODO
                         break;
 
 
                     //Sliders
                     case "Scale":
+                        if (race == null) break;
                         //TODO
                         break;
                 }
@@ -245,7 +255,8 @@ public class CharacterCustomizationGUI extends GUIScreen
                 {
                     //String selectors
                     case "Hair (Base)":
-                        //TODO
+                        if (race == null) break;
+                        addStringSelector("Hair (Base)", true, race.hairBase, race.premiumHairBase);
                         break;
 
                     case "Hair (Front)":
@@ -311,11 +322,18 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-    protected void addStringSelector(String key, boolean fileNames, Collection<String>... selections)
+
+    protected void addStringSelector(String key, boolean fileNames, Collection<String> selections)
+    {
+        addStringSelector(key, fileNames, selections, new HashSet<>());
+    }
+
+    protected void addStringSelector(String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)
     {
         String current = ccCompound.getString(key);
         ArrayList<String> options = new ArrayList<>();
-        for (Collection<String> selectionSet : selections) options.addAll(selectionSet);
+        options.addAll(selections);
+        options.addAll(premiumSelections);
 
 
         double yy = (1 - buttonRelH * Math.ceil(options.size() / 2d)) / 2;
@@ -329,12 +347,25 @@ public class CharacterCustomizationGUI extends GUIScreen
                 buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
             }
 
-            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 : buttonRelW * 3, yy, buttonShortText);
+            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonShortText, i >= selections.size());
             button.addClickActions(() ->
             {
                 if (buttonText.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setString(key, buttonText);
-                Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
+                switch (key)
+                {
+                    case "Body Type":
+                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(buttonText));
+                        break;
+
+                    case "Chest Type":
+                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
+                        break;
+
+                    default:
+                        Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
+                }
+
                 recalc();
             });
             if (buttonText.equals(current)) button.setActive(true);
