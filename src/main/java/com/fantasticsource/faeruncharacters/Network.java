@@ -1,10 +1,14 @@
 package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.mctools.MCTools;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -37,6 +41,7 @@ public class Network
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
         public HashSet<String> bareArms, faceAccessories, headAccessories;
+        public NBTTagCompound ccCompound;
 
         public CharacterCustomizationGUIPacket()
         {
@@ -46,12 +51,15 @@ public class Network
         public CharacterCustomizationGUIPacket(EntityPlayerMP player)
         {
             isPremium = MCTools.isWhitelisted(player);
+            ccCompound = CharacterTags.getCC(player);
         }
 
         @Override
         public void toBytes(ByteBuf buf)
         {
             buf.writeBoolean(isPremium);
+
+            ByteBufUtils.writeUTF8String(buf, ccCompound.toString());
 
             buf.writeInt(FaerunCharactersConfig.server.bareArmSkinSet.size());
             for (String bareArmSkin : FaerunCharactersConfig.server.bareArmSkinSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
@@ -81,6 +89,16 @@ public class Network
         public void fromBytes(ByteBuf buf)
         {
             isPremium = buf.readBoolean();
+
+            try
+            {
+                ccCompound = JsonToNBT.getTagFromJson(ByteBufUtils.readUTF8String(buf));
+            }
+            catch (NBTException e)
+            {
+                e.printStackTrace();
+                return;
+            }
 
             bareArms = new HashSet<>();
             for (int i = buf.readInt(); i > 0; i--) bareArms.add(ByteBufUtils.readUTF8String(buf));

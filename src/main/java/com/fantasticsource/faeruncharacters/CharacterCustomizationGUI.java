@@ -10,10 +10,12 @@ import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
@@ -21,7 +23,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 {
     public static final int BUTTON_W = 128, BUTTON_H = 16;
 
-    public static double internalScaling;
+    public static double internalScaling, buttonRelW, buttonRelH;
 
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
@@ -49,29 +51,47 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     protected Network.CharacterCustomizationGUIPacket packet;
-    protected String selectedTab = "Body", selectedOption = null, stringSelection = null; //stringSelection is used for skin name selectors
-    protected double doubleSelection1, doubleSelection2, doubleSelection3; //These are used for horizontal slider controls; just the first for basic ones, all 3 for full HSV.  First is also used for color selectors
+    protected String selectedTab = "Body", selectedOption = null;
+    protected NBTTagCompound ccCompound;
+    protected CRace race;
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
     {
         this.packet = packet;
+        ccCompound = packet.ccCompound;
 
         Minecraft.getMinecraft().displayGuiScreen(this);
 
+        preCalc();
         addAll();
     }
 
 
-    protected void addAll()
+    protected void preCalc()
     {
-        //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
+        //Definitions for what we want to allow for
         int totalW = BUTTON_W * 4;
         int totalH = BUTTON_H * 15;
-        int scaling = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = Tools.min(0.5d * pxWidth / (totalW * scaling), (double) pxHeight / (totalH * scaling));
-        double internalScaling2 = Math.floor(scaling * internalScaling) / scaling;
+
+
+        //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
+        int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
+        internalScaling = Tools.min(0.5d * pxWidth / (totalW * mcScale), (double) pxHeight / (totalH * mcScale));
+        double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
         if (internalScaling2 != 0) internalScaling = internalScaling2;
+
+
+        //Calc relative button size
+        buttonRelW = (double) BUTTON_W * internalScaling * mcScale / pxWidth;
+        buttonRelH = (double) BUTTON_H * internalScaling * mcScale / pxHeight;
+    }
+
+    protected void addAll()
+    {
+        String raceString = ccCompound.getString("Race");
+        race = packet.races.get(raceString);
+        if (race == null) race = packet.racesPremium.get(raceString);
 
         addTabs();
         addOptions();
@@ -108,9 +128,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         if (selectedTab == null) return;
 
 
-        int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double buttonRelW = (double) BUTTON_W * internalScaling * guiScale / pxWidth;
-        double buttonRelH = (double) BUTTON_H * internalScaling * guiScale / pxHeight;
         ArrayList<String> options = new ArrayList<>();
 
 
@@ -177,23 +194,46 @@ public class CharacterCustomizationGUI extends GUIScreen
         switch (selectedTab)
         {
             case "Body":
+                //String selectors
                 switch (selectedOption)
                 {
                     case "Race":
+                        addStringSelector("Race", packet.races.keySet(), packet.racesPremium.keySet());
+                        break;
+
                     case "Race Variant":
+                        if (race == null) break;
+                        addStringSelector("Race Variant", race.raceVariants, race.premiumRaceVariants);
+                        break;
+
                     case "Tail":
+                        if (race == null) break;
+                        addStringSelector("Tail", race.tails);
+                        break;
+
                     case "Bare Arms":
+                        if (race == null) break;
+                        addStringSelector("Bare Arms", packet.bareArms);
+                        break;
+
                     case "Body Type":
+                        //TODO
+                        break;
+
                     case "Chest":
-                        //TODO string selector
+                        //TODO
                         break;
 
+
+                    //Color selectors or HSV sliders, depending on race
                     case "Skin Color":
-                        //TODO color selector or HSV sliders, depending on race
+                        //TODO
                         break;
 
+
+                    //Sliders
                     case "Scale":
-                        //TODO slider
+                        //TODO
                         break;
                 }
                 break;
@@ -202,18 +242,39 @@ public class CharacterCustomizationGUI extends GUIScreen
             case "Head":
                 switch (selectedOption)
                 {
+                    //String selectors
                     case "Hair (Base)":
-                    case "Hair (Front)":
-                    case "Hair (Back)":
-                    case "Hair (Top/Overall 1)":
-                    case "Hair (Top/Overall 2)":
-                    case "Eyes":
-                        //TODO string selector
+                        //TODO
                         break;
 
+                    case "Hair (Front)":
+                        //TODO
+                        break;
+
+                    case "Hair (Back)":
+                        //TODO
+                        break;
+
+                    case "Hair (Top/Overall 1)":
+                        //TODO
+                        break;
+
+                    case "Hair (Top/Overall 2)":
+                        //TODO
+                        break;
+
+                    case "Eyes":
+                        //TODO
+                        break;
+
+
+                    //Color selectors or HSV sliders, depending on race
                     case "Hair Color":
+                        //TODO
+                        break;
+
                     case "Eye Color":
-                        //TODO color selector or HSV sliders, depending on race
+                        //TODO
                         break;
                 }
                 break;
@@ -222,18 +283,55 @@ public class CharacterCustomizationGUI extends GUIScreen
             case "Accessories":
                 switch (selectedOption)
                 {
+                    //String selectors
                     case "Markings":
-                    case "Accessory (Head)":
-                    case "Accessory (Face)":
-                        //TODO string selector
+                        //TODO
                         break;
 
+                    case "Accessory (Head)":
+                        //TODO
+                        break;
+
+                    case "Accessory (Face)":
+                        //TODO
+                        break;
+
+
+                    //Color selectors or HSV sliders, depending on race
                     case "Color 1":
+                        //TODO
+                        break;
+
                     case "Color 2":
-                        //TODO color selector or HSV sliders, depending on race
+                        //TODO
                         break;
                 }
                 break;
+        }
+    }
+
+    protected void addStringSelector(String key, Collection<String>... selections)
+    {
+        String current = ccCompound.getString(key);
+        ArrayList<String> options = new ArrayList<>();
+        for (Collection<String> selectionSet : selections) options.addAll(selectionSet);
+
+
+        double yy = (1 - buttonRelH * Math.ceil(options.size() / 2d)) / 2;
+        for (int i = 0; i < options.size(); i++)
+        {
+            String buttonText = options.get(i);
+            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 : buttonRelW * 3, yy, buttonText);
+            button.addClickActions(() ->
+            {
+                if (buttonText.equals(current)) ccCompound.removeTag(key);
+                else ccCompound.setString(key, buttonText);
+                recalc();
+            });
+            if (buttonText.equals(current)) button.setActive(true);
+
+            root.add(button);
+            if (i % 2 == 1) yy += buttonRelH;
         }
     }
 
@@ -267,6 +365,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         root.clear();
         super.recalc();
 
+        preCalc();
         addAll();
 
         root.recalc(0);

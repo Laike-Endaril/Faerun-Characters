@@ -137,6 +137,6 @@ public class CharacterCustomization
 
 
         Teleport.joinTempCopy(player, data.getFullName());
-        Network.WRAPPER.sendTo(new Network.CharacterCustomizationGUIPacket(), player);
+        Network.WRAPPER.sendTo(new Network.CharacterCustomizationGUIPacket(player), player);
     }
 }
