@@ -116,7 +116,8 @@ public class CharacterCustomization
         boolean noChoices = true;
         for (HashSet<T> set : sets)
         {
-            if (set == null) continue;
+            if (set == null || set.size() == 0) continue;
+
             if (set.contains(value)) return true;
             noChoices = false;
         }
