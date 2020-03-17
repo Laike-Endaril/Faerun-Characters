@@ -1,5 +1,8 @@
-package com.fantasticsource.faeruncharacters;
+package com.fantasticsource.faeruncharacters.gui;
 
+import com.fantasticsource.faeruncharacters.CRace;
+import com.fantasticsource.faeruncharacters.CharacterCustomization;
+import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
@@ -24,7 +27,9 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class CharacterCustomizationGUI extends GUIScreen
 {
     public static final int
-            BUTTON_W = 128, BUTTON_H = 16, GAP_W = 4,
+            BUTTON_W = 128, BUTTON_H = 16,
+            GAP_W = 4,
+            SLIDER_W = 128, SLIDER_H = 16,
 
     //Definitions for what we want to allow for
     TOTAL_W = BUTTON_W * 4 + GAP_W,
@@ -32,7 +37,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     public static final HashSet<String> bodyTypes = new HashSet<>();
-    public static double internalScaling, buttonRelW, buttonRelH, gapRelW;
+    public static double internalScaling, buttonRelW, buttonRelH, gapRelW, sliderRelH;
 
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
@@ -48,7 +53,9 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_active.png"),
             TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_premium_idle.png"),
             TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_premium_hover.png"),
-            TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png");
+            TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png"),
+            TEX_SLIDER_BAR = new ResourceLocation(MODID, "image/slider_bar.png"),
+            TEX_SLIDER_KNOB = new ResourceLocation(MODID, "image/slider_knob.png");
 
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
 
@@ -88,10 +95,13 @@ public class CharacterCustomizationGUI extends GUIScreen
         if (internalScaling2 != 0) internalScaling = internalScaling2;
 
 
-        //Calc relative button size
+        //Calc relative element sizes
         buttonRelW = (double) BUTTON_W * internalScaling * mcScale / pxWidth;
         buttonRelH = (double) BUTTON_H * internalScaling * mcScale / pxHeight;
+
         gapRelW = (double) GAP_W * internalScaling * mcScale / pxWidth;
+
+        sliderRelH = (double) SLIDER_H * internalScaling * mcScale / pxHeight;
     }
 
     protected void addAll()
@@ -244,7 +254,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //Sliders
                     case "Scale":
                         if (race == null) break;
-                        //TODO
+                        addSingleSlider(selectedOption, race.renderScaleMin, race.renderScaleMax);
                         break;
                 }
                 break;
@@ -377,6 +387,20 @@ public class CharacterCustomizationGUI extends GUIScreen
             root.add(button);
             if (i % 2 == 1) yy += buttonRelH;
         }
+    }
+
+
+    protected void addSingleSlider(String key, double min, double max)
+    {
+        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, SLIDER_W * internalScaling, SLIDER_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
+        slider.setValue(ccCompound.getDouble(key));
+        slider.addDragActions(() ->
+        {
+            ccCompound.setDouble(key, slider.getValue());
+            Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
+        });
+
+        root.add(slider);
     }
 
 

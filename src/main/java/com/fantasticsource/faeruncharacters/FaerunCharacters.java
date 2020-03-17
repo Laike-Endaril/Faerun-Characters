@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.tools.Tools;

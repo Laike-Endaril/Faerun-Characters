@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
