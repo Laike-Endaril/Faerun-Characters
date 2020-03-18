@@ -34,9 +34,11 @@ public class Network
     public static void init()
     {
         WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
-        WRAPPER.registerMessage(SetCCPacketHandler.class, SetCCPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetBodyTypePacketHandler.class, SetBodyTypePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetChestTypePacketHandler.class, SetChestTypePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCStringPacketHandler.class, SetCCStringPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCIntPacketHandler.class, SetCCIntPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCDoublePacketHandler.class, SetCCDoublePacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -148,51 +150,6 @@ public class Network
     }
 
 
-    public static class SetCCPacket implements IMessage
-    {
-        public NBTTagCompound ccCompound;
-
-        public SetCCPacket()
-        {
-            //Required
-        }
-
-        public SetCCPacket(NBTTagCompound ccCompound)
-        {
-            this.ccCompound = ccCompound;
-        }
-
-        @Override
-        public void toBytes(ByteBuf buf)
-        {
-            ByteBufUtils.writeUTF8String(buf, ccCompound.toString());
-        }
-
-        @Override
-        public void fromBytes(ByteBuf buf)
-        {
-            try
-            {
-                ccCompound = JsonToNBT.getTagFromJson(ByteBufUtils.readUTF8String(buf));
-            }
-            catch (NBTException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static class SetCCPacketHandler implements IMessageHandler<SetCCPacket, IMessage>
-    {
-        @Override
-        public IMessage onMessage(SetCCPacket packet, MessageContext ctx)
-        {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> CharacterTags.setCC(ctx.getServerHandler().player, packet.ccCompound));
-            return null;
-        }
-    }
-
-
     public static class SetBodyTypePacket implements IMessage
     {
         public String type;
@@ -225,7 +182,13 @@ public class Network
         @Override
         public IMessage onMessage(SetBodyTypePacket packet, MessageContext ctx)
         {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> RenderModes.setRenderMode(ctx.getServerHandler().player, "Body", packet.type));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    RenderModes.setRenderMode(ctx.getServerHandler().player, "Body", packet.type);
+                }
+            });
             return null;
         }
     }
@@ -263,7 +226,156 @@ public class Network
         @Override
         public IMessage onMessage(SetChestTypePacket packet, MessageContext ctx)
         {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> RenderModes.setRenderMode(ctx.getServerHandler().player, "Chest", packet.type));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    RenderModes.setRenderMode(ctx.getServerHandler().player, "Chest", packet.type);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class SetCCStringPacket implements IMessage
+    {
+        String key, value;
+
+        public SetCCStringPacket()
+        {
+            //Required
+        }
+
+        public SetCCStringPacket(String key, String value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, key);
+            ByteBufUtils.writeUTF8String(buf, value);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            key = ByteBufUtils.readUTF8String(buf);
+            value = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class SetCCStringPacketHandler implements IMessageHandler<SetCCStringPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetCCStringPacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    CharacterTags.getCC(ctx.getServerHandler().player).setString(packet.key, packet.value);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class SetCCIntPacket implements IMessage
+    {
+        String key;
+        int value;
+
+        public SetCCIntPacket()
+        {
+            //Required
+        }
+
+        public SetCCIntPacket(String key, int value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, key);
+            buf.writeInt(value);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            key = ByteBufUtils.readUTF8String(buf);
+            value = buf.readInt();
+        }
+    }
+
+    public static class SetCCIntPacketHandler implements IMessageHandler<SetCCIntPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetCCIntPacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    CharacterTags.getCC(ctx.getServerHandler().player).setInteger(packet.key, packet.value);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class SetCCDoublePacket implements IMessage
+    {
+        String key;
+        double value;
+
+        public SetCCDoublePacket()
+        {
+            //Required
+        }
+
+        public SetCCDoublePacket(String key, double value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, key);
+            buf.writeDouble(value);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            key = ByteBufUtils.readUTF8String(buf);
+            value = buf.readDouble();
+        }
+    }
+
+    public static class SetCCDoublePacketHandler implements IMessageHandler<SetCCDoublePacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetCCDoublePacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    CharacterTags.getCC(ctx.getServerHandler().player).setDouble(packet.key, packet.value);
+                }
+            });
             return null;
         }
     }
