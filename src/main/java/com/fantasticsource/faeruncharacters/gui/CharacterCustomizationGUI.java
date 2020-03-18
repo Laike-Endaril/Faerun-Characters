@@ -27,13 +27,12 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class CharacterCustomizationGUI extends GUIScreen
 {
     public static final int
-            BUTTON_W = 128, BUTTON_H = 16,
+            ELEMENT_W = 128, ELEMENT_H = 16,
             GAP_W = 4,
-            SLIDER_W = 128, SLIDER_H = 16,
 
     //Definitions for what we want to allow for
-    TOTAL_W = BUTTON_W * 4 + GAP_W,
-            TOTAL_H = BUTTON_H * 15;
+    TOTAL_W = ELEMENT_W * 4 + GAP_W,
+            TOTAL_H = ELEMENT_H * 15;
 
 
     public static final HashSet<String> bodyTypes = new HashSet<>();
@@ -55,7 +54,8 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_premium_hover.png"),
             TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png"),
             TEX_SLIDER_BAR = new ResourceLocation(MODID, "image/slider_bar.png"),
-            TEX_SLIDER_KNOB = new ResourceLocation(MODID, "image/slider_knob.png");
+            TEX_SLIDER_KNOB = new ResourceLocation(MODID, "image/slider_knob.png"),
+            TEX_SINGLE_COLOR = new ResourceLocation(MODID, "image/single_color.png");
 
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
 
@@ -96,12 +96,12 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
         //Calc relative element sizes
-        buttonRelW = (double) BUTTON_W * internalScaling * mcScale / pxWidth;
-        buttonRelH = (double) BUTTON_H * internalScaling * mcScale / pxHeight;
+        buttonRelW = (double) ELEMENT_W * internalScaling * mcScale / pxWidth;
+        buttonRelH = (double) ELEMENT_H * internalScaling * mcScale / pxHeight;
 
         gapRelW = (double) GAP_W * internalScaling * mcScale / pxWidth;
 
-        sliderRelH = (double) SLIDER_H * internalScaling * mcScale / pxHeight;
+        sliderRelH = (double) ELEMENT_H * internalScaling * mcScale / pxHeight;
     }
 
     protected void addAll()
@@ -119,7 +119,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected void addTabs()
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double buttonRelH = (double) BUTTON_H * internalScaling * guiScale / pxHeight;
+        double buttonRelH = (double) ELEMENT_H * internalScaling * guiScale / pxHeight;
 
         double yy = (1 - buttonRelH * TAB_NAMES.length) / 2;
         for (int i = 0; i < TAB_NAMES.length; i++)
@@ -247,7 +247,8 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //Color selectors or HSV sliders, depending on race
                     case "Skin Color":
                         if (race == null) break;
-                        //TODO
+                        if (race.skinColors != null) addColorSelector(selectedOption, race.skinColors.toArray(new Color[0]));
+                        else addHSVSliders(selectedOption);
                         break;
 
 
@@ -293,11 +294,23 @@ public class CharacterCustomizationGUI extends GUIScreen
 
                     //Color selectors or HSV sliders, depending on race
                     case "Hair Color":
-                        //TODO
+                        if (race == null) break;
+                        if (race.skinColorSetsHairColor)
+                        {
+                            if (race.skinColors != null) addColorSelector("Skin Color", race.skinColors.toArray(new Color[0]));
+                            else addHSVSliders("Skin Color");
+                        }
+                        else
+                        {
+                            if (race.hairColors != null) addColorSelector(selectedOption, race.hairColors.toArray(new Color[0]));
+                            else addHSVSliders(selectedOption);
+                        }
                         break;
 
                     case "Eye Color":
-                        //TODO
+                        if (race == null) break;
+                        if (race.eyeColors != null) addColorSelector(selectedOption, race.eyeColors.toArray(new Color[0]));
+                        else addHSVSliders(selectedOption);
                         break;
                 }
                 break;
@@ -325,11 +338,13 @@ public class CharacterCustomizationGUI extends GUIScreen
 
                     //Color selectors or HSV sliders, depending on race
                     case "Color 1":
-                        //TODO
+                        if (race == null) break;
+                        addHSVSliders(selectedOption);
                         break;
 
                     case "Color 2":
-                        //TODO
+                        if (race == null) break;
+                        addHSVSliders(selectedOption);
                         break;
                 }
                 break;
@@ -392,7 +407,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addSingleSlider(String key, double min, double max)
     {
-        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, SLIDER_W * internalScaling, SLIDER_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
         slider.setValue(ccCompound.getDouble(key));
         slider.addDragActions(() ->
         {
@@ -404,6 +419,39 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
+    protected void addColorSelector(String key, Color... colors)
+    {
+        Color current = new Color(ccCompound.getInteger(key));
+
+
+        double yy = (1 - buttonRelH * Math.ceil(colors.length / 2d)) / 2;
+        for (int i = 0; i < colors.length; i++)
+        {
+            Color buttonColor = colors[i];
+
+            GUIButton button = makeColorButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonColor);
+            button.addClickActions(() ->
+            {
+                if (buttonColor.equals(current)) ccCompound.removeTag(key);
+                else ccCompound.setInteger(key, buttonColor.color());
+                Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
+
+                recalc();
+            });
+            if (buttonColor.equals(current)) button.setActive(true);
+
+            root.add(button);
+            if (i % 2 == 1) yy += buttonRelH;
+        }
+    }
+
+
+    protected void addHSVSliders(String key)
+    {
+        //TODO
+    }
+
+
     protected GUIButton makeButton(double x, double y, String text)
     {
         return makeButton(x, y, text, false);
@@ -411,17 +459,35 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected GUIButton makeButton(double x, double y, String text, boolean premium)
     {
-        GUIImage active = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
+        GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
         active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
         active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, internalScaling));
 
-        GUIImage hover = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
+        GUIImage hover = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
         hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
         hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, internalScaling));
 
-        GUIImage idle = new GUIImage(this, BUTTON_W * internalScaling, BUTTON_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
+        GUIImage idle = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
         idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
         idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, internalScaling));
+
+        return new GUIButton(this, x, y, idle, hover, active, true);
+    }
+
+
+    protected GUIButton makeColorButton(double x, double y, Color color)
+    {
+        GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_BUTTON_ACTIVE);
+        active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+        active.add(new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SINGLE_COLOR, color));
+
+        GUIImage hover = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_BUTTON_HOVER);
+        hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+        hover.add(new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SINGLE_COLOR, color));
+
+        GUIImage idle = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_BUTTON_IDLE);
+        idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+        idle.add(new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SINGLE_COLOR, color));
 
         return new GUIButton(this, x, y, idle, hover, active, true);
     }
