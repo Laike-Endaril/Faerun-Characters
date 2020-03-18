@@ -91,10 +91,10 @@ public class GUIHorizontalSlider extends GUIImage
 
     protected void setValueByMouseX()
     {
-        double xx = absoluteX(), ww = absoluteWidth(), hh = absoluteHeight();
+        double xx = absolutePxX(), ww = absolutePxWidth(), hh = absolutePxHeight();
 
         double x1 = xx + hh / 2, x2 = xx + ww - hh / 2;
-        double percent = Tools.min(Tools.max((mouseX() - x1) / (x2 - x1), 0), 1);
+        double percent = Tools.min(Tools.max((mouseX() * screen.pxWidth - x1) / (x2 - x1), 0), 1);
 
         value = minValue + (maxValue - minValue) * percent;
         knob.x = (1 - knob.width) * percent;

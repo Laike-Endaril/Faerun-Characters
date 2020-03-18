@@ -1,5 +1,3 @@
-Fix horizontal sliders' mouse tracking; it's got the wrong offsets for the ends
-
 Make sure all sliders actually save and load data correctly
 
 
