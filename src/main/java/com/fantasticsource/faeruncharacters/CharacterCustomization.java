@@ -8,7 +8,6 @@ import com.fantasticsource.instances.server.Teleport;
 import com.fantasticsource.instances.world.dimensions.template.WorldProviderTemplate;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
-import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -137,6 +136,7 @@ public class CharacterCustomization
 
 
         Teleport.joinTempCopy(player, data.getFullName());
+        Teleport.teleport(player, player.dimension, player.posX, player.posY, player.posZ, 0, 0);
         Network.WRAPPER.sendTo(new Network.CharacterCustomizationGUIPacket(player), player);
     }
 }

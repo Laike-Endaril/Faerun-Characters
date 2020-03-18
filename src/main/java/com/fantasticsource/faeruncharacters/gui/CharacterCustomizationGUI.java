@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters.gui;
 
 import com.fantasticsource.faeruncharacters.CRace;
+import com.fantasticsource.faeruncharacters.Camera;
 import com.fantasticsource.faeruncharacters.CharacterCustomization;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
@@ -82,10 +83,15 @@ public class CharacterCustomizationGUI extends GUIScreen
         this.packet = packet;
         ccCompound = packet.ccCompound;
 
-        Minecraft.getMinecraft().displayGuiScreen(this);
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.displayGuiScreen(this);
 
         preCalc();
         addAll();
+
+
+        //Set to camera view
+        Camera.active = true;
     }
 
 
@@ -435,6 +441,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeColorButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonColor);
             button.addClickActions(() ->
             {
+                Camera.active = false;
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setInteger(key, buttonColor.color());
                 Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, buttonColor.color()));
