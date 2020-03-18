@@ -22,7 +22,7 @@ public class GUIHorizontalSlider extends GUIImage
 
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.value = (minValue + maxValue) / 2;
+        this.value = minValue;
 
         knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
@@ -34,7 +34,7 @@ public class GUIHorizontalSlider extends GUIImage
 
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.value = (minValue + maxValue) / 2;
+        this.value = minValue;
 
         knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture, color);
         add(knob);
@@ -46,7 +46,7 @@ public class GUIHorizontalSlider extends GUIImage
 
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.value = (minValue + maxValue) / 2;
+        this.value = minValue;
 
         knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
@@ -58,7 +58,7 @@ public class GUIHorizontalSlider extends GUIImage
 
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.value = (minValue + maxValue) / 2;
+        this.value = minValue;
 
         knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture, color);
         add(knob);

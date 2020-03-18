@@ -55,7 +55,10 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png"),
             TEX_SLIDER_BAR = new ResourceLocation(MODID, "image/slider_bar.png"),
             TEX_SLIDER_KNOB = new ResourceLocation(MODID, "image/slider_knob.png"),
-            TEX_SINGLE_COLOR = new ResourceLocation(MODID, "image/single_color.png");
+            TEX_SINGLE_COLOR = new ResourceLocation(MODID, "image/single_color.png"),
+            TEX_SLIDER_HUE = new ResourceLocation(MODID, "image/slider_hue.png"),
+            TEX_SLIDER_SATURATION = new ResourceLocation(MODID, "image/slider_saturation.png"),
+            TEX_SLIDER_GRADIENT = new ResourceLocation(MODID, "image/slider_gradient.png");
 
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
 
@@ -255,7 +258,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //Sliders
                     case "Scale":
                         if (race == null) break;
-                        addSingleSlider(selectedOption, race.renderScaleMin, race.renderScaleMax);
+                        addSingleSliderDouble(selectedOption, race.renderScaleMin, race.renderScaleMax);
                         break;
                 }
                 break;
@@ -405,7 +408,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addSingleSlider(String key, double min, double max)
+    protected void addSingleSliderDouble(String key, double min, double max)
     {
         GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
         slider.setValue(ccCompound.getDouble(key));
@@ -448,7 +451,28 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addHSVSliders(String key)
     {
-        //TODO
+        Color color = new Color(ccCompound.getInteger(key));
+
+        GUIHorizontalSlider hueSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2 - sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_HUE, TEX_SLIDER_KNOB);
+        hueSlider.setValue(color.h());
+
+        GUIHorizontalSlider satSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_SATURATION, TEX_SLIDER_KNOB);
+        satSlider.setValue(color.s());
+        GUIImage satOverlay = new GUIImage(this, ELEMENT_W * internalScaling * .85, ELEMENT_H * internalScaling * .85, TEX_SLIDER_GRADIENT, new Color(0).setColorHSV(color.h(), 255, 255, 255));
+        satSlider.add(satOverlay);
+
+        GUIHorizontalSlider valSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2 + sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_BUTTON_ACTIVE, TEX_SLIDER_KNOB);
+        valSlider.setValue(color.v());
+
+        hueSlider.addDragActions(() ->
+        {
+            Color c = new Color(0).setColorHSV((int) hueSlider.getValue(), (int) satSlider.getValue(), (int) valSlider.getValue(), color.a());
+            satOverlay.setColor(new Color(0).setColorHSV((int) hueSlider.getValue(), 255, 255, 255));
+            ccCompound.setInteger(key, c.color());
+            Network.WRAPPER.sendToServer(new Network.SetCCPacket(ccCompound));
+        });
+
+        root.addAll(hueSlider, satSlider, valSlider);
     }
 
 
