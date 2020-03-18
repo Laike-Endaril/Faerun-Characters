@@ -1,8 +1,4 @@
-Make sure all sliders actually save and load data correctly
-
-
-
-Systems for all standard render modes, for NPCs as well as players
+All character customization render systems, for NPCs as well as players
 
 
 

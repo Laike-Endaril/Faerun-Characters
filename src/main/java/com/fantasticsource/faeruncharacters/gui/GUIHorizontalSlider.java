@@ -24,7 +24,7 @@ public class GUIHorizontalSlider extends GUIImage
         this.maxValue = maxValue;
         this.value = minValue;
 
-        knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture);
+        knob = new GUIImage(screen, 0, 0, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
     }
 
@@ -36,7 +36,7 @@ public class GUIHorizontalSlider extends GUIImage
         this.maxValue = maxValue;
         this.value = minValue;
 
-        knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture, color);
+        knob = new GUIImage(screen, 0, 0, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
     }
 
@@ -48,7 +48,7 @@ public class GUIHorizontalSlider extends GUIImage
         this.maxValue = maxValue;
         this.value = minValue;
 
-        knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture);
+        knob = new GUIImage(screen, 0, 0, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
     }
 
@@ -60,7 +60,7 @@ public class GUIHorizontalSlider extends GUIImage
         this.maxValue = maxValue;
         this.value = minValue;
 
-        knob = new GUIImage(screen, unscaledHeight, unscaledHeight, knobTexture, color);
+        knob = new GUIImage(screen, 0, 0, unscaledHeight, unscaledHeight, knobTexture);
         add(knob);
     }
 
@@ -105,7 +105,7 @@ public class GUIHorizontalSlider extends GUIImage
         double percent = Tools.min(Tools.max((value - minValue) / (maxValue - minValue), 0), 1);
 
         this.value = minValue + (maxValue - minValue) * percent;
-        knob.x = (width - height) * percent;
+        knob.x = (1 - knob.width) * percent;
     }
 
     public double getValue()
