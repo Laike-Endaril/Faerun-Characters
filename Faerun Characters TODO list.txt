@@ -1,9 +1,4 @@
-Figure out why saturation overlay won't draw while fully scaled and added to saturation slider
-Scaling it down a bit makes it draw...some kind of hard-culling based on size somewhere?
-
 Fix horizontal sliders' mouse tracking; it's got the wrong offsets for the ends
-
-Finish HSV sliders
 
 Make sure all sliders actually save and load data correctly
 
