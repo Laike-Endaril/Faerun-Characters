@@ -14,6 +14,7 @@ import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -91,7 +92,11 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
         //Set to camera view
+        EntityPlayer player = mc.player;
         Camera.active = true;
+        Camera.x = player.posX;
+        Camera.y = player.posY;
+        Camera.z = player.posZ - 20;
     }
 
 
@@ -441,7 +446,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeColorButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonColor);
             button.addClickActions(() ->
             {
-                Camera.active = false;
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setInteger(key, buttonColor.color());
                 Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, buttonColor.color()));
