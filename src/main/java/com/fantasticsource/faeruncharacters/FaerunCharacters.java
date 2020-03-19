@@ -35,6 +35,7 @@ public class FaerunCharacters
     public static void preInit(FMLPreInitializationEvent event) throws IOException
     {
         Network.init();
+        CharacterCustomization.init();
 
         FLibAPI.attachNBTCapToEntityIf(MODID, entity -> entity instanceof EntityLivingBase);
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);

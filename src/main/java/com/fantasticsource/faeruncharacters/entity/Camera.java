@@ -2,6 +2,7 @@ package com.fantasticsource.faeruncharacters.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -104,6 +105,26 @@ public class Camera extends ClientEntity
 
         super.onUpdate();
     }
+
+    public void setPosition(Vec3d vec)
+    {
+        setPosition(vec.x, vec.y, vec.z);
+    }
+
+    @Override
+    public void setPosition(double x, double y, double z)
+    {
+        posX = x;
+        posY = y;
+        posZ = z;
+    }
+
+    @Override
+    public float getEyeHeight()
+    {
+        return 0;
+    }
+
 
     @SubscribeEvent
     public static void renderPlayerPre(RenderPlayerEvent.Pre event)
