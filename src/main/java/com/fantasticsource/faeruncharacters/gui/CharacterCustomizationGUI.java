@@ -1,10 +1,10 @@
 package com.fantasticsource.faeruncharacters.gui;
 
 import com.fantasticsource.faeruncharacters.CRace;
-import com.fantasticsource.faeruncharacters.Camera;
 import com.fantasticsource.faeruncharacters.CharacterCustomization;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.entity.Camera;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
@@ -93,10 +93,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         //Set to camera view
         EntityPlayer player = mc.player;
-        Camera.active = true;
-        Camera.x = player.posX;
-        Camera.y = player.posY;
-        Camera.z = player.posZ - 20;
+        Camera.getCamera().activate(player.world, player.posX, player.posY, player.posZ, 135, 45);
     }
 
 
