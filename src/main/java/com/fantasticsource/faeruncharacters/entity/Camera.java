@@ -39,7 +39,15 @@ public class Camera extends ClientEntity
 
     public void activate(World world, double x, double y, double z, float yaw, float pitch)
     {
-        if (active) deactivate();
+        if (active)
+        {
+            if (world != this.world) deactivate();
+            else
+            {
+                setPositionAndRotation(x, y, z, yaw, pitch);
+                return;
+            }
+        }
 
 
         //Set state
@@ -106,6 +114,19 @@ public class Camera extends ClientEntity
         super.onUpdate();
     }
 
+    public void setPositionAndRotation(Vec3d position, float yaw, float pitch)
+    {
+        setPosition(position);
+        setRotation(yaw, pitch);
+    }
+
+    @Override
+    public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch)
+    {
+        setPosition(x, y, z);
+        setRotation(yaw, pitch);
+    }
+
     public void setPosition(Vec3d vec)
     {
         setPosition(vec.x, vec.y, vec.z);
@@ -115,8 +136,20 @@ public class Camera extends ClientEntity
     public void setPosition(double x, double y, double z)
     {
         posX = x;
+        prevPosX = x;
         posY = y;
+        prevPosY = y;
         posZ = z;
+        prevPosZ = z;
+    }
+
+    @Override
+    public void setRotation(float yaw, float pitch)
+    {
+        rotationYaw = yaw;
+        prevRotationYaw = yaw;
+        rotationPitch = pitch;
+        prevRotationPitch = pitch;
     }
 
     @Override

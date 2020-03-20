@@ -5,22 +5,18 @@ import com.fantasticsource.faeruncharacters.CharacterCustomization;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.entity.Camera;
-import com.fantasticsource.mctools.ClientTickTimer;
-import com.fantasticsource.mctools.Render;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.textured.GUIImage;
 import com.fantasticsource.tools.Tools;
-import com.fantasticsource.tools.TrigLookupTable;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -96,44 +92,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         //Set to camera view
         EntityPlayer player = mc.player;
-        Camera.getCamera().activate(player.world, player.posX, player.posY + player.height / 2, player.posZ, (float) (180), 0);
-        initCam(Render.getCameraPosition());
-    }
-
-    protected void initCam(Vec3d nonCamOriginVec)
-    {
-        Vec3d currentOriginVec = Render.getCameraPosition();
-        if (currentOriginVec.equals(nonCamOriginVec))
-        {
-            ClientTickTimer.schedule(1, () -> initCam(nonCamOriginVec));
-        }
-        else adjustCam(currentOriginVec);
-    }
-
-    protected void adjustCam(Vec3d centeredCamOriginVec)
-    {
-        try
-        {
-            Camera camera = Camera.getCamera();
-
-            double zNearDist = Render.getStoredZNearDist(), zTargetDist = zNearDist + centeredCamOriginVec.distanceTo(camera.getPositionVector());
-
-            //1/4 the total horizontal FOV angle
-            float angleDif = (float) Tools.radtodeg(TrigLookupTable.TRIG_TABLE_1024.arctan(Render.getStoredZNearWidth() / 2 / zNearDist) / 2);
-
-            Vec3d vec2 = centeredCamOriginVec.add(Vec3d.fromPitchYaw(0, camera.rotationYaw + angleDif).scale(zTargetDist));
-
-            camera.setPosition(camera.getPositionVector().scale(2).subtract(vec2));
-
-//            double offset = zNearW / zNearDist * zTargetDist / 4;
-//
-//            Vec3d newPos = camera.getPositionVector().add(Vec3d.fromPitchYaw(0, camera.rotationYaw - 90).scale(offset));
-//            camera.setPosition(newPos.x, newPos.y, newPos.z);
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
+        Camera.getCamera().activate(player.world, player.posX, player.posY + player.height / 2, player.posZ, 180, 0);
     }
 
 
@@ -161,13 +120,22 @@ public class CharacterCustomizationGUI extends GUIScreen
         race = packet.races.get(raceString);
         if (race == null) race = packet.racesPremium.get(raceString);
 
-        addTabs();
-        addOptions();
-        addControls();
+        GUIElement root2 = addCamControls();
+        addTabs(root2);
+        addOptions(root2);
+        addOptionControls(root2);
     }
 
 
-    protected void addTabs()
+    protected GUIElement addCamControls()
+    {
+        GUIElement result = new GUICCCameraController(this, 0, 0, 1, 1);
+        root.add(result);
+        return result;
+    }
+
+
+    protected void addTabs(GUIElement root)
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         double buttonRelH = (double) ELEMENT_H * internalScaling * guiScale / pxHeight;
@@ -191,7 +159,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addOptions()
+    protected void addOptions(GUIElement root)
     {
         if (selectedTab == null) return;
 
@@ -254,7 +222,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addControls()
+    protected void addOptionControls(GUIElement root)
     {
         if (selectedTab == null || selectedOption == null) return;
 

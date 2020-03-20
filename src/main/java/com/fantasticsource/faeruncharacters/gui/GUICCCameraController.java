@@ -1,0 +1,41 @@
+package com.fantasticsource.faeruncharacters.gui;
+
+import com.fantasticsource.faeruncharacters.entity.Camera;
+import com.fantasticsource.mctools.gui.element.GUIElement;
+import com.fantasticsource.tools.Tools;
+
+public class GUICCCameraController extends GUIElement
+{
+    protected double lastX, lastY;
+    protected CharacterCustomizationGUI gui;
+
+    public GUICCCameraController(CharacterCustomizationGUI screen, double x, double y, double width, double height)
+    {
+        super(screen, x, y, width, height);
+        gui = screen;
+    }
+
+    @Override
+    public boolean mousePressed(double x, double y, int button)
+    {
+        lastX = mouseX();
+        lastY = mouseY();
+        return super.mousePressed(x, y, button);
+    }
+
+    @Override
+    public void mouseDrag(double x, double y, int button)
+    {
+        if (active)
+        {
+            double mX = mouseX(), mY = mouseY();
+
+            Camera camera = Camera.getCamera();
+            camera.setRotation((float) Tools.posMod(camera.rotationYaw + (mX - lastX) * 550, 360), (float) Tools.min(Tools.max(camera.rotationPitch + (mY - lastY) * 250, -89), 89));
+            lastX = mX;
+            lastY = mY;
+        }
+
+        super.mouseDrag(x, y, button);
+    }
+}
