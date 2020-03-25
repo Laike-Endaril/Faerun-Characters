@@ -36,6 +36,9 @@ public class CharacterCustomizationGUI extends GUIScreen
     TOTAL_W = ELEMENT_W * 4 + GAP_W,
             TOTAL_H = ELEMENT_H * 15;
 
+    public static final double
+            W_PERCENT = 0.4, H_PERCENT = 1;
+
 
     public static final HashSet<String> bodyTypes = new HashSet<>();
     public static double internalScaling, buttonRelW, buttonRelH, gapRelW, sliderRelH;
@@ -98,11 +101,13 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void preCalc()
     {
-        //Highest internal scaling that results in a full-pixel multiple when multiplied by the current MC gui scaling
+        //Highest possible internal scaling that fits within bounds
         int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = Tools.min(0.5d * pxWidth / (TOTAL_W * mcScale), (double) pxHeight / (TOTAL_H * mcScale));
-        double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
-        if (internalScaling2 != 0) internalScaling = internalScaling2;
+        internalScaling = Tools.min(W_PERCENT * pxWidth / (TOTAL_W * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
+
+        //These two lined prioritize full-pixel scaling multiples
+//        double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
+//        if (internalScaling2 != 0) internalScaling = internalScaling2;
 
 
         //Calc relative element sizes
