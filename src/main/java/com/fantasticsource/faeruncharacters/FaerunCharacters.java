@@ -8,10 +8,12 @@ import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -88,6 +90,12 @@ public class FaerunCharacters
     {
         if (!(event.player instanceof EntityPlayerMP)) return;
 
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:head 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:chest 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:legs 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:feet 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:wings 10");
         CharacterCustomization.validate((EntityPlayerMP) event.player);
     }
 

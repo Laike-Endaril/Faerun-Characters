@@ -66,9 +66,9 @@ public class GUIHorizontalSlider extends GUIImage
 
 
     @Override
-    public boolean mousePressed(double x, double y, int button)
+    public boolean mousePressed(int button)
     {
-        setActive(super.mousePressed(x, y, button));
+        setActive(super.mousePressed(button));
 
         if (active)
         {
@@ -80,7 +80,7 @@ public class GUIHorizontalSlider extends GUIImage
     }
 
     @Override
-    public void mouseDrag(double x, double y, int button)
+    public void mouseDrag(int button)
     {
         if (active && button == 0)
         {

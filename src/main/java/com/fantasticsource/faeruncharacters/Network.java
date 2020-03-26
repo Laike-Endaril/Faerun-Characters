@@ -277,7 +277,7 @@ public class Network
             {
                 if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
-                    CharacterTags.getCC(ctx.getServerHandler().player).setString(packet.key, packet.value);
+                    CharacterTags.setCCSkin(ctx.getServerHandler().player, packet.key, packet.value);
                 }
             });
             return null;

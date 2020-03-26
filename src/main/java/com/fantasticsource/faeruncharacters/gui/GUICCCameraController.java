@@ -16,15 +16,15 @@ public class GUICCCameraController extends GUIElement
     }
 
     @Override
-    public boolean mousePressed(double x, double y, int button)
+    public boolean mousePressed(int button)
     {
         lastX = mouseX();
         lastY = mouseY();
-        return super.mousePressed(x, y, button);
+        return super.mousePressed(button);
     }
 
     @Override
-    public void mouseDrag(double x, double y, int button)
+    public void mouseDrag(int button)
     {
         if (active)
         {
@@ -36,6 +36,6 @@ public class GUICCCameraController extends GUIElement
             lastY = mY;
         }
 
-        super.mouseDrag(x, y, button);
+        super.mouseDrag(button);
     }
 }

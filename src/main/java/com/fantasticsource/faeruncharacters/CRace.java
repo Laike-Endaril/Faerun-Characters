@@ -5,6 +5,7 @@ import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.component.Component;
 import com.fantasticsource.tools.datastructures.Color;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -58,17 +59,17 @@ public class CRace extends Component
         //Body
         if (raceVariants.size() + premiumRaceVariants.size() == 0)
         {
-            System.err.println("No variants found for race: " + name);
+            System.err.println(TextFormatting.RED + "No variants found for race: " + name);
             return false;
         }
         if (skinColors != null && skinColors.size() == 0)
         {
-            System.err.println("No skin colors found for race: " + name);
+            System.err.println(TextFormatting.RED + "No skin colors found for race: " + name);
             return false;
         }
         if (chestSizes.size() == 0)
         {
-            System.err.println("No chest sizes found for race: " + name);
+            System.err.println(TextFormatting.RED + "No chest sizes found for race: " + name);
             return false;
         }
 
@@ -79,14 +80,14 @@ public class CRace extends Component
             {
                 if (hairSet.size() > 0)
                 {
-                    System.err.println("Found hair, but no hair colors for race: " + name);
+                    System.err.println(TextFormatting.RED + "Found hair, but no hair colors for race: " + name);
                     return false;
                 }
             }
         }
         if (eyes.size() + premiumEyes.size() > 0 && eyeColors != null && eyeColors.size() == 0)
         {
-            System.err.println("Found eyes, but no eye colors for race: " + name);
+            System.err.println(TextFormatting.RED + "Found eyes, but no eye colors for race: " + name);
             return false;
         }
 
@@ -212,7 +213,7 @@ public class CRace extends Component
 
 
             default:
-                System.err.println("Unknown key/value pair: <" + key + ">, <" + value + ">\nFor race: " + name);
+                System.err.println(TextFormatting.RED + "Unknown key/value pair: <" + key + ">, <" + value + ">\nFor race: " + name);
         }
     }
 
