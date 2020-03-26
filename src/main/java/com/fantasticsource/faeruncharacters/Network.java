@@ -34,7 +34,7 @@ public class Network
 
     public static void init()
     {
-        WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
+        WRAPPER.registerMessage(CharacterCustomizationGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(SetBodyTypePacketHandler.class, SetBodyTypePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetChestTypePacketHandler.class, SetChestTypePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCSkinPacketHandler.class, SetCCSkinPacket.class, discriminator++, Side.SERVER);
@@ -140,7 +140,7 @@ public class Network
         }
     }
 
-    public static class PersonalPortalGUIPacketHandler implements IMessageHandler<CharacterCustomizationGUIPacket, IMessage>
+    public static class CharacterCustomizationGUIPacketHandler implements IMessageHandler<CharacterCustomizationGUIPacket, IMessage>
     {
         @Override
         @SideOnly(Side.CLIENT)
