@@ -43,14 +43,8 @@ public class FaerunCharacters
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);
         CRace.init(event);
 
-        FaerunCharactersConfig.server.bareArmSkinSet.clear();
-        loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
-        FaerunCharactersConfig.server.markingsSet.clear();
-        loadSkins(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
-        FaerunCharactersConfig.server.headAccessorySet.clear();
-        loadSkins(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
-        FaerunCharactersConfig.server.faceAccessorySet.clear();
-        loadSkins(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories);
+
+        updateGlobalOptions();
     }
 
     @SubscribeEvent
@@ -73,6 +67,13 @@ public class FaerunCharacters
         CharacterCustomizationGUI.hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverPremiumButtonColor, true);
         CharacterCustomizationGUI.idleButtonColor = new Color(FaerunCharactersConfig.client.idlePremiumButtonColor, true);
 
+
+        updateGlobalOptions();
+    }
+
+
+    protected static void updateGlobalOptions()
+    {
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
         loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
         FaerunCharactersConfig.server.markingsSet.clear();
