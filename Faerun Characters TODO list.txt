@@ -1,5 +1,3 @@
-Implement wardrobe color stuff
-
 Change render modes to work on in-wardrobe skins as well
 
 Character customization render systems for NPCs
