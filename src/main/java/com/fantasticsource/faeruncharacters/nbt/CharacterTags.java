@@ -4,10 +4,13 @@ import com.fantasticsource.faeruncharacters.CRace;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
 import com.fantasticsource.mctools.aw.AWSkinGenerator;
+import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.LinkedHashMap;
 
@@ -16,6 +19,7 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class CharacterTags
 {
     protected static final LinkedHashMap<String, SkinSlotting> SKIN_SLOTTINGS = new LinkedHashMap<>();
+    protected static final LinkedHashMap<String, String> COLOR_KEYS = new LinkedHashMap<>();
 
     static
     {
@@ -31,6 +35,14 @@ public class CharacterTags
         SKIN_SLOTTINGS.put("Hair (Top/Overall 2)", new SkinSlotting("Hair (Top/Overall 2)", "armourers:head", 6));
         SKIN_SLOTTINGS.put("Accessory (Head)", new SkinSlotting("Accessory (Head)", "armourers:head", 7));
         SKIN_SLOTTINGS.put("Accessory (Face)", new SkinSlotting("Accessory (Face)", "armourers:head", 8));
+
+        COLOR_KEYS.put("Skin Color", "skin");
+        COLOR_KEYS.put("Eye Color", "eye");
+        COLOR_KEYS.put("Hair Color", "hair");
+        COLOR_KEYS.put("Color 1", "misc_1");
+        COLOR_KEYS.put("Color 2", "misc_2");
+        COLOR_KEYS.put("Color 3", "misc_3");
+        COLOR_KEYS.put("Color 4", "misc_4");
     }
 
     public static void setCC(EntityLivingBase livingBase, NBTTagCompound characterCustomization)
@@ -46,6 +58,28 @@ public class CharacterTags
     }
 
 
+    public static void setCCColor(EntityLivingBase livingBase, String key, Color value)
+    {
+        //These are wardrobe color channels, and should always have a paint type of 255 (alpha channel used for paint type)
+        String cmdKey = COLOR_KEYS.get(key);
+        if (cmdKey == null)
+        {
+            System.err.println(TextFormatting.RED + "Tried to set invalid color key (" + key + ")");
+            System.err.println(TextFormatting.RED + "...for entity..." + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
+            return;
+        }
+
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        int cmdColor = (value.r() << 16) | (value.g() << 8) | value.b();
+        String cmdColorHex = Integer.toHexString(cmdColor);
+        StringBuilder cmdHex = new StringBuilder("#");
+        for (int i = 6 - cmdColorHex.length(); i > 0; i--) cmdHex.append("0");
+        cmdHex.append(cmdColorHex);
+        server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
+
+        getCC(livingBase).setInteger(key, value.color());
+    }
+
     public static void setCCSkin(EntityLivingBase livingBase, String key, String value)
     {
         if (key.equals("Race"))
@@ -59,8 +93,9 @@ public class CharacterTags
                 return;
             }
 
+
             key = "Race Variant";
-            value = race.raceVariants.iterator().next();
+            value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
         }
 
 
@@ -89,6 +124,8 @@ public class CharacterTags
 
         GlobalInventory.setAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType, newSkin);
         GlobalInventory.syncAWWardrobeSkins(livingBase, true, true);
+
+        getCC(livingBase).setString(key, value);
     }
 
 

@@ -416,7 +416,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                         break;
 
                     default:
-                        Network.WRAPPER.sendToServer(new Network.SetCCStringPacket(key, buttonText));
+                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, buttonText));
                 }
 
                 recalc();
@@ -458,7 +458,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             {
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setInteger(key, buttonColor.color());
-                Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, buttonColor.color()));
+                Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, buttonColor.color()));
 
                 recalc();
             });
@@ -493,7 +493,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             satOverlay.setColor(new Color(0).setColorHSV((int) hueSlider.getValue(), 255, 255, 255));
             valOverlay.setColor(new Color(0).setColorHSV((int) hueSlider.getValue(), (int) satSlider.getValue(), 255, 255));
             ccCompound.setInteger(key, c.color());
-            Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, c.color()));
+            Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, c.color()));
         });
 
         satSlider.addDragActions(() ->
@@ -501,14 +501,14 @@ public class CharacterCustomizationGUI extends GUIScreen
             Color c = new Color(0).setColorHSV((int) hueSlider.getValue(), (int) satSlider.getValue(), (int) valSlider.getValue(), color.a());
             valOverlay.setColor(new Color(0).setColorHSV((int) hueSlider.getValue(), (int) satSlider.getValue(), 255, 255));
             ccCompound.setInteger(key, c.color());
-            Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, c.color()));
+            Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, c.color()));
         });
 
         valSlider.addDragActions(() ->
         {
             Color c = new Color(0).setColorHSV((int) hueSlider.getValue(), (int) satSlider.getValue(), (int) valSlider.getValue(), color.a());
             ccCompound.setInteger(key, c.color());
-            Network.WRAPPER.sendToServer(new Network.SetCCIntPacket(key, c.color()));
+            Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, c.color()));
         });
 
         root.addAll(hueSlider, satSlider, valSlider);

@@ -5,6 +5,7 @@ import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
+import com.fantasticsource.tools.datastructures.Color;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,7 +37,8 @@ public class Network
         WRAPPER.registerMessage(PersonalPortalGUIPacketHandler.class, CharacterCustomizationGUIPacket.class, discriminator++, Side.CLIENT);
         WRAPPER.registerMessage(SetBodyTypePacketHandler.class, SetBodyTypePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetChestTypePacketHandler.class, SetChestTypePacket.class, discriminator++, Side.SERVER);
-        WRAPPER.registerMessage(SetCCStringPacketHandler.class, SetCCStringPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCSkinPacketHandler.class, SetCCSkinPacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCColorPacketHandler.class, SetCCColorPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCIntPacketHandler.class, SetCCIntPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCDoublePacketHandler.class, SetCCDoublePacket.class, discriminator++, Side.SERVER);
     }
@@ -238,16 +240,16 @@ public class Network
     }
 
 
-    public static class SetCCStringPacket implements IMessage
+    public static class SetCCSkinPacket implements IMessage
     {
         String key, value;
 
-        public SetCCStringPacket()
+        public SetCCSkinPacket()
         {
             //Required
         }
 
-        public SetCCStringPacket(String key, String value)
+        public SetCCSkinPacket(String key, String value)
         {
             this.key = key;
             this.value = value;
@@ -268,16 +270,64 @@ public class Network
         }
     }
 
-    public static class SetCCStringPacketHandler implements IMessageHandler<SetCCStringPacket, IMessage>
+    public static class SetCCSkinPacketHandler implements IMessageHandler<SetCCSkinPacket, IMessage>
     {
         @Override
-        public IMessage onMessage(SetCCStringPacket packet, MessageContext ctx)
+        public IMessage onMessage(SetCCSkinPacket packet, MessageContext ctx)
         {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
             {
                 if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
                     CharacterTags.setCCSkin(ctx.getServerHandler().player, packet.key, packet.value);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class SetCCColorPacket implements IMessage
+    {
+        String key;
+        int value;
+
+        public SetCCColorPacket()
+        {
+            //Required
+        }
+
+        public SetCCColorPacket(String key, int value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, key);
+            buf.writeInt(value);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            key = ByteBufUtils.readUTF8String(buf);
+            value = buf.readInt();
+        }
+    }
+
+    public static class SetCCColorPacketHandler implements IMessageHandler<SetCCColorPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetCCColorPacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    CharacterTags.setCCColor(ctx.getServerHandler().player, packet.key, new Color(packet.value));
                 }
             });
             return null;
