@@ -109,23 +109,27 @@ public class CharacterTags
 
 
         ItemStack newSkin = AWSkinGenerator.generate(value, skinSlotting.skinType);
-        applyCCTag(newSkin, skinSlotting.name);
-
-        ItemStack oldSkin = GlobalInventory.getAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType);
-
-        if (oldSkin != null && !oldSkin.isEmpty() && !ccTagMatches(oldSkin, newSkin))
+        if (!newSkin.isEmpty())
         {
-            System.err.println(TextFormatting.RED + "Tried to set CC skin in wardrobe slot already filled with non-CC skin!");
-            System.err.println(TextFormatting.RED + "Entity: " + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
-            System.err.println(TextFormatting.RED + "Slot; " + skinSlotting.skinType + " #" + skinSlotting.indexWithinType);
-            System.err.println(TextFormatting.RED + "Existing item in slot: " + oldSkin.getDisplayName());
+            applyCCTag(newSkin, skinSlotting.name);
+
+            ItemStack oldSkin = GlobalInventory.getAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType);
+
+            if (oldSkin != null && !oldSkin.isEmpty() && !ccTagMatches(oldSkin, newSkin))
+            {
+                System.err.println(TextFormatting.RED + "Tried to set CC skin in wardrobe slot already filled with non-CC skin!");
+                System.err.println(TextFormatting.RED + "Entity: " + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
+                System.err.println(TextFormatting.RED + "Slot; " + skinSlotting.skinType + " #" + skinSlotting.indexWithinType);
+                System.err.println(TextFormatting.RED + "Existing item in slot: " + oldSkin.getDisplayName());
+            }
         }
 
 
         GlobalInventory.setAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType, newSkin);
         GlobalInventory.syncAWWardrobeSkins(livingBase, true, true);
 
-        getCC(livingBase).setString(key, value);
+        if (newSkin.isEmpty()) getCC(livingBase).removeTag(key);
+        else getCC(livingBase).setString(key, value);
     }
 
 

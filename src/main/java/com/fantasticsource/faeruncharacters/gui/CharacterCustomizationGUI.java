@@ -307,7 +307,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                     case "Hair (Top/Overall 1)":
                     case "Hair (Top/Overall 2)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.hairBase, race.premiumHairBase);
+                        addStringSelector(selectedOption, true, race.hairTop, race.premiumHairTop);
                         break;
 
                     case "Eyes":
@@ -403,20 +403,32 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonShortText, i >= selections.size());
             button.addClickActions(() ->
             {
-                if (buttonText.equals(current)) ccCompound.removeTag(key);
-                else ccCompound.setString(key, buttonText);
+                String messageValue;
+
+                if (buttonText.equals(current))
+                {
+                    ccCompound.removeTag(key);
+                    messageValue = "null";
+                }
+                else
+                {
+                    ccCompound.setString(key, buttonText);
+                    messageValue = buttonText;
+                }
+
+
                 switch (key)
                 {
                     case "Body Type":
-                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(buttonText));
+                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue));
                         break;
 
                     case "Chest Type":
-                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
+                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(messageValue));
                         break;
 
                     default:
-                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, buttonText));
+                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, messageValue));
                 }
 
                 recalc();

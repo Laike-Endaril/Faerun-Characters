@@ -105,7 +105,7 @@ public class FaerunCharacters
         boolean pool;
         for (String skinString : skinStrings)
         {
-            if (skinString.substring(0, 7).equals("folder:"))
+            if (skinString.length() >= 7 && skinString.substring(0, 7).equals("folder:"))
             {
                 pool = true;
                 skinString = skinString.replace("folder:", "");
