@@ -71,16 +71,16 @@ public class Network
             ByteBufUtils.writeUTF8String(buf, ccCompound.toString());
 
             buf.writeInt(FaerunCharactersConfig.server.bareArmSkinSet.size());
-            for (String bareArmSkin : FaerunCharactersConfig.server.bareArmSkinSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+            for (String skinName : FaerunCharactersConfig.server.bareArmSkinSet) ByteBufUtils.writeUTF8String(buf, skinName);
 
             buf.writeInt(FaerunCharactersConfig.server.markingsSet.size());
-            for (String bareArmSkin : FaerunCharactersConfig.server.markingsSet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+            for (String skinName : FaerunCharactersConfig.server.markingsSet) ByteBufUtils.writeUTF8String(buf, skinName);
 
             buf.writeInt(FaerunCharactersConfig.server.faceAccessorySet.size());
-            for (String bareArmSkin : FaerunCharactersConfig.server.faceAccessorySet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+            for (String skinName : FaerunCharactersConfig.server.faceAccessorySet) ByteBufUtils.writeUTF8String(buf, skinName);
 
             buf.writeInt(FaerunCharactersConfig.server.headAccessorySet.size());
-            for (String bareArmSkin : FaerunCharactersConfig.server.headAccessorySet) ByteBufUtils.writeUTF8String(buf, bareArmSkin);
+            for (String skinName : FaerunCharactersConfig.server.headAccessorySet) ByteBufUtils.writeUTF8String(buf, skinName);
 
             buf.writeInt(CRace.RACES.size());
             for (Map.Entry<String, CRace> entry : CRace.RACES.entrySet())

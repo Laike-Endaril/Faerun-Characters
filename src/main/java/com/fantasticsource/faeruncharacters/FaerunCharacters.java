@@ -42,15 +42,6 @@ public class FaerunCharacters
         FLibAPI.attachNBTCapToEntityIf(MODID, entity -> entity instanceof EntityLivingBase);
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);
         CRace.init(event);
-    }
-
-    @SubscribeEvent
-    public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
-    {
-        if (!event.getModID().equals(MODID)) return;
-
-
-        ConfigManager.sync(MODID, Config.Type.INSTANCE);
 
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
         loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
@@ -60,6 +51,14 @@ public class FaerunCharacters
         loadSkins(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
         FaerunCharactersConfig.server.faceAccessorySet.clear();
         loadSkins(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories);
+    }
+
+    @SubscribeEvent
+    public static void saveConfig(ConfigChangedEvent.OnConfigChangedEvent event)
+    {
+        if (!event.getModID().equals(MODID)) return;
+
+        ConfigManager.sync(MODID, Config.Type.INSTANCE);
     }
 
     @SubscribeEvent
