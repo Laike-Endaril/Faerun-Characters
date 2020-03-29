@@ -2,16 +2,16 @@ package com.fantasticsource.faeruncharacters.config;
 
 import net.minecraftforge.common.config.Config;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class ServerConfig
 {
     @Config.Ignore
-    public HashSet<String>
-            bareArmSkinSet = new HashSet<>(),
-            markingsSet = new HashSet<>(),
-            headAccessorySet = new HashSet<>(),
-            faceAccessorySet = new HashSet<>();
+    public LinkedHashSet<String>
+            bareArmSkinSet = new LinkedHashSet<>(),
+            markingsSet = new LinkedHashSet<>(),
+            headAccessorySet = new LinkedHashSet<>(),
+            faceAccessorySet = new LinkedHashSet<>();
 
     @Config.Name("Bare Arms")
     public String[] bareArms = new String[0];

@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class CharacterCustomization
 {
@@ -119,10 +119,10 @@ public class CharacterCustomization
     }
 
 
-    protected static <T> boolean checkMultiHashSet(T value, HashSet<T>... sets)
+    protected static <T> boolean checkMultiHashSet(T value, LinkedHashSet<T>... sets)
     {
         boolean noChoices = true;
-        for (HashSet<T> set : sets)
+        for (LinkedHashSet<T> set : sets)
         {
             if (set == null || set.size() == 0) continue;
 

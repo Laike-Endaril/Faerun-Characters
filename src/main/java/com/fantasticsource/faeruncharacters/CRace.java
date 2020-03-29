@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
@@ -32,21 +32,21 @@ public class CRace extends Component
 
 
     //Body
-    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), defaultTorsos = new HashSet<>(), defaultChests = new HashSet<>();
-    public HashSet<Color> skinColors = new HashSet<>();
-    public HashSet<String> chestSizes = new HashSet<>();
+    public LinkedHashSet<String> raceVariants = new LinkedHashSet<>(), premiumRaceVariants = new LinkedHashSet<>(), tails = new LinkedHashSet<>(), defaultTorsos = new LinkedHashSet<>(), defaultChests = new LinkedHashSet<>();
+    public LinkedHashSet<Color> skinColors = new LinkedHashSet<>();
+    public LinkedHashSet<String> chestSizes = new LinkedHashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
 
 
     //Head
-    public HashSet<String> hairBase = new HashSet<>(), premiumHairBase = new HashSet<>();
-    public HashSet<String> hairFront = new HashSet<>(), premiumHairFront = new HashSet<>();
-    public HashSet<String> hairBack = new HashSet<>(), premiumHairBack = new HashSet<>();
-    public HashSet<String> hairTop = new HashSet<>(), premiumHairTop = new HashSet<>();
-    public HashSet<Color> hairColors = new HashSet<>();
+    public LinkedHashSet<String> hairBase = new LinkedHashSet<>(), premiumHairBase = new LinkedHashSet<>();
+    public LinkedHashSet<String> hairFront = new LinkedHashSet<>(), premiumHairFront = new LinkedHashSet<>();
+    public LinkedHashSet<String> hairBack = new LinkedHashSet<>(), premiumHairBack = new LinkedHashSet<>();
+    public LinkedHashSet<String> hairTop = new LinkedHashSet<>(), premiumHairTop = new LinkedHashSet<>();
+    public LinkedHashSet<Color> hairColors = new LinkedHashSet<>();
 
-    public HashSet<String> eyes = new HashSet<>(), premiumEyes = new HashSet<>();
-    public HashSet<Color> eyeColors = new HashSet<>();
+    public LinkedHashSet<String> eyes = new LinkedHashSet<>(), premiumEyes = new LinkedHashSet<>();
+    public LinkedHashSet<Color> eyeColors = new LinkedHashSet<>();
 
 
     //Other
@@ -86,7 +86,7 @@ public class CRace extends Component
         //Head
         if (!skinColorSetsHairColor && hairColors != null && hairColors.size() == 0)
         {
-            for (HashSet<String> hairSet : new HashSet[]{hairBase, premiumHairBase, hairFront, premiumHairFront, hairBack, premiumHairBack, hairTop, premiumHairTop})
+            for (LinkedHashSet<String> hairSet : new LinkedHashSet[]{hairBase, premiumHairBase, hairFront, premiumHairFront, hairBack, premiumHairBack, hairTop, premiumHairTop})
             {
                 if (hairSet.size() > 0)
                 {
@@ -235,7 +235,7 @@ public class CRace extends Component
         }
     }
 
-    protected HashSet<Color> loadColors(HashSet<Color> colorSet, String[] colorStrings)
+    protected LinkedHashSet<Color> loadColors(LinkedHashSet<Color> colorSet, String[] colorStrings)
     {
         if (colorSet == null) return null;
 
@@ -427,7 +427,7 @@ public class CRace extends Component
         if (buf.readBoolean()) skinColors = null;
         else
         {
-            skinColors = new HashSet<>();
+            skinColors = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) skinColors.add(new Color(buf.readInt()));
         }
 
@@ -472,7 +472,7 @@ public class CRace extends Component
         if (buf.readBoolean()) hairColors = null;
         else
         {
-            hairColors = new HashSet<>();
+            hairColors = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) hairColors.add(new Color(buf.readInt()));
         }
 
@@ -485,7 +485,7 @@ public class CRace extends Component
         if (buf.readBoolean()) eyeColors = null;
         else
         {
-            eyeColors = new HashSet<>();
+            eyeColors = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) eyeColors.add(new Color(buf.readInt()));
         }
 

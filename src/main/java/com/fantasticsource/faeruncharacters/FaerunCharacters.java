@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 @Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034a,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.49.1.527,)")
 public class FaerunCharacters
@@ -101,7 +101,7 @@ public class FaerunCharacters
     }
 
 
-    public static void loadSkinNames(HashSet<String> skinSet, String[] skinStrings)
+    public static void loadSkinNames(LinkedHashSet<String> skinSet, String[] skinStrings)
     {
         boolean pool;
         for (String skinString : skinStrings)

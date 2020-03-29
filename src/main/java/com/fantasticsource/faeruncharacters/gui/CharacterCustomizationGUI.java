@@ -22,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
@@ -40,7 +40,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             W_PERCENT = 0.4, H_PERCENT = 1;
 
 
-    public static final HashSet<String> bodyTypes = new HashSet<>();
+    public static final LinkedHashSet<String> bodyTypes = new LinkedHashSet<>();
     public static double internalScaling, buttonRelW, buttonRelH, gapRelW, sliderRelH;
 
     public static Color
@@ -384,7 +384,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addStringSelector(GUIElement root2, String key, boolean fileNames, Collection<String> selections)
     {
-        addStringSelector(root2, key, fileNames, selections, new HashSet<>());
+        addStringSelector(root2, key, fileNames, selections, new LinkedHashSet<>());
     }
 
     protected void addStringSelector(GUIElement root2, String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)

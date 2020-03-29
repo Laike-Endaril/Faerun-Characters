@@ -21,8 +21,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
@@ -52,7 +52,7 @@ public class Network
 
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
-        public HashSet<String> bareArms, markings, faceAccessories, headAccessories;
+        public LinkedHashSet<String> bareArms, markings, faceAccessories, headAccessories;
 
         public CharacterCustomizationGUIPacket()
         {
@@ -127,16 +127,16 @@ public class Network
                 return;
             }
 
-            bareArms = new HashSet<>();
+            bareArms = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) bareArms.add(ByteBufUtils.readUTF8String(buf));
 
-            markings = new HashSet<>();
+            markings = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) markings.add(ByteBufUtils.readUTF8String(buf));
 
-            faceAccessories = new HashSet<>();
+            faceAccessories = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) faceAccessories.add(ByteBufUtils.readUTF8String(buf));
 
-            headAccessories = new HashSet<>();
+            headAccessories = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) headAccessories.add(ByteBufUtils.readUTF8String(buf));
 
             int size = buf.readInt();
