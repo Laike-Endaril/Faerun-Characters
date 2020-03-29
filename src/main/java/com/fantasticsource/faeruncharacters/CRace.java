@@ -32,7 +32,7 @@ public class CRace extends Component
 
 
     //Body
-    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), defaultTorsos = new HashSet<>(), defaultLegs = new HashSet<>(), defaultFeet = new HashSet<>(), defaultChests = new HashSet<>();
+    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), defaultTorsos = new HashSet<>(), defaultChests = new HashSet<>();
     public HashSet<Color> skinColors = new HashSet<>();
     public HashSet<String> chestSizes = new HashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
@@ -70,16 +70,6 @@ public class CRace extends Component
         if (defaultTorsos.size() == 0)
         {
             System.err.println(TextFormatting.RED + "No default torsos found for race: " + name);
-            return false;
-        }
-        if (defaultLegs.size() == 0)
-        {
-            System.err.println(TextFormatting.RED + "No default legs found for race: " + name);
-            return false;
-        }
-        if (defaultFeet.size() == 0)
-        {
-            System.err.println(TextFormatting.RED + "No default feet found for race: " + name);
             return false;
         }
         if (defaultChests.size() == 0)
@@ -163,14 +153,6 @@ public class CRace extends Component
 
             case "default torso":
                 FaerunCharacters.loadSkinNames(defaultTorsos, Tools.fixedSplit(value, ","));
-                break;
-
-            case "default legs":
-                FaerunCharacters.loadSkinNames(defaultLegs, Tools.fixedSplit(value, ","));
-                break;
-
-            case "default feet":
-                FaerunCharacters.loadSkinNames(defaultFeet, Tools.fixedSplit(value, ","));
                 break;
 
             case "default chest":
@@ -358,12 +340,6 @@ public class CRace extends Component
         buf.writeInt(defaultTorsos.size());
         for (String s : defaultTorsos) ByteBufUtils.writeUTF8String(buf, s);
 
-        buf.writeInt(defaultLegs.size());
-        for (String s : defaultLegs) ByteBufUtils.writeUTF8String(buf, s);
-
-        buf.writeInt(defaultFeet.size());
-        for (String s : defaultFeet) ByteBufUtils.writeUTF8String(buf, s);
-
         buf.writeInt(defaultChests.size());
         for (String s : defaultChests) ByteBufUtils.writeUTF8String(buf, s);
 
@@ -457,12 +433,6 @@ public class CRace extends Component
 
         defaultTorsos.clear();
         for (int i = buf.readInt(); i > 0; i--) defaultTorsos.add(ByteBufUtils.readUTF8String(buf));
-
-        defaultLegs.clear();
-        for (int i = buf.readInt(); i > 0; i--) defaultLegs.add(ByteBufUtils.readUTF8String(buf));
-
-        defaultFeet.clear();
-        for (int i = buf.readInt(); i > 0; i--) defaultFeet.add(ByteBufUtils.readUTF8String(buf));
 
         defaultChests.clear();
         for (int i = buf.readInt(); i > 0; i--) defaultChests.add(ByteBufUtils.readUTF8String(buf));

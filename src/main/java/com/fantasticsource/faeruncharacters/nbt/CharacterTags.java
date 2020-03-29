@@ -37,10 +37,6 @@ public class CharacterTags
         SKIN_SLOTTINGS.put("Default Torso", new SkinSlotting("Default Torso", "armourers:chest", 0));
         SKIN_SLOTTINGS.put("Bare Arms", new SkinSlotting("Bare Arms", "armourers:chest", 2));
 
-        SKIN_SLOTTINGS.put("Default Legs", new SkinSlotting("Default Legs", "armourers:legs", 0));
-
-        SKIN_SLOTTINGS.put("Default Feet", new SkinSlotting("Default Feet", "armourers:feet", 0));
-
         SKIN_SLOTTINGS.put("Default Chest", new SkinSlotting("Default Chest", "armourers:wings", 0));
         SKIN_SLOTTINGS.put("Tail", new SkinSlotting("Tail", "armourers:wings", 6));
 
@@ -201,22 +197,6 @@ public class CharacterTags
         if (!race.defaultTorsos.contains(value))
         {
             value = race.defaultTorsos.iterator().next();
-            setCCSkin(livingBase, key, value);
-        }
-
-        key = "Default Legs";
-        value = ccCompound.getString(key);
-        if (!race.defaultLegs.contains(value))
-        {
-            value = race.defaultLegs.iterator().next();
-            setCCSkin(livingBase, key, value);
-        }
-
-        key = "Default Feet";
-        value = ccCompound.getString(key);
-        if (!race.defaultFeet.contains(value))
-        {
-            value = race.defaultFeet.iterator().next();
             setCCSkin(livingBase, key, value);
         }
 

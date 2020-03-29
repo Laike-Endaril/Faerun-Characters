@@ -5,14 +5,16 @@ import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.instances.InstanceData;
 import com.fantasticsource.instances.Instances;
 import com.fantasticsource.instances.server.Teleport;
+import com.fantasticsource.instances.world.InstanceHandler;
 import com.fantasticsource.instances.world.dimensions.template.WorldProviderTemplate;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.DimensionType;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.HashSet;
 
@@ -48,8 +50,6 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Default Legs"), race.defaultLegs)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Default Feet"), race.defaultFeet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
@@ -86,8 +86,6 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Default Legs"), race.defaultLegs)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Default Feet"), race.defaultFeet)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
@@ -138,8 +136,8 @@ public class CharacterCustomization
         InstanceData data = InstanceData.get(true, DIMTYPE_CHARACTER_CREATION, "Character_Creation");
         if (!data.exists())
         {
-            System.err.println(TextFormatting.RED + "No character creation instance was found!  Need a character creation instance saved to '" + data.getFullName() + "'");
-            return;
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            InstanceHandler.loadOrCreateInstance(server, data.getFullName());
         }
 
 
