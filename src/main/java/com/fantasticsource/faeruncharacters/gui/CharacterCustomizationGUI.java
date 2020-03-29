@@ -409,33 +409,22 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonShortText, i >= selections.size());
             button.addClickActions(() ->
             {
-                String messageValue;
-
-                if (buttonText.equals(current))
-                {
-                    ccCompound.removeTag(key);
-                    messageValue = "null";
-                }
-                else
-                {
-                    ccCompound.setString(key, buttonText);
-                    messageValue = buttonText;
-                }
-
-
                 switch (key)
                 {
                     case "Body Type":
-                        packet.bodyType = messageValue;
-                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue.equals("Masculine") ? "M" : "F"));
+                        packet.bodyType = buttonText;
+                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(buttonText.equals("Masculine") ? "M" : "F"));
                         break;
 
                     case "Chest":
-                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(messageValue));
+                        ccCompound.setString(key, buttonText);
+                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
                         break;
 
                     default:
-                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, messageValue));
+                        ccCompound.setString(key, buttonText);
+                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, buttonText));
+                        break;
                 }
 
                 recalc();
