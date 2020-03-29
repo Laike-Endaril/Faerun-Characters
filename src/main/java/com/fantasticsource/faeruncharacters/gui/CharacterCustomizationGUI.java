@@ -423,7 +423,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                         Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue.equals("Masculine") ? "M" : "F"));
                         break;
 
-                    case "Chest Type":
+                    case "Chest":
                         Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(messageValue));
                         break;
 

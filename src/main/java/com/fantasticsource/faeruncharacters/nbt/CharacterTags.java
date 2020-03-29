@@ -213,7 +213,7 @@ public class CharacterTags
         }
 
         key = "Chest";
-        value = ccCompound.getString(key);
+        value = RenderModes.getRenderMode(livingBase, key);
         if (!race.chestSizes.contains(value))
         {
             value = race.chestSizes.iterator().next();
