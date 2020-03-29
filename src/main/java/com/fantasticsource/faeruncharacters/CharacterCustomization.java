@@ -53,6 +53,7 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
+            if (RenderModes.getRenderMode(player, "CapeInv") == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
             double d = ccCompound.getDouble("Scale");
             if (d < race.renderScaleMin || d > race.renderScaleMax) return false;
@@ -89,6 +90,7 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
+            if (RenderModes.getRenderMode(player, "CapeInv") == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
             double d = ccCompound.getDouble("Scale");
             if (d < race.renderScaleMin || d > race.renderScaleMax) return false;
@@ -133,6 +135,14 @@ public class CharacterCustomization
 
     public static void go(EntityPlayerMP player)
     {
+        if (RenderModes.getRenderMode(player, "Body") == null) RenderModes.setRenderMode(player, "Body", "M");
+        if (RenderModes.getRenderMode(player, "Chest") == null) RenderModes.setRenderMode(player, "Chest", "Flat");
+        if (RenderModes.getRenderMode(player, "CapeInv") == null) RenderModes.setRenderMode(player, "CapeInv", "Off");
+
+
+        if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", CRace.RACES.keySet().iterator().next());
+
+
         InstanceData data = InstanceData.get(true, DIMTYPE_CHARACTER_CREATION, "Character_Creation");
         if (!data.exists())
         {

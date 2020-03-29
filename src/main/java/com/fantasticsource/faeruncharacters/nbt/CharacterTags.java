@@ -176,8 +176,12 @@ public class CharacterTags
 
         NBTTagCompound ccCompound = getCC(livingBase);
 
-        String key = "Race Variant";
-        String value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
+        String key = "Race";
+        String value = raceName;
+        getCC(livingBase).setString(key, value);
+
+        key = "Race Variant";
+        value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
         setCCSkin(livingBase, key, value);
 
         key = "Tail";
