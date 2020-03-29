@@ -18,9 +18,18 @@ public class GUICCCameraController extends GUIElement
     @Override
     public boolean mousePressed(int button)
     {
-        lastX = mouseX();
-        lastY = mouseY();
-        return super.mousePressed(button);
+        boolean done = false;
+        for (GUIElement child : children) done |= child.mousePressed(button);
+
+        if (!done)
+        {
+            if (isMouseWithin()) setActive(true);
+
+            lastX = mouseX();
+            lastY = mouseY();
+        }
+
+        return true;
     }
 
     @Override

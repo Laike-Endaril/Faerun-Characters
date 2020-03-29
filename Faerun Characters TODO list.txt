@@ -1,9 +1,3 @@
-On equipment change or CC change, check the wardrobe slot
-If it's empty or has a CC skin, replace with new CC skin
-CC skins also need the temporary tag so they're auto-removed by equipment skins EXCEPT when the selected race doesn't show that equip type
-
-
-
 Character customization render systems for NPCs
 
 
