@@ -55,7 +55,7 @@ public class CharacterCustomization
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
             if (RenderModes.getRenderMode(player, "CapeInv") == null) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
+            if (!checkMultiHashSet(RenderModes.getRenderMode(player, "Chest"), race.chestSizes)) return false;
             double d = ccCompound.getDouble("Scale");
             if (d < race.renderScaleMin || d > race.renderScaleMax) return false;
 
@@ -92,7 +92,7 @@ public class CharacterCustomization
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
             if (RenderModes.getRenderMode(player, "CapeInv") == null) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
+            if (!checkMultiHashSet(RenderModes.getRenderMode(player, "Chest"), race.chestSizes)) return false;
             double d = ccCompound.getDouble("Scale");
             if (d < race.renderScaleMin || d > race.renderScaleMax) return false;
 

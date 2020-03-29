@@ -220,6 +220,8 @@ public class CharacterTags
             RenderModes.setRenderMode(livingBase, key, value);
         }
 
+        ccCompound.setDouble("Scale", Tools.min(Tools.max(ccCompound.getDouble("Scale"), race.renderScaleMin), race.renderScaleMax));
+
         key = "Hair (Base)";
         value = ccCompound.getString(key);
         if (!race.hairBase.contains(value) && !race.premiumHairBase.contains(value))
