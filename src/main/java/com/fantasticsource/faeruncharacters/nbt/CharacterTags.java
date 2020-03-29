@@ -5,6 +5,7 @@ import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
 import com.fantasticsource.mctools.aw.AWSkinGenerator;
 import com.fantasticsource.mctools.aw.RenderModes;
+import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -48,8 +49,7 @@ public class CharacterTags
         COLOR_KEYS.put("Hair Color", "hair");
         COLOR_KEYS.put("Color 1", "misc_1");
         COLOR_KEYS.put("Color 2", "misc_2");
-        COLOR_KEYS.put("Color 3", "misc_3");
-        COLOR_KEYS.put("Color 4", "misc_4");
+        COLOR_KEYS.put("Underwear Color", "misc_3");
     }
 
     public static void setCC(EntityLivingBase livingBase, NBTTagCompound characterCustomization)
@@ -181,18 +181,18 @@ public class CharacterTags
         getCC(livingBase).setString(key, value);
 
         key = "Race Variant";
-        value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
+        value = race.raceVariants.size() > 0 ? Tools.choose(race.raceVariants.toArray(new String[0])) : Tools.choose(race.premiumRaceVariants.toArray(new String[0]));
         setCCSkin(livingBase, key, value);
 
         key = "Tail";
-        value = race.tails.size() > 0 ? race.tails.iterator().next() : "null";
+        value = race.tails.size() > 0 ? Tools.choose(race.tails.toArray(new String[0])) : "null";
         setCCSkin(livingBase, key, value);
 
         key = "Skin Color";
         Color color = new Color(ccCompound.getInteger(key));
         if (race.skinColors != null && !race.skinColors.contains(color))
         {
-            color = race.skinColors.iterator().next();
+            color = Tools.choose(race.skinColors.toArray(new Color[0]));
             setCCColor(livingBase, key, color);
         }
 
@@ -200,7 +200,7 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.defaultTorsos.contains(value))
         {
-            value = race.defaultTorsos.iterator().next();
+            value = Tools.choose(race.defaultTorsos.toArray(new String[0]));
             setCCSkin(livingBase, key, value);
         }
 
@@ -208,7 +208,7 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.defaultChests.contains(value))
         {
-            value = race.defaultChests.iterator().next();
+            value = Tools.choose(race.defaultChests.toArray(new String[0]));
             setCCSkin(livingBase, key, value);
         }
 
@@ -216,7 +216,7 @@ public class CharacterTags
         value = RenderModes.getRenderMode(livingBase, key);
         if (!race.chestSizes.contains(value))
         {
-            value = race.chestSizes.iterator().next();
+            value = Tools.choose(race.chestSizes.toArray(new String[0]));
             RenderModes.setRenderMode(livingBase, key, value);
         }
 
@@ -224,8 +224,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairBase.contains(value) && !race.premiumHairBase.contains(value))
         {
-            if (race.hairBase.size() > 0) value = race.hairBase.iterator().next();
-            else if (race.premiumHairBase.size() > 0) value = race.premiumHairBase.iterator().next();
+            if (race.hairBase.size() > 0) value = Tools.choose(race.hairBase.toArray(new String[0]));
+            else if (race.premiumHairBase.size() > 0) value = Tools.choose(race.premiumHairBase.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -234,18 +234,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
         {
-            if (race.hairFront.size() > 0) value = race.hairFront.iterator().next();
-            else if (race.premiumHairFront.size() > 0) value = race.premiumHairFront.iterator().next();
-            else value = "null";
-            setCCSkin(livingBase, key, value);
-        }
-
-        key = "Hair (Front)";
-        value = ccCompound.getString(key);
-        if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
-        {
-            if (race.hairFront.size() > 0) value = race.hairFront.iterator().next();
-            else if (race.premiumHairFront.size() > 0) value = race.premiumHairFront.iterator().next();
+            if (race.hairFront.size() > 0) value = Tools.choose(race.hairFront.toArray(new String[0]));
+            else if (race.premiumHairFront.size() > 0) value = Tools.choose(race.premiumHairFront.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -254,8 +244,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairBack.contains(value) && !race.premiumHairBack.contains(value))
         {
-            if (race.hairBack.size() > 0) value = race.hairBack.iterator().next();
-            else if (race.premiumHairBack.size() > 0) value = race.premiumHairBack.iterator().next();
+            if (race.hairBack.size() > 0) value = Tools.choose(race.hairBack.toArray(new String[0]));
+            else if (race.premiumHairBack.size() > 0) value = Tools.choose(race.premiumHairBack.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -264,8 +254,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            if (race.hairTop.size() > 0) value = race.hairTop.iterator().next();
-            else if (race.premiumHairTop.size() > 0) value = race.premiumHairTop.iterator().next();
+            if (race.hairTop.size() > 0) value = Tools.choose(race.hairTop.toArray(new String[0]));
+            else if (race.premiumHairTop.size() > 0) value = Tools.choose(race.premiumHairTop.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -274,8 +264,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            if (race.hairTop.size() > 0) value = race.hairTop.iterator().next();
-            else if (race.premiumHairTop.size() > 0) value = race.premiumHairTop.iterator().next();
+            if (race.hairTop.size() > 0) value = Tools.choose(race.hairTop.toArray(new String[0]));
+            else if (race.premiumHairTop.size() > 0) value = Tools.choose(race.premiumHairTop.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -286,7 +276,7 @@ public class CharacterTags
             color = new Color(ccCompound.getInteger(key));
             if (race.hairColors != null && !race.hairColors.contains(color))
             {
-                color = race.hairColors.iterator().next();
+                color = Tools.choose(race.hairColors.toArray(new Color[0]));
                 setCCColor(livingBase, key, color);
             }
         }
@@ -295,8 +285,8 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.eyes.contains(value) && !race.premiumEyes.contains(value))
         {
-            if (race.eyes.size() > 0) value = race.eyes.iterator().next();
-            else if (race.premiumEyes.size() > 0) value = race.premiumEyes.iterator().next();
+            if (race.eyes.size() > 0) value = Tools.choose(race.eyes.toArray(new String[0]));
+            else if (race.premiumEyes.size() > 0) value = Tools.choose(race.premiumEyes.toArray(new String[0]));
             else value = "null";
             setCCSkin(livingBase, key, value);
         }
@@ -305,19 +295,19 @@ public class CharacterTags
         color = new Color(ccCompound.getInteger(key));
         if (race.eyeColors != null && !race.eyeColors.contains(color))
         {
-            color = race.eyeColors.iterator().next();
+            color = Tools.choose(race.eyeColors.toArray(new Color[0]));
             setCCColor(livingBase, key, color);
         }
 
 
         value = RenderModes.getRenderMode(livingBase, "Body");
-        if (value == null) RenderModes.setRenderMode(livingBase, "Body", "M");
+        if (value == null) RenderModes.setRenderMode(livingBase, "Body", Tools.choose("M", "F"));
 
         value = RenderModes.getRenderMode(livingBase, "CapeInv");
         if (value == null) RenderModes.setRenderMode(livingBase, "CapeInv", "Off");
 
         value = RenderModes.getRenderMode(livingBase, "Chest");
-        if (value == null) RenderModes.setRenderMode(livingBase, "Chest", "Flat");
+        if (!race.chestSizes.contains(value)) RenderModes.setRenderMode(livingBase, "Chest", Tools.choose(race.chestSizes.toArray(new String[0])));
     }
 
 

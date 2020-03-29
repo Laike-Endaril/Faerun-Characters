@@ -9,6 +9,7 @@ import com.fantasticsource.instances.world.InstanceHandler;
 import com.fantasticsource.instances.world.dimensions.template.WorldProviderTemplate;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
+import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -140,7 +141,7 @@ public class CharacterCustomization
         if (RenderModes.getRenderMode(player, "CapeInv") == null) RenderModes.setRenderMode(player, "CapeInv", "Off");
 
 
-        if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", CRace.RACES.keySet().iterator().next());
+        if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", Tools.choose(CRace.RACES.keySet().toArray(new String[0])));
 
 
         InstanceData data = InstanceData.get(true, DIMTYPE_CHARACTER_CREATION, "Character_Creation");

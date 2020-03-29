@@ -183,6 +183,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 options.add("Body Type");
                 options.add("Chest");
                 options.add("Scale");
+                options.add("Underwear Color");
                 break;
 
 
@@ -273,6 +274,11 @@ public class CharacterCustomizationGUI extends GUIScreen
                         if (race == null) break;
                         if (race.skinColors != null) addColorSelector(selectedOption, race.skinColors.toArray(new Color[0]));
                         else addHSVSliders(selectedOption);
+                        break;
+
+                    case "Underwear Color":
+                        if (race == null) break;
+                        addHSVSliders(selectedOption);
                         break;
 
 
@@ -383,7 +389,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addStringSelector(String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)
     {
-        String current = ccCompound.getString(key);
+        String current = key.equals("Body Type") ? packet.bodyType : ccCompound.getString(key);
         ArrayList<String> options = new ArrayList<>();
         options.addAll(selections);
         options.addAll(premiumSelections);
@@ -420,6 +426,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 switch (key)
                 {
                     case "Body Type":
+                        packet.bodyType = messageValue;
                         Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue.equals("Masculine") ? "M" : "F"));
                         break;
 

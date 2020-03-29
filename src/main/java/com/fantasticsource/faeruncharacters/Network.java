@@ -47,10 +47,12 @@ public class Network
     public static class CharacterCustomizationGUIPacket implements IMessage
     {
         public boolean isPremium;
+        public String bodyType;
+        public NBTTagCompound ccCompound;
+
         public LinkedHashMap<String, CRace> races;
         public LinkedHashMap<String, CRace> racesPremium;
         public HashSet<String> bareArms, markings, faceAccessories, headAccessories;
-        public NBTTagCompound ccCompound;
 
         public CharacterCustomizationGUIPacket()
         {
@@ -60,6 +62,8 @@ public class Network
         public CharacterCustomizationGUIPacket(EntityPlayerMP player)
         {
             isPremium = MCTools.isWhitelisted(player);
+            bodyType = RenderModes.getRenderMode(player, "Body");
+            if (bodyType != null) bodyType = bodyType.equals("M") ? "Masculine" : "Feminine";
             ccCompound = CharacterTags.getCC(player);
         }
 
@@ -67,6 +71,8 @@ public class Network
         public void toBytes(ByteBuf buf)
         {
             buf.writeBoolean(isPremium);
+
+            ByteBufUtils.writeUTF8String(buf, bodyType);
 
             ByteBufUtils.writeUTF8String(buf, ccCompound.toString());
 
@@ -101,6 +107,8 @@ public class Network
         public void fromBytes(ByteBuf buf)
         {
             isPremium = buf.readBoolean();
+
+            bodyType = ByteBufUtils.readUTF8String(buf);
 
             try
             {
