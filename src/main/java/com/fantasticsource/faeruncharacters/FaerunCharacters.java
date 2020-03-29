@@ -1,5 +1,6 @@
 package com.fantasticsource.faeruncharacters;
 
+import com.fantasticsource.faeruncharacters.blocksanditems.BlocksAndItems;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
@@ -43,6 +44,7 @@ public class FaerunCharacters
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);
         CRace.init(event);
 
+        MinecraftForge.EVENT_BUS.register(BlocksAndItems.class);
 
         updateGlobalOptions();
     }
