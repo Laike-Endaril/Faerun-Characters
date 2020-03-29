@@ -420,7 +420,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 switch (key)
                 {
                     case "Body Type":
-                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue));
+                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(messageValue.equals("Masculine") ? "M" : "F"));
                         break;
 
                     case "Chest Type":

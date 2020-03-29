@@ -4,6 +4,7 @@ import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
+import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
@@ -75,13 +76,13 @@ public class FaerunCharacters
     protected static void updateGlobalOptions()
     {
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
-        loadSkins(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
+        loadSkinNames(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
         FaerunCharactersConfig.server.markingsSet.clear();
-        loadSkins(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
+        loadSkinNames(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
         FaerunCharactersConfig.server.headAccessorySet.clear();
-        loadSkins(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
+        loadSkinNames(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
         FaerunCharactersConfig.server.faceAccessorySet.clear();
-        loadSkins(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories);
+        loadSkinNames(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories);
     }
 
 
@@ -91,16 +92,17 @@ public class FaerunCharacters
         if (!(event.player instanceof EntityPlayerMP)) return;
 
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:head 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:chest 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:legs 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:feet 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + event.player.getName() + " armourers:wings 10");
+        String name = event.player.getName();
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:head 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:chest 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:legs 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:feet 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:wings 10");
         CharacterCustomization.validate((EntityPlayerMP) event.player);
     }
 
 
-    public static void loadSkins(HashSet<String> skinSet, String[] skinStrings)
+    public static void loadSkinNames(HashSet<String> skinSet, String[] skinStrings)
     {
         boolean pool;
         for (String skinString : skinStrings)
@@ -139,7 +141,7 @@ public class FaerunCharacters
                     subSkinStrings[i++] = subFile.getAbsolutePath().replace(AW_SKIN_LIBRARY_DIR, "").replace(".armour", "");
                 }
 
-                loadSkins(skinSet, subSkinStrings);
+                loadSkinNames(skinSet, subSkinStrings);
             }
         }
     }

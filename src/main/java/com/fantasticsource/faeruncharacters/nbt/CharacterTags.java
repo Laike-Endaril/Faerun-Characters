@@ -4,6 +4,7 @@ import com.fantasticsource.faeruncharacters.CRace;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
 import com.fantasticsource.mctools.aw.AWSkinGenerator;
+import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -23,9 +24,6 @@ public class CharacterTags
 
     static
     {
-        SKIN_SLOTTINGS.put("Race Variant", new SkinSlotting("Race Variant", "armourers:outfit", 0));
-        SKIN_SLOTTINGS.put("Tail", new SkinSlotting("Tail", "armourers:wings", 5));
-        SKIN_SLOTTINGS.put("Bare Arms", new SkinSlotting("Bare Arms", "armourers:chest", 1));
         SKIN_SLOTTINGS.put("Markings", new SkinSlotting("Markings", "armourers:head", 0));
         SKIN_SLOTTINGS.put("Hair (Base)", new SkinSlotting("Hair (Base)", "armourers:head", 1));
         SKIN_SLOTTINGS.put("Eyes", new SkinSlotting("Eyes", "armourers:head", 2));
@@ -35,6 +33,19 @@ public class CharacterTags
         SKIN_SLOTTINGS.put("Hair (Top/Overall 2)", new SkinSlotting("Hair (Top/Overall 2)", "armourers:head", 6));
         SKIN_SLOTTINGS.put("Accessory (Head)", new SkinSlotting("Accessory (Head)", "armourers:head", 7));
         SKIN_SLOTTINGS.put("Accessory (Face)", new SkinSlotting("Accessory (Face)", "armourers:head", 8));
+
+        SKIN_SLOTTINGS.put("Default Torso", new SkinSlotting("Default Torso", "armourers:chest", 0));
+        SKIN_SLOTTINGS.put("Bare Arms", new SkinSlotting("Bare Arms", "armourers:chest", 2));
+
+        SKIN_SLOTTINGS.put("Default Legs", new SkinSlotting("Default Legs", "armourers:legs", 0));
+
+        SKIN_SLOTTINGS.put("Default Feet", new SkinSlotting("Default Feet", "armourers:feet", 0));
+
+        SKIN_SLOTTINGS.put("Default Chest", new SkinSlotting("Default Chest", "armourers:wings", 0));
+        SKIN_SLOTTINGS.put("Tail", new SkinSlotting("Tail", "armourers:wings", 6));
+
+        SKIN_SLOTTINGS.put("Race Variant", new SkinSlotting("Race Variant", "armourers:outfit", 0));
+
 
         COLOR_KEYS.put("Skin Color", "skin");
         COLOR_KEYS.put("Eye Color", "eye");
@@ -84,18 +95,8 @@ public class CharacterTags
     {
         if (key.equals("Race"))
         {
-            CRace race = CRace.RACES.get(value);
-            if (race == null) race = CRace.RACES_PREMIUM.get(value);
-            if (race == null)
-            {
-                System.err.println(TextFormatting.RED + "Tried to set race to non-existing race: (" + value + ")");
-                System.err.println(TextFormatting.RED + "...for entity..." + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
-                return;
-            }
-
-
-            key = "Race Variant";
-            value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
+            setRace(livingBase, value);
+            return;
         }
 
 
@@ -108,45 +109,52 @@ public class CharacterTags
         }
 
 
-        ItemStack newSkin = AWSkinGenerator.generate(value, skinSlotting.skinType);
-        if (!newSkin.isEmpty())
+        ItemStack oldSkin = GlobalInventory.getAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType);
+
+        if (oldSkin != null && !oldSkin.isEmpty() && !skinSlotting.name.equals(getCCStackTag(oldSkin)))
         {
-            applyCCTag(newSkin, skinSlotting.name);
-
-            ItemStack oldSkin = GlobalInventory.getAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType);
-
-            if (oldSkin != null && !oldSkin.isEmpty() && !ccTagMatches(oldSkin, newSkin))
+            switch (skinSlotting.name)
             {
-                System.err.println(TextFormatting.RED + "Tried to set CC skin in wardrobe slot already filled with non-CC skin!");
-                System.err.println(TextFormatting.RED + "Entity: " + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
-                System.err.println(TextFormatting.RED + "Slot; " + skinSlotting.skinType + " #" + skinSlotting.indexWithinType);
-                System.err.println(TextFormatting.RED + "Existing item in slot: " + oldSkin.getDisplayName());
+                case "Default Torso":
+                    //Prevent error from default torso, because this will happen anytime they have a normal chest armor on
+                    break;
+
+                default:
+                    System.err.println(TextFormatting.RED + "Tried to set CC skin in wardrobe slot already filled with non-CC skin!");
+                    System.err.println(TextFormatting.RED + "Entity: " + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
+                    System.err.println(TextFormatting.RED + "Slot; " + skinSlotting.skinType + " #" + skinSlotting.indexWithinType);
+                    System.err.println(TextFormatting.RED + "Existing item in slot: " + oldSkin.getDisplayName());
             }
+        }
+        else
+        {
+            ItemStack newSkin = AWSkinGenerator.generate(value, skinSlotting.skinType);
+            if (!newSkin.isEmpty()) applyCCStackTag(newSkin, skinSlotting.name);
+
+            GlobalInventory.setAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType, newSkin);
+            GlobalInventory.syncAWWardrobeSkins(livingBase, true, true);
         }
 
 
-        GlobalInventory.setAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType, newSkin);
-        GlobalInventory.syncAWWardrobeSkins(livingBase, true, true);
-
-        if (newSkin.isEmpty()) getCC(livingBase).removeTag(key);
+        if (value == null || value.trim().toLowerCase().equals("null")) getCC(livingBase).removeTag(key);
         else getCC(livingBase).setString(key, value);
     }
 
 
-    protected static boolean ccTagMatches(ItemStack stack1, ItemStack stack2)
+    protected static String getCCStackTag(ItemStack stack)
     {
-        if (!stack1.hasTagCompound() || !stack2.hasTagCompound()) return false;
-        NBTTagCompound compound1 = stack1.getTagCompound(), compound2 = stack2.getTagCompound();
+        if (!stack.hasTagCompound()) return null;
 
-        if (!compound1.hasKey(MODID) || !compound2.hasKey(MODID)) return false;
-        compound1 = compound1.getCompoundTag(MODID);
-        compound2 = compound2.getCompoundTag(MODID);
+        NBTTagCompound compound = stack.getTagCompound();
+        if (!compound.hasKey(MODID)) return null;
 
-        if (!compound1.hasKey("CC") || !compound2.hasKey("CC")) return false;
-        return compound1.getString("CC").equals(compound2.getString("CC"));
+        compound = compound.getCompoundTag(MODID);
+        if (!compound.hasKey("CC")) return null;
+
+        return compound.getString("CC");
     }
 
-    protected static void applyCCTag(ItemStack stack, String skinSlottingName)
+    protected static void applyCCStackTag(ItemStack stack, String skinSlottingName)
     {
         //Mark as CC skin
         NBTTagCompound compound = stack.getTagCompound();
@@ -155,6 +163,171 @@ public class CharacterTags
         compound = compound.getCompoundTag(MODID);
 
         compound.setString("CC", skinSlottingName);
+    }
+
+
+    protected static void setRace(EntityLivingBase livingBase, String raceName)
+    {
+        CRace race = CRace.RACES.get(raceName);
+        if (race == null) race = CRace.RACES_PREMIUM.get(raceName);
+        if (race == null)
+        {
+            System.err.println(TextFormatting.RED + "Tried to set race to non-existing race: (" + raceName + ")");
+            System.err.println(TextFormatting.RED + "...for entity..." + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
+            return;
+        }
+
+
+        NBTTagCompound ccCompound = getCC(livingBase);
+
+        String key = "Race Variant";
+        String value = race.raceVariants.size() > 0 ? race.raceVariants.iterator().next() : race.premiumRaceVariants.iterator().next();
+        setCCSkin(livingBase, key, value);
+
+        key = "Tail";
+        value = race.tails.size() > 0 ? race.tails.iterator().next() : "null";
+        setCCSkin(livingBase, key, value);
+
+        key = "Skin Color";
+        Color color = new Color(ccCompound.getInteger(key));
+        if (race.skinColors != null && !race.skinColors.contains(color))
+        {
+            color = race.skinColors.iterator().next();
+            setCCColor(livingBase, key, color);
+        }
+
+        key = "Default Torso";
+        value = ccCompound.getString(key);
+        if (!race.defaultTorsos.contains(value))
+        {
+            value = race.defaultTorsos.iterator().next();
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Default Legs";
+        value = ccCompound.getString(key);
+        if (!race.defaultLegs.contains(value))
+        {
+            value = race.defaultLegs.iterator().next();
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Default Feet";
+        value = ccCompound.getString(key);
+        if (!race.defaultFeet.contains(value))
+        {
+            value = race.defaultFeet.iterator().next();
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Default Chest";
+        value = ccCompound.getString(key);
+        if (!race.defaultChests.contains(value))
+        {
+            value = race.defaultChests.iterator().next();
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Chest";
+        value = ccCompound.getString(key);
+        if (!race.chestSizes.contains(value))
+        {
+            value = race.chestSizes.iterator().next();
+            RenderModes.setRenderMode(livingBase, key, value);
+        }
+
+        key = "Hair (Base)";
+        value = ccCompound.getString(key);
+        if (!race.hairBase.contains(value) && !race.premiumHairBase.contains(value))
+        {
+            if (race.hairBase.size() > 0) value = race.hairBase.iterator().next();
+            else if (race.premiumHairBase.size() > 0) value = race.premiumHairBase.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Hair (Front)";
+        value = ccCompound.getString(key);
+        if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
+        {
+            if (race.hairFront.size() > 0) value = race.hairFront.iterator().next();
+            else if (race.premiumHairFront.size() > 0) value = race.premiumHairFront.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Hair (Front)";
+        value = ccCompound.getString(key);
+        if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
+        {
+            if (race.hairFront.size() > 0) value = race.hairFront.iterator().next();
+            else if (race.premiumHairFront.size() > 0) value = race.premiumHairFront.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Hair (Back)";
+        value = ccCompound.getString(key);
+        if (!race.hairBack.contains(value) && !race.premiumHairBack.contains(value))
+        {
+            if (race.hairBack.size() > 0) value = race.hairBack.iterator().next();
+            else if (race.premiumHairBack.size() > 0) value = race.premiumHairBack.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Hair (Top/Overall 1)";
+        value = ccCompound.getString(key);
+        if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
+        {
+            if (race.hairTop.size() > 0) value = race.hairTop.iterator().next();
+            else if (race.premiumHairTop.size() > 0) value = race.premiumHairTop.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Hair (Top/Overall 2)";
+        value = ccCompound.getString(key);
+        if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
+        {
+            if (race.hairTop.size() > 0) value = race.hairTop.iterator().next();
+            else if (race.premiumHairTop.size() > 0) value = race.premiumHairTop.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        if (!race.skinColorSetsHairColor)
+        {
+            key = "Hair Color";
+            color = new Color(ccCompound.getInteger(key));
+            if (race.hairColors != null && !race.hairColors.contains(color))
+            {
+                color = race.hairColors.iterator().next();
+                setCCColor(livingBase, key, color);
+            }
+        }
+
+        key = "Eyes";
+        value = ccCompound.getString(key);
+        if (!race.eyes.contains(value) && !race.premiumEyes.contains(value))
+        {
+            if (race.eyes.size() > 0) value = race.eyes.iterator().next();
+            else if (race.premiumEyes.size() > 0) value = race.premiumEyes.iterator().next();
+            else value = "null";
+            setCCSkin(livingBase, key, value);
+        }
+
+        key = "Eye Color";
+        color = new Color(ccCompound.getInteger(key));
+        if (race.eyeColors != null && !race.eyeColors.contains(color))
+        {
+            color = race.eyeColors.iterator().next();
+            setCCColor(livingBase, key, color);
+        }
+
+
+        value = RenderModes.getRenderMode(livingBase, "Body");
+        if (value == null) RenderModes.setRenderMode(livingBase, "Body", "M");
     }
 
 

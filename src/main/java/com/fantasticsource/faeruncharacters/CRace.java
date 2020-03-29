@@ -32,7 +32,7 @@ public class CRace extends Component
 
 
     //Body
-    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>();
+    public HashSet<String> raceVariants = new HashSet<>(), premiumRaceVariants = new HashSet<>(), tails = new HashSet<>(), defaultTorsos = new HashSet<>(), defaultLegs = new HashSet<>(), defaultFeet = new HashSet<>(), defaultChests = new HashSet<>();
     public HashSet<Color> skinColors = new HashSet<>();
     public HashSet<String> chestSizes = new HashSet<>();
     public double renderScaleMin = 1, renderScaleMax = 1;
@@ -65,6 +65,26 @@ public class CRace extends Component
         if (skinColors != null && skinColors.size() == 0)
         {
             System.err.println(TextFormatting.RED + "No skin colors found for race: " + name);
+            return false;
+        }
+        if (defaultTorsos.size() == 0)
+        {
+            System.err.println(TextFormatting.RED + "No default torsos found for race: " + name);
+            return false;
+        }
+        if (defaultLegs.size() == 0)
+        {
+            System.err.println(TextFormatting.RED + "No default legs found for race: " + name);
+            return false;
+        }
+        if (defaultFeet.size() == 0)
+        {
+            System.err.println(TextFormatting.RED + "No default feet found for race: " + name);
+            return false;
+        }
+        if (defaultChests.size() == 0)
+        {
+            System.err.println(TextFormatting.RED + "No default chests found for race: " + name);
             return false;
         }
         if (chestSizes.size() == 0)
@@ -126,19 +146,35 @@ public class CRace extends Component
 
             //Body
             case "race variant":
-                FaerunCharacters.loadSkins(raceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(raceVariants, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium race variant":
-                FaerunCharacters.loadSkins(premiumRaceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumRaceVariants, Tools.fixedSplit(value, ","));
                 break;
 
             case "tail":
-                FaerunCharacters.loadSkins(tails, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(tails, Tools.fixedSplit(value, ","));
                 break;
 
             case "skin color":
                 skinColors = loadColors(skinColors, Tools.fixedSplit(value, ","));
+                break;
+
+            case "default torso":
+                FaerunCharacters.loadSkinNames(defaultTorsos, Tools.fixedSplit(value, ","));
+                break;
+
+            case "default legs":
+                FaerunCharacters.loadSkinNames(defaultLegs, Tools.fixedSplit(value, ","));
+                break;
+
+            case "default feet":
+                FaerunCharacters.loadSkinNames(defaultFeet, Tools.fixedSplit(value, ","));
+                break;
+
+            case "default chest":
+                FaerunCharacters.loadSkinNames(defaultChests, Tools.fixedSplit(value, ","));
                 break;
 
             case "chest":
@@ -160,35 +196,35 @@ public class CRace extends Component
 
             //Head
             case "hair":
-                FaerunCharacters.loadSkins(hairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairBase, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair":
-                FaerunCharacters.loadSkins(premiumHairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairBase, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair front":
-                FaerunCharacters.loadSkins(hairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairFront, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair front":
-                FaerunCharacters.loadSkins(premiumHairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairFront, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair back":
-                FaerunCharacters.loadSkins(hairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairBack, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair back":
-                FaerunCharacters.loadSkins(premiumHairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairBack, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair top":
-                FaerunCharacters.loadSkins(hairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairTop, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium hair top":
-                FaerunCharacters.loadSkins(premiumHairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairTop, Tools.fixedSplit(value, ","));
                 break;
 
             case "hair color":
@@ -196,11 +232,11 @@ public class CRace extends Component
                 break;
 
             case "eyes":
-                FaerunCharacters.loadSkins(eyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(eyes, Tools.fixedSplit(value, ","));
                 break;
 
             case "premium eyes":
-                FaerunCharacters.loadSkins(premiumEyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumEyes, Tools.fixedSplit(value, ","));
                 break;
 
             case "eye color":
@@ -319,6 +355,18 @@ public class CRace extends Component
             for (Color c : skinColors) buf.writeInt(c.color());
         }
 
+        buf.writeInt(defaultTorsos.size());
+        for (String s : defaultTorsos) ByteBufUtils.writeUTF8String(buf, s);
+
+        buf.writeInt(defaultLegs.size());
+        for (String s : defaultLegs) ByteBufUtils.writeUTF8String(buf, s);
+
+        buf.writeInt(defaultFeet.size());
+        for (String s : defaultFeet) ByteBufUtils.writeUTF8String(buf, s);
+
+        buf.writeInt(defaultChests.size());
+        for (String s : defaultChests) ByteBufUtils.writeUTF8String(buf, s);
+
         buf.writeInt(chestSizes.size());
         for (String s : chestSizes) ByteBufUtils.writeUTF8String(buf, s);
 
@@ -406,6 +454,18 @@ public class CRace extends Component
             skinColors = new HashSet<>();
             for (int i = buf.readInt(); i > 0; i--) skinColors.add(new Color(buf.readInt()));
         }
+
+        defaultTorsos.clear();
+        for (int i = buf.readInt(); i > 0; i--) defaultTorsos.add(ByteBufUtils.readUTF8String(buf));
+
+        defaultLegs.clear();
+        for (int i = buf.readInt(); i > 0; i--) defaultLegs.add(ByteBufUtils.readUTF8String(buf));
+
+        defaultFeet.clear();
+        for (int i = buf.readInt(); i > 0; i--) defaultFeet.add(ByteBufUtils.readUTF8String(buf));
+
+        defaultChests.clear();
+        for (int i = buf.readInt(); i > 0; i--) defaultChests.add(ByteBufUtils.readUTF8String(buf));
 
         chestSizes.clear();
         for (int i = buf.readInt(); i > 0; i--) chestSizes.add(ByteBufUtils.readUTF8String(buf));

@@ -47,6 +47,10 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Legs"), race.defaultLegs)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Feet"), race.defaultFeet)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
@@ -81,6 +85,10 @@ public class CharacterCustomization
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Legs"), race.defaultLegs)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Feet"), race.defaultFeet)) return false;
+            if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
             if (RenderModes.getRenderMode(player, "Body") == null) return false;
             if (RenderModes.getRenderMode(player, "Chest") == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Chest"), race.chestSizes)) return false;
