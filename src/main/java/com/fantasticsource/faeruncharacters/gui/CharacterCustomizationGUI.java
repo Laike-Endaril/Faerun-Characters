@@ -140,7 +140,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addTabs(GUIElement root)
+    protected void addTabs(GUIElement root2)
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         double buttonRelH = (double) ELEMENT_H * internalScaling * guiScale / pxHeight;
@@ -158,13 +158,13 @@ public class CharacterCustomizationGUI extends GUIScreen
             });
             if (tabName.equals(selectedTab)) button.setActive(true);
 
-            root.add(button);
+            root2.add(button);
             yy += buttonRelH;
         }
     }
 
 
-    protected void addOptions(GUIElement root)
+    protected void addOptions(GUIElement root2)
     {
         if (selectedTab == null) return;
 
@@ -222,13 +222,13 @@ public class CharacterCustomizationGUI extends GUIScreen
             });
             if (optionName.equals(selectedOption)) button.setActive(true);
 
-            root.add(button);
+            root2.add(button);
             yy += buttonRelH;
         }
     }
 
 
-    protected void addOptionControls(GUIElement root)
+    protected void addOptionControls(GUIElement root2)
     {
         if (selectedTab == null || selectedOption == null) return;
 
@@ -240,52 +240,52 @@ public class CharacterCustomizationGUI extends GUIScreen
                 switch (selectedOption)
                 {
                     case "Race":
-                        addStringSelector(selectedOption, true, packet.races.keySet(), packet.racesPremium.keySet());
+                        addStringSelector(root2, selectedOption, true, packet.races.keySet(), packet.racesPremium.keySet());
                         break;
 
                     case "Race Variant":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.raceVariants, race.premiumRaceVariants);
+                        addStringSelector(root2, selectedOption, true, race.raceVariants, race.premiumRaceVariants);
                         break;
 
                     case "Tail":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.tails);
+                        addStringSelector(root2, selectedOption, true, race.tails);
                         break;
 
                     case "Bare Arms":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, packet.bareArms);
+                        addStringSelector(root2, selectedOption, true, packet.bareArms);
                         break;
 
                     case "Body Type":
                         if (race == null) break;
-                        addStringSelector(selectedOption, false, bodyTypes);
+                        addStringSelector(root2, selectedOption, false, bodyTypes);
                         break;
 
                     case "Chest":
                         if (race == null) break;
-                        addStringSelector(selectedOption, false, race.chestSizes);
+                        addStringSelector(root2, selectedOption, false, race.chestSizes);
                         break;
 
 
                     //Color selectors or HSV sliders, depending on race
                     case "Skin Color":
                         if (race == null) break;
-                        if (race.skinColors != null) addColorSelector(selectedOption, race.skinColors.toArray(new Color[0]));
-                        else addHSVSliders(selectedOption);
+                        if (race.skinColors != null) addColorSelector(root2, selectedOption, race.skinColors.toArray(new Color[0]));
+                        else addHSVSliders(root2, selectedOption);
                         break;
 
                     case "Underwear Color":
                         if (race == null) break;
-                        addHSVSliders(selectedOption);
+                        addHSVSliders(root2, selectedOption);
                         break;
 
 
                     //Sliders
                     case "Scale":
                         if (race == null) break;
-                        addSingleSliderDouble(selectedOption, race.renderScaleMin, race.renderScaleMax);
+                        addSingleSliderDouble(root2, selectedOption, race.renderScaleMin, race.renderScaleMax);
                         break;
                 }
                 break;
@@ -297,28 +297,28 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //String selectors
                     case "Hair (Base)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.hairBase, race.premiumHairBase);
+                        addStringSelector(root2, selectedOption, true, race.hairBase, race.premiumHairBase);
                         break;
 
                     case "Hair (Front)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.hairFront, race.premiumHairFront);
+                        addStringSelector(root2, selectedOption, true, race.hairFront, race.premiumHairFront);
                         break;
 
                     case "Hair (Back)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.hairBack, race.premiumHairBack);
+                        addStringSelector(root2, selectedOption, true, race.hairBack, race.premiumHairBack);
                         break;
 
                     case "Hair (Top/Overall 1)":
                     case "Hair (Top/Overall 2)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.hairTop, race.premiumHairTop);
+                        addStringSelector(root2, selectedOption, true, race.hairTop, race.premiumHairTop);
                         break;
 
                     case "Eyes":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, race.eyes, race.premiumEyes);
+                        addStringSelector(root2, selectedOption, true, race.eyes, race.premiumEyes);
                         break;
 
 
@@ -327,20 +327,20 @@ public class CharacterCustomizationGUI extends GUIScreen
                         if (race == null) break;
                         if (race.skinColorSetsHairColor)
                         {
-                            if (race.skinColors != null) addColorSelector("Skin Color", race.skinColors.toArray(new Color[0]));
-                            else addHSVSliders("Skin Color");
+                            if (race.skinColors != null) addColorSelector(root2, "Skin Color", race.skinColors.toArray(new Color[0]));
+                            else addHSVSliders(root2, "Skin Color");
                         }
                         else
                         {
-                            if (race.hairColors != null) addColorSelector(selectedOption, race.hairColors.toArray(new Color[0]));
-                            else addHSVSliders(selectedOption);
+                            if (race.hairColors != null) addColorSelector(root2, selectedOption, race.hairColors.toArray(new Color[0]));
+                            else addHSVSliders(root2, selectedOption);
                         }
                         break;
 
                     case "Eye Color":
                         if (race == null) break;
-                        if (race.eyeColors != null) addColorSelector(selectedOption, race.eyeColors.toArray(new Color[0]));
-                        else addHSVSliders(selectedOption);
+                        if (race.eyeColors != null) addColorSelector(root2, selectedOption, race.eyeColors.toArray(new Color[0]));
+                        else addHSVSliders(root2, selectedOption);
                         break;
                 }
                 break;
@@ -352,29 +352,29 @@ public class CharacterCustomizationGUI extends GUIScreen
                     //String selectors
                     case "Markings":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, packet.markings);
+                        addStringSelector(root2, selectedOption, true, packet.markings);
                         break;
 
                     case "Accessory (Head)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, packet.headAccessories);
+                        addStringSelector(root2, selectedOption, true, packet.headAccessories);
                         break;
 
                     case "Accessory (Face)":
                         if (race == null) break;
-                        addStringSelector(selectedOption, true, packet.faceAccessories);
+                        addStringSelector(root2, selectedOption, true, packet.faceAccessories);
                         break;
 
 
                     //Color selectors or HSV sliders, depending on race
                     case "Color 1":
                         if (race == null) break;
-                        addHSVSliders(selectedOption);
+                        addHSVSliders(root2, selectedOption);
                         break;
 
                     case "Color 2":
                         if (race == null) break;
-                        addHSVSliders(selectedOption);
+                        addHSVSliders(root2, selectedOption);
                         break;
                 }
                 break;
@@ -382,12 +382,12 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addStringSelector(String key, boolean fileNames, Collection<String> selections)
+    protected void addStringSelector(GUIElement root2, String key, boolean fileNames, Collection<String> selections)
     {
-        addStringSelector(key, fileNames, selections, new HashSet<>());
+        addStringSelector(root2, key, fileNames, selections, new HashSet<>());
     }
 
-    protected void addStringSelector(String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)
+    protected void addStringSelector(GUIElement root2, String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)
     {
         String current;
         switch (key)
@@ -448,13 +448,13 @@ public class CharacterCustomizationGUI extends GUIScreen
             });
             if (buttonText.equals(current)) button.setActive(true);
 
-            root.add(button);
+            root2.add(button);
             if (i % 2 == 1) yy += buttonRelH;
         }
     }
 
 
-    protected void addSingleSliderDouble(String key, double min, double max)
+    protected void addSingleSliderDouble(GUIElement root2, String key, double min, double max)
     {
         GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
         slider.setValue(ccCompound.getDouble(key));
@@ -464,11 +464,11 @@ public class CharacterCustomizationGUI extends GUIScreen
             Network.WRAPPER.sendToServer(new Network.SetCCDoublePacket(key, slider.getValue()));
         });
 
-        root.add(slider);
+        root2.add(slider);
     }
 
 
-    protected void addColorSelector(String key, Color... colors)
+    protected void addColorSelector(GUIElement root2, String key, Color... colors)
     {
         Color current = new Color(ccCompound.getInteger(key));
 
@@ -489,13 +489,13 @@ public class CharacterCustomizationGUI extends GUIScreen
             });
             if (buttonColor.equals(current)) button.setActive(true);
 
-            root.add(button);
+            root2.add(button);
             if (i % 2 == 1) yy += buttonRelH;
         }
     }
 
 
-    protected void addHSVSliders(String key)
+    protected void addHSVSliders(GUIElement root2, String key)
     {
         Color color = new Color(ccCompound.getInteger(key));
 
@@ -536,7 +536,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, c.color()));
         });
 
-        root.addAll(hueSlider, satSlider, valSlider);
+        root2.addAll(hueSlider, satSlider, valSlider);
     }
 
 
