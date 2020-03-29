@@ -3,6 +3,7 @@ package com.fantasticsource.faeruncharacters;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
+import com.fantasticsource.instances.server.Teleport;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.datastructures.Color;
@@ -41,6 +42,7 @@ public class Network
         WRAPPER.registerMessage(SetCCColorPacketHandler.class, SetCCColorPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCIntPacketHandler.class, SetCCIntPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCDoublePacketHandler.class, SetCCDoublePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(LeaveCCPacketHandler.class, LeaveCCPacket.class, discriminator++, Side.SERVER);
     }
 
 
@@ -439,6 +441,37 @@ public class Network
                 if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
                     CharacterTags.getCC(ctx.getServerHandler().player).setDouble(packet.key, packet.value);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class LeaveCCPacket implements IMessage
+    {
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+        }
+    }
+
+    public static class LeaveCCPacketHandler implements IMessageHandler<LeaveCCPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(LeaveCCPacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                if (player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    if (CharacterCustomization.hasValidCharacter(player)) Teleport.escape(player);
                 }
             });
             return null;

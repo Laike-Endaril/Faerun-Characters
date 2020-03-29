@@ -126,7 +126,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         if (race == null) race = packet.racesPremium.get(raceString);
 
         GUIElement root2 = addCamControls();
-        addTabs(root2);
+        addTabsAndDone(root2);
         addOptions(root2);
         addOptionControls(root2);
     }
@@ -140,12 +140,13 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addTabs(GUIElement root2)
+    protected void addTabsAndDone(GUIElement root2)
     {
         int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         double buttonRelH = (double) ELEMENT_H * internalScaling * guiScale / pxHeight;
 
-        double yy = (1 - buttonRelH * TAB_NAMES.length) / 2;
+        //Tab buttons
+        double yy = (1 - buttonRelH * (TAB_NAMES.length + 2)) / 2;
         for (int i = 0; i < TAB_NAMES.length; i++)
         {
             String tabName = TAB_NAMES[i];
@@ -161,6 +162,15 @@ public class CharacterCustomizationGUI extends GUIScreen
             root2.add(button);
             yy += buttonRelH;
         }
+
+
+        //Done button
+        yy += buttonRelH;
+        String tabName = "Done";
+        GUIButton button = makeButton(0, yy, tabName);
+        button.addClickActions(() -> Network.WRAPPER.sendToServer(new Network.LeaveCCPacket()));
+
+        root2.add(button);
     }
 
 
