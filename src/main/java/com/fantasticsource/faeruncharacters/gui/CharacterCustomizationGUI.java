@@ -389,7 +389,21 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addStringSelector(String key, boolean fileNames, Collection<String> selections, Collection<String> premiumSelections)
     {
-        String current = key.equals("Body Type") ? packet.bodyType : ccCompound.getString(key);
+        String current;
+        switch (key)
+        {
+            case "Body Type":
+                current = packet.bodyType;
+                break;
+
+            case "Chest":
+                current = packet.chest;
+                break;
+
+            default:
+                current = ccCompound.getString(key);
+        }
+
         ArrayList<String> options = new ArrayList<>();
         options.addAll(selections);
         options.addAll(premiumSelections);
@@ -409,25 +423,28 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonShortText, i >= selections.size());
             button.addClickActions(() ->
             {
-                switch (key)
+                if (!buttonText.equals(current))
                 {
-                    case "Body Type":
-                        packet.bodyType = buttonText;
-                        Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(buttonText.equals("Masculine") ? "M" : "F"));
-                        break;
+                    switch (key)
+                    {
+                        case "Body Type":
+                            packet.bodyType = buttonText;
+                            Network.WRAPPER.sendToServer(new Network.SetBodyTypePacket(buttonText.equals("Masculine") ? "M" : "F"));
+                            break;
 
-                    case "Chest":
-                        ccCompound.setString(key, buttonText);
-                        Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
-                        break;
+                        case "Chest":
+                            packet.chest = buttonText;
+                            Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
+                            break;
 
-                    default:
-                        ccCompound.setString(key, buttonText);
-                        Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, buttonText));
-                        break;
+                        default:
+                            ccCompound.setString(key, buttonText);
+                            Network.WRAPPER.sendToServer(new Network.SetCCSkinPacket(key, buttonText));
+                            break;
+                    }
+
+                    recalc();
                 }
-
-                recalc();
             });
             if (buttonText.equals(current)) button.setActive(true);
 
