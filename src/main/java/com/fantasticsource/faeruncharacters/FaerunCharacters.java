@@ -4,7 +4,6 @@ import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
-import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
@@ -107,6 +106,8 @@ public class FaerunCharacters
         boolean pool;
         for (String skinString : skinStrings)
         {
+            if (skinString.equals("")) continue;
+
             if (skinString.length() >= 7 && skinString.substring(0, 7).equals("folder:"))
             {
                 pool = true;

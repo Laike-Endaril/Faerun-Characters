@@ -162,7 +162,7 @@ public class CRace extends Component
             case "chest":
                 for (String mode : Tools.fixedSplit(value, ","))
                 {
-                    chestSizes.add(mode.trim().toLowerCase());
+                    chestSizes.add(mode.trim());
                 }
                 break;
 
