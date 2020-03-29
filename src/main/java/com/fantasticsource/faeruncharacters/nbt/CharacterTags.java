@@ -198,6 +198,10 @@ public class CharacterTags
         value = race.tails.size() > 0 ? Tools.choose(race.tails.toArray(new String[0])) : "null";
         setCCSkin(livingBase, key, value);
 
+        key = "Bare Arms";
+        value = Tools.choose(FaerunCharactersConfig.server.bareArmSkinSet.toArray(new String[0]));
+        setCCSkin(livingBase, key, value);
+
         key = "Skin Color";
         Color color = new Color(ccCompound.getInteger(key));
         if (race.skinColors != null && !race.skinColors.contains(color))
@@ -310,6 +314,15 @@ public class CharacterTags
             color = Tools.choose(race.eyeColors.toArray(new Color[0]));
             setCCColor(livingBase, key, color);
         }
+
+
+        key = "Color 1";
+        color = ccCompound.hasKey(key) ? new Color(ccCompound.getInteger(key)) : new Color(Tools.random(256), Tools.random(256), Tools.random(256), 255);
+        setCCColor(livingBase, key, color);
+
+        key = "Color 2";
+        color = ccCompound.hasKey(key) ? new Color(ccCompound.getInteger(key)) : new Color(Tools.random(256), Tools.random(256), Tools.random(256), 255);
+        setCCColor(livingBase, key, color);
 
 
         value = RenderModes.getRenderMode(livingBase, "Body");

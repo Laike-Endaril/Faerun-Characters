@@ -48,7 +48,7 @@ public class CharacterCustomization
             if (race == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Race Variant"), race.raceVariants, race.premiumRaceVariants)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
+            if (ccCompound.hasKey("Bare Arms") && !checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
@@ -61,20 +61,20 @@ public class CharacterCustomization
 
 
             //Head
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Base)"), race.hairBase, race.premiumHairBase)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Front)"), race.hairFront, race.premiumHairFront)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Back)"), race.hairBack, race.premiumHairBack)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 1)"), race.hairTop, race.premiumHairTop)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 2)"), race.hairTop, race.premiumHairTop)) return false;
+            if (ccCompound.hasKey("Hair (Base)") && !checkMultiHashSet(ccCompound.getString("Hair (Base)"), race.hairBase, race.premiumHairBase)) return false;
+            if (ccCompound.hasKey("Hair (Front)") && !checkMultiHashSet(ccCompound.getString("Hair (Front)"), race.hairFront, race.premiumHairFront)) return false;
+            if (ccCompound.hasKey("Hair (Back)") && !checkMultiHashSet(ccCompound.getString("Hair (Back)"), race.hairBack, race.premiumHairBack)) return false;
+            if (ccCompound.hasKey("Hair (Top/Overall 1)") && !checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 1)"), race.hairTop, race.premiumHairTop)) return false;
+            if (ccCompound.hasKey("Hair (Top/Overall 2)") && !checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 2)"), race.hairTop, race.premiumHairTop)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Hair Color")), race.hairColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Eyes"), race.eyes, race.premiumEyes)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Eye Color")), race.eyeColors)) return false;
 
 
             //Accessories
-            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
+            if (ccCompound.hasKey("Markings") && !checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
+            if (ccCompound.hasKey("Accessory (Head)") && !checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
+            if (ccCompound.hasKey("Accessory (Face)") && !checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;
         }
         else //Non-premium
@@ -85,7 +85,7 @@ public class CharacterCustomization
             if (race == null) return false;
             if (!checkMultiHashSet(ccCompound.getString("Race Variant"), race.raceVariants)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Tail"), race.tails)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
+            if (ccCompound.hasKey("Bare Arms") && !checkMultiHashSet(ccCompound.getString("Bare Arms"), FaerunCharactersConfig.server.bareArmSkinSet)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Skin Color")), race.skinColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Torso"), race.defaultTorsos)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Default Chest"), race.defaultChests)) return false;
@@ -98,20 +98,20 @@ public class CharacterCustomization
 
 
             //Head
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Base)"), race.hairBase)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Front)"), race.hairFront)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Back)"), race.hairBack)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 1)"), race.hairTop)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 2)"), race.hairTop)) return false;
+            if (ccCompound.hasKey("Hair (Base)") && !checkMultiHashSet(ccCompound.getString("Hair (Base)"), race.hairBase)) return false;
+            if (ccCompound.hasKey("Hair (Front)") && !checkMultiHashSet(ccCompound.getString("Hair (Front)"), race.hairFront)) return false;
+            if (ccCompound.hasKey("Hair (Back)") && !checkMultiHashSet(ccCompound.getString("Hair (Back)"), race.hairBack)) return false;
+            if (ccCompound.hasKey("Hair (Top/Overall 1)") && !checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 1)"), race.hairTop)) return false;
+            if (ccCompound.hasKey("Hair (Top/Overall 2)") && !checkMultiHashSet(ccCompound.getString("Hair (Top/Overall 2)"), race.hairTop)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Hair Color")), race.hairColors)) return false;
             if (!checkMultiHashSet(ccCompound.getString("Eyes"), race.eyes)) return false;
             if (!checkMultiHashSet(new Color(ccCompound.getInteger("Eye Color")), race.eyeColors)) return false;
 
 
             //Accessories
-            if (!checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
-            if (!checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
+            if (ccCompound.hasKey("Markings") && !checkMultiHashSet(ccCompound.getString("Markings"), FaerunCharactersConfig.server.markingsSet)) return false;
+            if (ccCompound.hasKey("Accessory (Head)") && !checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
+            if (ccCompound.hasKey("Accessory (Face)") && !checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;
         }
 
