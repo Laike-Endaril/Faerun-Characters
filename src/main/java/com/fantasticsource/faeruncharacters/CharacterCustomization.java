@@ -14,6 +14,8 @@ import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -37,9 +39,24 @@ public class CharacterCustomization
 
     public static boolean hasValidCharacter(EntityPlayerMP player)
     {
+        if (MCTools.isWhitelisted(player)) return hasValidCharacter(player, true);
+
+        if (hasValidCharacter(player, false)) return true;
+
+        if (hasValidCharacter(player, true) && player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+        {
+            player.sendMessage(new TextComponentString(TextFormatting.RED + "You have a premium option selected, but do not currently have premium status!"));
+            player.sendMessage(new TextComponentString(TextFormatting.RED + "Please change any premium options to non-premium options, or leave the game and obtain premium status."));
+            player.sendMessage(new TextComponentString(TextFormatting.RED + "If you believe you should already have premium status, please contact a server admin!"));
+        }
+        return false;
+    }
+
+    public static boolean hasValidCharacter(EntityPlayerMP player, boolean isPremium)
+    {
         NBTTagCompound ccCompound = CharacterTags.getCC(player);
 
-        if (MCTools.isWhitelisted(player)) //Premium
+        if (isPremium) //Premium
         {
             //Body
             String s = ccCompound.getString("Race");
