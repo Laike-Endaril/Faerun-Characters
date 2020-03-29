@@ -90,8 +90,11 @@ public class CharacterTags
 
     public static void setCCSkin(EntityLivingBase livingBase, String key, String value)
     {
-        value = value.trim();
-        if (value.toLowerCase().equals("null") || Tools.fixFileSeparators(value).equals(Tools.fixFileSeparators(FaerunCharactersConfig.server.noneFolder))) value = null;
+        if (value != null) value = value.trim();
+        if (value == null || value.toLowerCase().equals("null"))
+        {
+            value = FaerunCharactersConfig.server.noneFolder;
+        }
 
         if (key.equals("Race"))
         {
@@ -129,7 +132,7 @@ public class CharacterTags
         else
         {
             ItemStack newSkin;
-            if (value == null)
+            if (Tools.fixFileSeparators(value).equals(Tools.fixFileSeparators(FaerunCharactersConfig.server.noneFolder)))
             {
                 newSkin = ItemStack.EMPTY;
             }
@@ -142,7 +145,10 @@ public class CharacterTags
         }
 
 
-        if (value == null) getCC(livingBase).removeTag(key);
+        if (Tools.fixFileSeparators(value).equals(Tools.fixFileSeparators(FaerunCharactersConfig.server.noneFolder)))
+        {
+            getCC(livingBase).removeTag(key);
+        }
         else getCC(livingBase).setString(key, value);
     }
 
