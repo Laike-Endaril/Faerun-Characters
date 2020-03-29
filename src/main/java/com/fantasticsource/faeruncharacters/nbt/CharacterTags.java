@@ -308,6 +308,12 @@ public class CharacterTags
 
         value = RenderModes.getRenderMode(livingBase, "Body");
         if (value == null) RenderModes.setRenderMode(livingBase, "Body", "M");
+
+        value = RenderModes.getRenderMode(livingBase, "CapeInv");
+        if (value == null) RenderModes.setRenderMode(livingBase, "CapeInv", "Off");
+
+        value = RenderModes.getRenderMode(livingBase, "Chest");
+        if (value == null) RenderModes.setRenderMode(livingBase, "Chest", "Flat");
     }
 
 
