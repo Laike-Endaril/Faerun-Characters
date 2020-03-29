@@ -13,15 +13,18 @@ public class ServerConfig
             headAccessorySet = new LinkedHashSet<>(),
             faceAccessorySet = new LinkedHashSet<>();
 
+    @Config.Name("'None' Folder")
+    public String noneFolder = "Era2/[None]/None";
+
     @Config.Name("Bare Arms")
-    public String[] bareArms = new String[0];
+    public String[] bareArms = new String[]{noneFolder};
 
     @Config.Name("Markings")
-    public String[] markings = new String[0];
+    public String[] markings = new String[]{noneFolder};
 
     @Config.Name("Head Accessories")
-    public String[] headAccessories = new String[0];
+    public String[] headAccessories = new String[]{noneFolder};
 
     @Config.Name("Face Accessories")
-    public String[] faceAccessories = new String[0];
+    public String[] faceAccessories = new String[]{noneFolder};
 }

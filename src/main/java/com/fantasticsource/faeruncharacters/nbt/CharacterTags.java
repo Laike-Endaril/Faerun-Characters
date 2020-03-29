@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters.nbt;
 
 import com.fantasticsource.faeruncharacters.CRace;
+import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
 import com.fantasticsource.mctools.aw.AWSkinGenerator;
@@ -89,6 +90,9 @@ public class CharacterTags
 
     public static void setCCSkin(EntityLivingBase livingBase, String key, String value)
     {
+        value = value.trim();
+        if (value.toLowerCase().equals("null") || Tools.fixFileSeparators(value).equals(Tools.fixFileSeparators(FaerunCharactersConfig.server.noneFolder))) value = null;
+
         if (key.equals("Race"))
         {
             setRace(livingBase, value);
@@ -124,7 +128,13 @@ public class CharacterTags
         }
         else
         {
-            ItemStack newSkin = AWSkinGenerator.generate(value, skinSlotting.skinType);
+            ItemStack newSkin;
+            if (value == null)
+            {
+                newSkin = ItemStack.EMPTY;
+            }
+            else newSkin = AWSkinGenerator.generate(value, skinSlotting.skinType);
+
             if (!newSkin.isEmpty()) applyCCStackTag(newSkin, skinSlotting.name);
 
             GlobalInventory.setAWSkin(livingBase, skinSlotting.skinType, skinSlotting.indexWithinType, newSkin);
@@ -132,7 +142,7 @@ public class CharacterTags
         }
 
 
-        if (value == null || value.trim().toLowerCase().equals("null")) getCC(livingBase).removeTag(key);
+        if (value == null) getCC(livingBase).removeTag(key);
         else getCC(livingBase).setString(key, value);
     }
 
