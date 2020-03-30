@@ -30,10 +30,10 @@ public class CharacterCustomizationGUI extends GUIScreen
 {
     public static final int
             ELEMENT_W = 128, ELEMENT_H = 16,
-            GAP_W = 4,
+            PADDING = 4,
 
     //Definitions for what we want to allow for
-    TOTAL_W = ELEMENT_W * 4 + GAP_W,
+    TOTAL_W = PADDING + ELEMENT_W + PADDING + ELEMENT_W * 2,
             TOTAL_H = ELEMENT_H * 15;
 
     public static final double
@@ -41,7 +41,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     public static final LinkedHashSet<String> bodyTypes = new LinkedHashSet<>();
-    public static double internalScaling, buttonRelW, buttonRelH, gapRelW, sliderRelH;
+    public static double internalScaling, buttonRelW, buttonRelH, paddingRelW, paddingRelH, sliderRelH;
 
     public static Color
             activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
@@ -105,16 +105,17 @@ public class CharacterCustomizationGUI extends GUIScreen
         int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         internalScaling = Tools.min(W_PERCENT * pxWidth / (TOTAL_W * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
 
-        //These two lined prioritize full-pixel scaling multiples
-//        double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
-//        if (internalScaling2 != 0) internalScaling = internalScaling2;
+        //These two lines prioritize full-pixel scaling multiples
+        double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
+        if (internalScaling2 != 0) internalScaling = internalScaling2;
 
 
         //Calc relative element sizes
         buttonRelW = (double) ELEMENT_W * internalScaling * mcScale / pxWidth;
         buttonRelH = (double) ELEMENT_H * internalScaling * mcScale / pxHeight;
 
-        gapRelW = (double) GAP_W * internalScaling * mcScale / pxWidth;
+        paddingRelW = (double) PADDING * internalScaling * mcScale / pxWidth;
+        paddingRelH = (double) PADDING * internalScaling * mcScale / pxHeight;
 
         sliderRelH = (double) ELEMENT_H * internalScaling * mcScale / pxHeight;
     }
@@ -126,7 +127,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         if (race == null) race = packet.racesPremium.get(raceString);
 
         GUIElement root2 = addCamControls();
-        addTabsAndDone(root2);
+        addTabsAndDoneButton(root2);
         addOptions(root2);
         addOptionControls(root2);
     }
@@ -140,17 +141,14 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected void addTabsAndDone(GUIElement root2)
+    protected void addTabsAndDoneButton(GUIElement root2)
     {
-        int guiScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        double buttonRelH = (double) ELEMENT_H * internalScaling * guiScale / pxHeight;
-
         //Tab buttons
-        double yy = (1 - buttonRelH * (TAB_NAMES.length + 2)) / 2;
+        double xx = paddingRelW;
         for (int i = 0; i < TAB_NAMES.length; i++)
         {
             String tabName = TAB_NAMES[i];
-            GUIButton button = makeButton(0, yy, tabName);
+            GUIButton button = makeButton(xx, paddingRelH, tabName);
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
@@ -160,14 +158,12 @@ public class CharacterCustomizationGUI extends GUIScreen
             if (tabName.equals(selectedTab)) button.setActive(true);
 
             root2.add(button);
-            yy += buttonRelH;
+            xx += buttonRelW;
         }
 
 
         //Done button
-        yy += buttonRelH;
-        String tabName = "Done";
-        GUIButton button = makeButton(0, yy, tabName);
+        GUIButton button = makeButton(paddingRelW, 1 - paddingRelH - buttonRelH, "Done");
         button.addClickActions(() -> Network.WRAPPER.sendToServer(new Network.LeaveCCPacket()));
 
         root2.add(button);
@@ -223,7 +219,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         for (int i = 0; i < options.size(); i++)
         {
             String optionName = options.get(i);
-            GUIButton button = makeButton(buttonRelW, yy, optionName);
+            GUIButton button = makeButton(paddingRelW, yy, optionName);
             button.addClickActions(() ->
             {
                 if (optionName.equals(selectedOption)) selectedOption = null;
@@ -430,7 +426,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
             }
 
-            GUIButton button = makeButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonShortText, i >= selections.size());
+            GUIButton button = makeButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonShortText, i >= selections.size());
             button.addClickActions(() ->
             {
                 if (!buttonText.equals(current))
@@ -466,7 +462,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addSingleSliderDouble(GUIElement root2, String key, double min, double max)
     {
-        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
         slider.setValue(ccCompound.getDouble(key));
         slider.addDragActions(() ->
         {
@@ -488,7 +484,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         {
             Color buttonColor = colors[i];
 
-            GUIButton button = makeColorButton(i % 2 == 0 ? buttonRelW * 2 + gapRelW : buttonRelW * 3 + gapRelW, yy, buttonColor);
+            GUIButton button = makeColorButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonColor);
             button.addClickActions(() ->
             {
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
@@ -509,15 +505,15 @@ public class CharacterCustomizationGUI extends GUIScreen
     {
         Color color = new Color(ccCompound.getInteger(key));
 
-        GUIHorizontalSlider hueSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2 - sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_HUE, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider hueSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2 - sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_HUE, TEX_SLIDER_KNOB);
         hueSlider.setValue(color.h());
 
-        GUIHorizontalSlider satSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_SATURATION, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider satSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_SATURATION, TEX_SLIDER_KNOB);
         satSlider.setValue(color.s());
         GUIImage satOverlay = new GUIImage(this, 0, 0, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SLIDER_GRADIENT, new Color(0).setColorHSV(color.h(), 255, 255, 255));
         satSlider.add(0, satOverlay);
 
-        GUIHorizontalSlider valSlider = new GUIHorizontalSlider(this, buttonRelW * 2 + gapRelW, (1 - sliderRelH) / 2 + sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_BUTTON_ACTIVE, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider valSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2 + sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_BUTTON_ACTIVE, TEX_SLIDER_KNOB);
         valSlider.setValue(color.v());
         GUIImage valOverlay = new GUIImage(this, 0, 0, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SLIDER_GRADIENT, new Color(0).setColorHSV(color.h(), color.s(), 255, 255));
         valSlider.add(0, valOverlay);
