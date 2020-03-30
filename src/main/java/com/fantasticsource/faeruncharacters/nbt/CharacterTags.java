@@ -213,8 +213,8 @@ public class CharacterTags
         if (race.skinColors != null && !race.skinColors.contains(color))
         {
             color = Tools.choose(race.skinColors.toArray(new Color[0]));
-            setCCColor(livingBase, key, color);
         }
+        setCCColor(livingBase, key, color);
 
         key = "Default Torso";
         value = ccCompound.getString(key);
@@ -307,8 +307,8 @@ public class CharacterTags
             if (race.hairColors != null && !race.hairColors.contains(color))
             {
                 color = Tools.choose(race.hairColors.toArray(new Color[0]));
-                setCCColor(livingBase, key, color);
             }
+            setCCColor(livingBase, key, color);
         }
 
         key = "Eyes";

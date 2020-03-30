@@ -1,8 +1,6 @@
 GUI should open up with Race already selected
 
-Hair color always starts white, and HSV always register it as black
-
--When you first select a race, the random hair selection needs to go. It causes several issues, not sure if that was just debug or not. Random Skin Tone, Torso style, chest, is fine if none are defined, otherwise whatever it was before is appropriate.
+-When you first select a race, the random hair selection needs to go. It causes several issues
 
 -a sound effect for clicking a button would be good, will provide ogg below.
 
