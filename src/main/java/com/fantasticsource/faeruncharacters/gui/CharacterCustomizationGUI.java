@@ -611,7 +611,11 @@ public class CharacterCustomizationGUI extends GUIScreen
     public void onClosed()
     {
         super.onClosed();
-        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) Minecraft.getMinecraft().displayGuiScreen(this);
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+        {
+            Minecraft.getMinecraft().displayGuiScreen(this);
+        }
+        else Camera.getCamera().deactivate();
     }
 
     @Override
