@@ -1,4 +1,4 @@
-GUI should open up with Race already selected
+Dragging from ON a button to OFF a button and releasing doesn't deactivate the button
 
 -a sound effect for clicking a button would be good, will provide ogg below.
 

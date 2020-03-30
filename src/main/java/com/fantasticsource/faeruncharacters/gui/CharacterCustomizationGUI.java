@@ -77,7 +77,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     protected Network.CharacterCustomizationGUIPacket packet;
-    protected String selectedTab = "Body", selectedOption = null;
+    protected String selectedTab = "Body", selectedOption = "Race";
     protected NBTTagCompound ccCompound;
     protected CRace race;
 
