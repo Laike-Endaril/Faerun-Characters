@@ -264,40 +264,28 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
         {
-            if (race.hairFront.size() > 0) value = Tools.choose(race.hairFront.toArray(new String[0]));
-            else if (race.premiumHairFront.size() > 0) value = Tools.choose(race.premiumHairFront.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Hair (Back)";
         value = ccCompound.getString(key);
         if (!race.hairBack.contains(value) && !race.premiumHairBack.contains(value))
         {
-            if (race.hairBack.size() > 0) value = Tools.choose(race.hairBack.toArray(new String[0]));
-            else if (race.premiumHairBack.size() > 0) value = Tools.choose(race.premiumHairBack.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Hair (Top/Overall 1)";
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            if (race.hairTop.size() > 0) value = Tools.choose(race.hairTop.toArray(new String[0]));
-            else if (race.premiumHairTop.size() > 0) value = Tools.choose(race.premiumHairTop.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Hair (Top/Overall 2)";
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            if (race.hairTop.size() > 0) value = Tools.choose(race.hairTop.toArray(new String[0]));
-            else if (race.premiumHairTop.size() > 0) value = Tools.choose(race.premiumHairTop.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         if (!race.skinColorSetsHairColor)
@@ -336,27 +324,21 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.markingsSet.contains(value))
         {
-            if (FaerunCharactersConfig.server.markingsSet.size() > 0) value = Tools.choose(FaerunCharactersConfig.server.markingsSet.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Accessory (Head)";
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.headAccessorySet.contains(value))
         {
-            if (FaerunCharactersConfig.server.headAccessorySet.size() > 0) value = Tools.choose(FaerunCharactersConfig.server.headAccessorySet.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Accessory (Face)";
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.faceAccessorySet.contains(value))
         {
-            if (FaerunCharactersConfig.server.faceAccessorySet.size() > 0) value = Tools.choose(FaerunCharactersConfig.server.faceAccessorySet.toArray(new String[0]));
-            else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
         }
 
         key = "Color 1";
