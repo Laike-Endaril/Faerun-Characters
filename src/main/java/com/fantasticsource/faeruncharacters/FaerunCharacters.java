@@ -7,9 +7,11 @@ import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -152,5 +154,14 @@ public class FaerunCharacters
                 loadSkinNames(skinSet, subSkinStrings, false);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void renderExpBar(RenderGameOverlayEvent.Pre event)
+    {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() != CharacterCustomization.DIMTYPE_CHARACTER_CREATION) return;
+
+        event.setCanceled(true);
     }
 }
