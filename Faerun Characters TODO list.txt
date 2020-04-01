@@ -1,8 +1,6 @@
+Fix all hairs besides base being glitched on first load, probably from when I changed their default to None
+
 -a sound effect for clicking a button would be good, will provide ogg below.
-
--Finding what skin was premium is harder to do than it should be. Are we able to take the player to the first panel that is premium and tell them how many premium skins they've chosen? ( they can try again if they picked multiple that's probably fine)
-
--Clicking "Done" but cant complete, should tell the player what selections are missing.
 
 
 

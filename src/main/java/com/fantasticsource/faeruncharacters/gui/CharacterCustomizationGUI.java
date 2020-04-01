@@ -22,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
@@ -58,6 +59,12 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_PREMIUM_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_premium_idle.png"),
             TEX_PREMIUM_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_premium_hover.png"),
             TEX_PREMIUM_BUTTON_ACTIVE = new ResourceLocation(MODID, "image/button_premium_active.png"),
+            TEX_BUTTON_IDLE_ERROR = new ResourceLocation(MODID, "image/button_idle_error.png"),
+            TEX_BUTTON_HOVER_ERROR = new ResourceLocation(MODID, "image/button_hover_error.png"),
+            TEX_BUTTON_ACTIVE_ERROR = new ResourceLocation(MODID, "image/button_active_error.png"),
+            TEX_PREMIUM_BUTTON_IDLE_ERROR = new ResourceLocation(MODID, "image/button_premium_idle_error.png"),
+            TEX_PREMIUM_BUTTON_HOVER_ERROR = new ResourceLocation(MODID, "image/button_premium_hover_error.png"),
+            TEX_PREMIUM_BUTTON_ACTIVE_ERROR = new ResourceLocation(MODID, "image/button_premium_active_error.png"),
             TEX_SLIDER_BAR = new ResourceLocation(MODID, "image/slider_bar.png"),
             TEX_SLIDER_KNOB = new ResourceLocation(MODID, "image/slider_knob.png"),
             TEX_SINGLE_COLOR = new ResourceLocation(MODID, "image/single_color.png"),
@@ -80,6 +87,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected String selectedTab = "Body", selectedOption = "Race";
     protected NBTTagCompound ccCompound;
     protected CRace race;
+    protected HashSet<String> errors = new HashSet<>();
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
@@ -90,7 +98,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         Minecraft mc = Minecraft.getMinecraft();
         mc.displayGuiScreen(this);
 
-        preCalc();
         addAll();
 
         //Set to camera view
@@ -120,8 +127,72 @@ public class CharacterCustomizationGUI extends GUIScreen
         sliderRelH = (double) ELEMENT_H * internalScaling * mcScale / pxHeight;
     }
 
+    protected void calcErrors()
+    {
+        errors.clear();
+
+        if (packet.isPremium) return;
+
+
+        if (!packet.races.keySet().contains(ccCompound.getString("Race")))
+        {
+            errors.add("Body");
+            errors.add("Race");
+        }
+
+
+        CRace race = packet.races.get(ccCompound.getString("Race"));
+        if (race == null) race = packet.racesPremium.get(ccCompound.getString("Race"));
+
+        if (!race.raceVariants.contains(ccCompound.getString("Race Variant")))
+        {
+            errors.add("Body");
+            errors.add("Race Variant");
+        }
+
+
+        if (!race.hairBase.contains(ccCompound.getString("Hair (Base)")))
+        {
+            errors.add("Head");
+            errors.add("Hair (Base)");
+        }
+
+        if (!race.hairFront.contains(ccCompound.getString("Hair (Front)")))
+        {
+            errors.add("Head");
+            errors.add("Hair (Front)");
+        }
+
+        if (!race.hairBack.contains(ccCompound.getString("Hair (Back)")))
+        {
+            errors.add("Head");
+            errors.add("Hair (Back)");
+        }
+
+        if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 1)")))
+        {
+            errors.add("Head");
+            errors.add("Hair (Top/Overall 1)");
+        }
+
+        if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 2)")))
+        {
+            errors.add("Head");
+            errors.add("Hair (Top/Overall 2)");
+        }
+
+        if (!race.eyes.contains(ccCompound.getString("Eyes")))
+        {
+            errors.add("Head");
+            errors.add("Eyes");
+        }
+    }
+
     protected void addAll()
     {
+        preCalc();
+        calcErrors();
+
         String raceString = ccCompound.getString("Race");
         race = packet.races.get(raceString);
         if (race == null) race = packet.racesPremium.get(raceString);
@@ -148,7 +219,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         for (int i = 0; i < TAB_NAMES.length; i++)
         {
             String tabName = TAB_NAMES[i];
-            GUIButton button = makeButton(xx, paddingRelH, tabName);
+            GUIButton button = makeButton(xx, paddingRelH, tabName, errors.contains(tabName));
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
@@ -163,7 +234,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
         //Done button
-        GUIButton button = makeButton(paddingRelW, 1 - paddingRelH - buttonRelH, "Done");
+        GUIButton button = makeButton(paddingRelW, 1 - paddingRelH - buttonRelH, "Done", errors.size() > 0);
         button.addClickActions(() -> Network.WRAPPER.sendToServer(new Network.LeaveCCPacket()));
 
         root2.add(button);
@@ -219,7 +290,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         for (int i = 0; i < options.size(); i++)
         {
             String optionName = options.get(i);
-            GUIButton button = makeButton(paddingRelW, yy, optionName);
+            GUIButton button = makeButton(paddingRelW, yy, optionName, errors.contains(optionName));
             button.addClickActions(() ->
             {
                 if (optionName.equals(selectedOption)) selectedOption = null;
@@ -426,7 +497,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
             }
 
-            GUIButton button = makeButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonShortText, i >= selections.size());
+            GUIButton button = makeButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
             button.addClickActions(() ->
             {
                 if (!buttonText.equals(current))
@@ -546,26 +617,45 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected GUIButton makeButton(double x, double y, String text)
+    protected GUIButton makeButton(double x, double y, String text, boolean error)
     {
-        return makeButton(x, y, text, false);
+        return makeButton(x, y, text, error, false);
     }
 
-    protected GUIButton makeButton(double x, double y, String text, boolean premium)
+    protected GUIButton makeButton(double x, double y, String text, boolean error, boolean premium)
     {
-        GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
-        active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, internalScaling));
+        if (error)
+        {
+            GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE_ERROR : TEX_BUTTON_ACTIVE_ERROR);
+            active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, internalScaling));
 
-        GUIImage hover = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
-        hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, internalScaling));
+            GUIImage hover = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER_ERROR : TEX_BUTTON_HOVER_ERROR);
+            hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, internalScaling));
 
-        GUIImage idle = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
-        idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
-        idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, internalScaling));
+            GUIImage idle = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE_ERROR : TEX_BUTTON_IDLE_ERROR);
+            idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, internalScaling));
 
-        return new GUIButton(this, x, y, idle, hover, active, true);
+            return new GUIButton(this, x, y, idle, hover, active, true);
+        }
+        else
+        {
+            GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_ACTIVE : TEX_BUTTON_ACTIVE);
+            active.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            active.add(new GUIText(this, text, premium ? activePremiumButtonColor : activeButtonColor, internalScaling));
+
+            GUIImage hover = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_HOVER : TEX_BUTTON_HOVER);
+            hover.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            hover.add(new GUIText(this, text, premium ? hoverPremiumButtonColor : hoverButtonColor, internalScaling));
+
+            GUIImage idle = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, premium ? TEX_PREMIUM_BUTTON_IDLE : TEX_BUTTON_IDLE);
+            idle.setSubElementAutoplaceMethod(GUIElement.AP_CENTER);
+            idle.add(new GUIText(this, text, premium ? idlePremiumButtonColor : idleButtonColor, internalScaling));
+
+            return new GUIButton(this, x, y, idle, hover, active, true);
+        }
     }
 
 
@@ -593,7 +683,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         root.clear();
         super.recalc();
 
-        preCalc();
         addAll();
 
         root.recalc(0);
