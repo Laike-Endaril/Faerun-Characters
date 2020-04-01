@@ -83,9 +83,9 @@ public class CharacterCustomizationGUI extends GUIScreen
     }
 
 
-    protected Network.CharacterCustomizationGUIPacket packet;
+    public Network.CharacterCustomizationGUIPacket packet;
+    public NBTTagCompound ccCompound;
     protected String selectedTab = "Body", selectedOption = "Race";
-    protected NBTTagCompound ccCompound;
     protected CRace race;
     protected HashSet<String> errors = new HashSet<>();
 
@@ -98,7 +98,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         Minecraft mc = Minecraft.getMinecraft();
         mc.displayGuiScreen(this);
 
-        addAll();
+        refresh();
 
         //Set to camera view
         EntityPlayer player = mc.player;
@@ -188,7 +188,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-    protected void addAll()
+    public void refresh()
     {
         preCalc();
         calcErrors();
@@ -683,7 +683,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         root.clear();
         super.recalc();
 
-        addAll();
+        refresh();
 
         root.recalc(0);
     }

@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters.nbt;
 
 import com.fantasticsource.faeruncharacters.CRace;
+import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
@@ -9,6 +10,7 @@ import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -88,7 +90,7 @@ public class CharacterTags
         getCC(livingBase).setInteger(key, value.color());
     }
 
-    public static void setCCSkin(EntityLivingBase livingBase, String key, String value)
+    public static void setCCSkin(EntityLivingBase livingBase, String key, String value, boolean refresh)
     {
         if (value != null) value = value.trim();
         if (value == null || value.equals(FaerunCharactersConfig.server.noneFolder))
@@ -98,7 +100,7 @@ public class CharacterTags
 
         if (key.equals("Race"))
         {
-            setRace(livingBase, value);
+            setRace(livingBase, value, refresh);
             return;
         }
 
@@ -174,7 +176,7 @@ public class CharacterTags
     }
 
 
-    protected static void setRace(EntityLivingBase livingBase, String raceName)
+    protected static void setRace(EntityLivingBase livingBase, String raceName, boolean refresh)
     {
         CRace race = CRace.RACES.get(raceName);
         if (race == null) race = CRace.RACES_PREMIUM.get(raceName);
@@ -198,15 +200,15 @@ public class CharacterTags
 
         key = "Race Variant";
         value = race.raceVariants.size() > 0 ? Tools.choose(race.raceVariants.toArray(new String[0])) : Tools.choose(race.premiumRaceVariants.toArray(new String[0]));
-        setCCSkin(livingBase, key, value);
+        setCCSkin(livingBase, key, value, false);
 
         key = "Tail";
         value = race.tails.size() > 0 ? Tools.choose(race.tails.toArray(new String[0])) : FaerunCharactersConfig.server.noneFolder;
-        setCCSkin(livingBase, key, value);
+        setCCSkin(livingBase, key, value, false);
 
         key = "Bare Arms";
         value = Tools.choose(FaerunCharactersConfig.server.bareArmSkinSet.toArray(new String[0]));
-        setCCSkin(livingBase, key, value);
+        setCCSkin(livingBase, key, value, false);
 
         key = "Skin Color";
         Color color = ccCompound.hasKey(key) ? new Color(ccCompound.getInteger(key)) : new Color(Tools.random(256), Tools.random(256), Tools.random(256), 255);
@@ -221,7 +223,7 @@ public class CharacterTags
         if (!race.defaultTorsos.contains(value))
         {
             value = Tools.choose(race.defaultTorsos.toArray(new String[0]));
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, value, false);
         }
 
         key = "Default Chest";
@@ -229,7 +231,7 @@ public class CharacterTags
         if (!race.defaultChests.contains(value))
         {
             value = Tools.choose(race.defaultChests.toArray(new String[0]));
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, value, false);
         }
 
         key = "Chest";
@@ -257,35 +259,35 @@ public class CharacterTags
             if (race.hairBase.size() > 0) value = Tools.choose(race.hairBase.toArray(new String[0]));
             else if (race.premiumHairBase.size() > 0) value = Tools.choose(race.premiumHairBase.toArray(new String[0]));
             else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, value, false);
         }
 
         key = "Hair (Front)";
         value = ccCompound.getString(key);
         if (!race.hairFront.contains(value) && !race.premiumHairFront.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Hair (Back)";
         value = ccCompound.getString(key);
         if (!race.hairBack.contains(value) && !race.premiumHairBack.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Hair (Top/Overall 1)";
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Hair (Top/Overall 2)";
         value = ccCompound.getString(key);
         if (!race.hairTop.contains(value) && !race.premiumHairTop.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         if (!race.skinColorSetsHairColor)
@@ -306,7 +308,7 @@ public class CharacterTags
             if (race.eyes.size() > 0) value = Tools.choose(race.eyes.toArray(new String[0]));
             else if (race.premiumEyes.size() > 0) value = Tools.choose(race.premiumEyes.toArray(new String[0]));
             else value = FaerunCharactersConfig.server.noneFolder;
-            setCCSkin(livingBase, key, value);
+            setCCSkin(livingBase, key, value, false);
         }
 
         key = "Eye Color";
@@ -324,21 +326,21 @@ public class CharacterTags
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.markingsSet.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Accessory (Head)";
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.headAccessorySet.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Accessory (Face)";
         value = ccCompound.getString(key);
         if (!FaerunCharactersConfig.server.faceAccessorySet.contains(value))
         {
-            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder);
+            setCCSkin(livingBase, key, FaerunCharactersConfig.server.noneFolder, false);
         }
 
         key = "Color 1";
@@ -360,6 +362,10 @@ public class CharacterTags
 
         value = RenderModes.getRenderMode(livingBase, "Chest");
         if (!race.chestSizes.contains(value)) RenderModes.setRenderMode(livingBase, "Chest", Tools.choose(race.chestSizes.toArray(new String[0])));
+
+
+        //Refresh GUI
+        if (refresh) Network.WRAPPER.sendTo(new Network.CharacterCustomizationGUIPacket((EntityPlayerMP) livingBase), (EntityPlayerMP) livingBase);
     }
 
 

@@ -163,7 +163,18 @@ public class Network
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(CharacterCustomizationGUIPacket packet, MessageContext ctx)
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> new CharacterCustomizationGUI(packet));
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.addScheduledTask(() ->
+            {
+                if (mc.currentScreen instanceof CharacterCustomizationGUI)
+                {
+                    CharacterCustomizationGUI gui = (CharacterCustomizationGUI) mc.currentScreen;
+                    gui.packet = packet;
+                    gui.ccCompound = packet.ccCompound;
+                    gui.refresh();
+                }
+                else new CharacterCustomizationGUI(packet);
+            });
             return null;
         }
     }
@@ -296,7 +307,7 @@ public class Network
             {
                 if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
-                    CharacterTags.setCCSkin(ctx.getServerHandler().player, packet.key, packet.value);
+                    CharacterTags.setCCSkin(ctx.getServerHandler().player, packet.key, packet.value, true);
                 }
             });
             return null;

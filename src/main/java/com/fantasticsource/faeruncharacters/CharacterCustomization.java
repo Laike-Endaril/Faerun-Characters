@@ -158,7 +158,7 @@ public class CharacterCustomization
         if (RenderModes.getRenderMode(player, "CapeInv") == null) RenderModes.setRenderMode(player, "CapeInv", "Off");
 
 
-        if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", Tools.choose(CRace.RACES.keySet().toArray(new String[0])));
+        if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", Tools.choose(CRace.RACES.keySet().toArray(new String[0])), false);
 
 
         InstanceData data = InstanceData.get(true, DIMTYPE_CHARACTER_CREATION, "Character_Creation");
