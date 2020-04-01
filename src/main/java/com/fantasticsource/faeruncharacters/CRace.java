@@ -258,13 +258,7 @@ public class CRace extends Component
 
 
         //Load
-        boolean premium = false;
         File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races" + File.separator + name + ".txt");
-        if (!file.exists() || file.isDirectory())
-        {
-            premium = true;
-            file = new File(MCTools.getConfigDir() + MODID + File.separator + "racesPremium" + File.separator + name + ".txt");
-        }
         if (!file.exists() || file.isDirectory()) return;
 
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -289,7 +283,7 @@ public class CRace extends Component
 
 
         //Save and return
-        if (premium) RACES_PREMIUM.put(name, race);
+        if (race.raceVariants.size() == 0) RACES_PREMIUM.put(name, race);
         else RACES.put(name, race);
     }
 
