@@ -130,6 +130,7 @@ public class FaerunCharacters
                 if (!skinFile.exists()) skinFile = new File(AW_SKIN_LIBRARY_DIR + skinString + ".armour");
 
                 if (!skinFile.exists()) continue;
+                if (Tools.fixFileSeparators(skinString).equals(Tools.fixFileSeparators(FaerunCharactersConfig.server.noneFolder))) continue;
 
                 skinSet.add(skinString);
             }

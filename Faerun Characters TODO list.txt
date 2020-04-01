@@ -1,5 +1,3 @@
-Remove duplicate "None" options due to manual add
-
 Figure out why other tab buttons have to be clicked twice after selecting a new race
 
 Make things with no options invisible
