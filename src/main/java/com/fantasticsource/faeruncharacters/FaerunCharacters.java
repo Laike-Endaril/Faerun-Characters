@@ -77,13 +77,13 @@ public class FaerunCharacters
     protected static void updateGlobalOptions()
     {
         FaerunCharactersConfig.server.bareArmSkinSet.clear();
-        loadSkinNames(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms);
+        loadSkinNames(FaerunCharactersConfig.server.bareArmSkinSet, FaerunCharactersConfig.server.bareArms, true);
         FaerunCharactersConfig.server.markingsSet.clear();
-        loadSkinNames(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings);
+        loadSkinNames(FaerunCharactersConfig.server.markingsSet, FaerunCharactersConfig.server.markings, true);
         FaerunCharactersConfig.server.headAccessorySet.clear();
-        loadSkinNames(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories);
+        loadSkinNames(FaerunCharactersConfig.server.headAccessorySet, FaerunCharactersConfig.server.headAccessories, true);
         FaerunCharactersConfig.server.faceAccessorySet.clear();
-        loadSkinNames(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories);
+        loadSkinNames(FaerunCharactersConfig.server.faceAccessorySet, FaerunCharactersConfig.server.faceAccessories, true);
     }
 
 
@@ -103,8 +103,10 @@ public class FaerunCharacters
     }
 
 
-    public static void loadSkinNames(LinkedHashSet<String> skinSet, String[] skinStrings)
+    public static void loadSkinNames(LinkedHashSet<String> skinSet, String[] skinStrings, boolean addNoneOption)
     {
+        if (addNoneOption) skinSet.add(FaerunCharactersConfig.server.noneFolder);
+
         boolean pool;
         for (String skinString : skinStrings)
         {
@@ -146,7 +148,7 @@ public class FaerunCharacters
                     subSkinStrings[i++] = subFile.getAbsolutePath().replace(AW_SKIN_LIBRARY_DIR, "").replace(".armour", "");
                 }
 
-                loadSkinNames(skinSet, subSkinStrings);
+                loadSkinNames(skinSet, subSkinStrings, false);
             }
         }
     }

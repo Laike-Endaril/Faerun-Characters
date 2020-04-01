@@ -1,4 +1,4 @@
-Fix all hairs besides base being glitched on first load, probably from when I changed their default to None
+Make things with no options invisible?
 
 -a sound effect for clicking a button would be good, will provide ogg below.
 

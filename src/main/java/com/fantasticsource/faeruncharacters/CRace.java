@@ -136,15 +136,15 @@ public class CRace extends Component
 
             //Body
             case "race variant":
-                FaerunCharacters.loadSkinNames(raceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(raceVariants, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "premium race variant":
-                FaerunCharacters.loadSkinNames(premiumRaceVariants, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumRaceVariants, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "tail":
-                FaerunCharacters.loadSkinNames(tails, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(tails, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "skin color":
@@ -152,11 +152,11 @@ public class CRace extends Component
                 break;
 
             case "default torso":
-                FaerunCharacters.loadSkinNames(defaultTorsos, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(defaultTorsos, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "default chest":
-                FaerunCharacters.loadSkinNames(defaultChests, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(defaultChests, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "chest":
@@ -178,35 +178,35 @@ public class CRace extends Component
 
             //Head
             case "hair":
-                FaerunCharacters.loadSkinNames(hairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairBase, Tools.fixedSplit(value, ","), true);
                 break;
 
             case "premium hair":
-                FaerunCharacters.loadSkinNames(premiumHairBase, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairBase, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "hair front":
-                FaerunCharacters.loadSkinNames(hairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairFront, Tools.fixedSplit(value, ","), true);
                 break;
 
             case "premium hair front":
-                FaerunCharacters.loadSkinNames(premiumHairFront, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairFront, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "hair back":
-                FaerunCharacters.loadSkinNames(hairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairBack, Tools.fixedSplit(value, ","), true);
                 break;
 
             case "premium hair back":
-                FaerunCharacters.loadSkinNames(premiumHairBack, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairBack, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "hair top":
-                FaerunCharacters.loadSkinNames(hairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(hairTop, Tools.fixedSplit(value, ","), true);
                 break;
 
             case "premium hair top":
-                FaerunCharacters.loadSkinNames(premiumHairTop, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumHairTop, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "hair color":
@@ -214,11 +214,11 @@ public class CRace extends Component
                 break;
 
             case "eyes":
-                FaerunCharacters.loadSkinNames(eyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(eyes, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "premium eyes":
-                FaerunCharacters.loadSkinNames(premiumEyes, Tools.fixedSplit(value, ","));
+                FaerunCharacters.loadSkinNames(premiumEyes, Tools.fixedSplit(value, ","), false);
                 break;
 
             case "eye color":

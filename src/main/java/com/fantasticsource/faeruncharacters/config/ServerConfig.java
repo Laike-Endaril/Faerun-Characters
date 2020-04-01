@@ -17,14 +17,14 @@ public class ServerConfig
     public String noneFolder = "Era2/[None]/None";
 
     @Config.Name("Bare Arms")
-    public String[] bareArms = new String[]{noneFolder};
+    public String[] bareArms = new String[]{};
 
     @Config.Name("Markings")
-    public String[] markings = new String[]{noneFolder};
+    public String[] markings = new String[]{};
 
     @Config.Name("Head Accessories")
-    public String[] headAccessories = new String[]{noneFolder};
+    public String[] headAccessories = new String[]{};
 
     @Config.Name("Face Accessories")
-    public String[] faceAccessories = new String[]{noneFolder};
+    public String[] faceAccessories = new String[]{};
 }
