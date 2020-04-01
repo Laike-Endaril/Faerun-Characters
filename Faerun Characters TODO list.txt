@@ -1,5 +1,3 @@
-Make things with no options invisible
-
 -a sound effect for clicking a button would be good, will provide ogg below.
 
 

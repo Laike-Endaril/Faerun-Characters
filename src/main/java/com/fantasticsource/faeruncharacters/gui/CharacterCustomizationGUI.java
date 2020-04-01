@@ -262,34 +262,44 @@ public class CharacterCustomizationGUI extends GUIScreen
         switch (selectedTab)
         {
             case "Body":
-                options.add("Race");
-                options.add("Race Variant");
-                options.add("Tail");
-                options.add("Bare Arms");
-                options.add("Skin Color");
+                if (CRace.RACES.size() + CRace.RACES_PREMIUM.size() > 1) options.add("Race");
+                if (race.raceVariants.size() + race.premiumRaceVariants.size() > 1) options.add("Race Variant");
+                if (race.tails.size() > 1) options.add("Tail");
+                if (FaerunCharactersConfig.server.bareArmSkinSet.size() > 1) options.add("Bare Arms");
+                if (race.skinColors == null || race.skinColors.size() > 1) options.add("Skin Color");
                 options.add("Body Type");
-                options.add("Chest");
+                if (race.chestSizes.size() > 1) options.add("Chest");
                 options.add("Scale");
                 options.add("Underwear Color");
                 break;
 
 
             case "Head":
-                options.add("Hair (Base)");
-                options.add("Hair (Front)");
-                options.add("Hair (Back)");
-                options.add("Hair (Top/Overall 1)");
-                options.add("Hair (Top/Overall 2)");
-                options.add("Hair Color");
-                options.add("Eyes");
-                options.add("Eye Color");
+                if (race.hairBase.size() + race.premiumHairBase.size() > 1) options.add("Hair (Base)");
+                if (race.hairFront.size() + race.premiumHairFront.size() > 1) options.add("Hair (Front)");
+                if (race.hairBack.size() + race.premiumHairBack.size() > 1) options.add("Hair (Back)");
+                if (race.hairTop.size() + race.premiumHairTop.size() > 1)
+                {
+                    options.add("Hair (Top/Overall 1)");
+                    options.add("Hair (Top/Overall 2)");
+                }
+                if (race.skinColorSetsHairColor)
+                {
+                    if (race.skinColors == null || race.skinColors.size() > 1) options.add("Hair Color");
+                }
+                else
+                {
+                    if (race.hairColors == null || race.hairColors.size() > 1) options.add("Hair Color");
+                }
+                if (race.eyes.size() > 1) options.add("Eyes");
+                if (race.eyeColors == null || race.eyeColors.size() > 1) options.add("Eye Color");
                 break;
 
 
             case "Accessories":
-                options.add("Markings");
-                options.add("Accessory (Head)");
-                options.add("Accessory (Face)");
+                if (FaerunCharactersConfig.server.markingsSet.size() > 1) options.add("Markings");
+                if (FaerunCharactersConfig.server.headAccessorySet.size() > 1) options.add("Accessory (Head)");
+                if (FaerunCharactersConfig.server.faceAccessorySet.size() > 1) options.add("Accessory (Face)");
                 options.add("Color 1");
                 options.add("Color 2");
                 break;
