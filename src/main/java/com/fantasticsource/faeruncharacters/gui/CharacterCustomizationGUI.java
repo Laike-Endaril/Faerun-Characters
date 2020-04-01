@@ -223,7 +223,20 @@ public class CharacterCustomizationGUI extends GUIScreen
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
-                selectedOption = null;
+                switch (tabName)
+                {
+                    case "Body":
+                        selectedOption = "Race";
+                        break;
+
+                    case "Head":
+                        selectedOption = "Hair (Base)";
+                        break;
+
+                    case "Accessories":
+                        selectedOption = "Markings";
+                        break;
+                }
                 recalc();
             });
             if (tabName.equals(selectedTab)) button.setActive(true);
@@ -243,9 +256,6 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addOptions(GUIElement root2)
     {
-        if (selectedTab == null) return;
-
-
         ArrayList<String> options = new ArrayList<>();
 
 
@@ -293,8 +303,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(paddingRelW, yy, optionName, errors.contains(optionName));
             button.addClickActions(() ->
             {
-                if (optionName.equals(selectedOption)) selectedOption = null;
-                else selectedOption = optionName;
+                selectedOption = optionName;
                 recalc();
             });
             if (optionName.equals(selectedOption)) button.setActive(true);
@@ -307,9 +316,6 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addOptionControls(GUIElement root2)
     {
-        if (selectedTab == null || selectedOption == null) return;
-
-
         switch (selectedTab)
         {
             case "Body":
