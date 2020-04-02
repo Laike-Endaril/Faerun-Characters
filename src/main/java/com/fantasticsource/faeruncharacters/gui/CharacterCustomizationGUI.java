@@ -115,7 +115,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     {
         //Highest possible internal scaling that fits within bounds
         int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = Tools.min(W_PERCENT_LEFT * pxWidth / (TOTAL_W_LEFT * mcScale), W_PERCENT_RIGHT * pxWidth / (TOTAL_W_LEFT * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
+        internalScaling = Tools.min(W_PERCENT_LEFT * pxWidth / (TOTAL_W_LEFT * mcScale), W_PERCENT_RIGHT * pxWidth / (TOTAL_W_RIGHT * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
 
         //These two lines prioritize full-pixel scaling multiples
         double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
