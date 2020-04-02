@@ -556,7 +556,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addSingleSliderDouble(GUIElement root2, String key, double min, double max)
     {
-        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider slider = new GUIHorizontalSlider(this, 1 - paddingRelW - buttonRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
         slider.setValue(ccCompound.getDouble(key));
         slider.addDragActions(() ->
         {
@@ -578,7 +578,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         {
             Color buttonColor = colors[i];
 
-            GUIButton button = makeColorButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonColor);
+            GUIButton button = makeColorButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonColor);
             button.addClickActions(() ->
             {
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
@@ -599,15 +599,15 @@ public class CharacterCustomizationGUI extends GUIScreen
     {
         Color color = new Color(ccCompound.getInteger(key));
 
-        GUIHorizontalSlider hueSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2 - sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_HUE, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider hueSlider = new GUIHorizontalSlider(this, 1 - paddingRelW - buttonRelW, (1 - sliderRelH) / 2 - sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_HUE, TEX_SLIDER_KNOB);
         hueSlider.setValue(color.h());
 
-        GUIHorizontalSlider satSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_SATURATION, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider satSlider = new GUIHorizontalSlider(this, 1 - paddingRelW - buttonRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_SLIDER_SATURATION, TEX_SLIDER_KNOB);
         satSlider.setValue(color.s());
         GUIImage satOverlay = new GUIImage(this, 0, 0, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SLIDER_GRADIENT, new Color(0).setColorHSV(color.h(), 255, 255, 255));
         satSlider.add(0, satOverlay);
 
-        GUIHorizontalSlider valSlider = new GUIHorizontalSlider(this, paddingRelW + buttonRelW + paddingRelW, (1 - sliderRelH) / 2 + sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_BUTTON_ACTIVE, TEX_SLIDER_KNOB);
+        GUIHorizontalSlider valSlider = new GUIHorizontalSlider(this, 1 - paddingRelW - buttonRelW, (1 - sliderRelH) / 2 + sliderRelH, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, 0, 255, TEX_BUTTON_ACTIVE, TEX_SLIDER_KNOB);
         valSlider.setValue(color.v());
         GUIImage valOverlay = new GUIImage(this, 0, 0, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_SLIDER_GRADIENT, new Color(0).setColorHSV(color.h(), color.s(), 255, 255));
         valSlider.add(0, valOverlay);
