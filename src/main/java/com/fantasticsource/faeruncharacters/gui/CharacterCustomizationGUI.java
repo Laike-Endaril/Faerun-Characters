@@ -36,11 +36,12 @@ public class CharacterCustomizationGUI extends GUIScreen
             PADDING = 4,
 
     //Definitions for what we want to allow for
-    TOTAL_W = PADDING + ELEMENT_W + PADDING + ELEMENT_W * 2,
+    TOTAL_W_LEFT = PADDING + ELEMENT_W + PADDING + ELEMENT_W,
+            TOTAL_W_RIGHT = PADDING + ELEMENT_W * 2,
             TOTAL_H = ELEMENT_H * 15;
 
     public static final double
-            W_PERCENT = 0.4, H_PERCENT = 1;
+            W_PERCENT_LEFT = 0.4, W_PERCENT_RIGHT = 0.4, H_PERCENT = 1;
 
 
     public static final LinkedHashSet<String> bodyTypes = new LinkedHashSet<>();
@@ -112,7 +113,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     {
         //Highest possible internal scaling that fits within bounds
         int mcScale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        internalScaling = Tools.min(W_PERCENT * pxWidth / (TOTAL_W * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
+        internalScaling = Tools.min(W_PERCENT_LEFT * pxWidth / (TOTAL_W_LEFT * mcScale), W_PERCENT_RIGHT * pxWidth / (TOTAL_W_LEFT * mcScale), H_PERCENT * pxHeight / (TOTAL_H * mcScale));
 
         //These two lines prioritize full-pixel scaling multiples
         double internalScaling2 = Math.floor(mcScale * internalScaling) / mcScale;
@@ -217,11 +218,11 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected void addTabsAndDoneButton(GUIElement root2)
     {
         //Tab buttons
-        double xx = paddingRelW;
+        double yy = (1 - buttonRelH * TAB_NAMES.length) / 2;
         for (int i = 0; i < TAB_NAMES.length; i++)
         {
             String tabName = TAB_NAMES[i];
-            GUIButton button = makeButton(xx, paddingRelH, tabName, errors.contains(tabName));
+            GUIButton button = makeButton(paddingRelW, yy, tabName, errors.contains(tabName));
             button.addClickActions(() ->
             {
                 selectedTab = tabName;
@@ -244,7 +245,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             if (tabName.equals(selectedTab)) button.setActive(true);
 
             root2.add(button);
-            xx += buttonRelW;
+            yy += buttonRelH;
         }
 
 
@@ -316,7 +317,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         for (int i = 0; i < options.size(); i++)
         {
             String optionName = options.get(i);
-            GUIButton button = makeButton(paddingRelW, yy, optionName, errors.contains(optionName));
+            GUIButton button = makeButton(paddingRelW + buttonRelW + paddingRelW, yy, optionName, errors.contains(optionName));
             button.addClickActions(() ->
             {
                 selectedOption = optionName;
@@ -519,7 +520,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
             }
 
-            GUIButton button = makeButton(i % 2 == 0 ? paddingRelW + buttonRelW + paddingRelW : paddingRelW + buttonRelW + paddingRelW + buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
+            GUIButton button = makeButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
             button.addClickActions(() ->
             {
                 if (!buttonText.equals(current))
