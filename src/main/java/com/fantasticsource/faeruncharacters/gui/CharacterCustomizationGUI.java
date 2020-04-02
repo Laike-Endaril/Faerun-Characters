@@ -268,7 +268,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         switch (selectedTab)
         {
             case "Body":
-                if (CRace.RACES.size() + CRace.RACES_PREMIUM.size() > 1) options.add("Race");
+                if (packet.races.size() + packet.racesPremium.size() > 1) options.add("Race");
                 if (race.raceVariants.size() + race.premiumRaceVariants.size() > 1) options.add("Race Variant");
                 if (race.tails.size() > 1) options.add("Tail");
                 if (FaerunCharactersConfig.server.bareArmSkinSet.size() > 1) options.add("Bare Arms");

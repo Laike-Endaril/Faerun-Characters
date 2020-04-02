@@ -11,7 +11,9 @@ import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 public class GUISounds
 {
     public static final ResourceLocation
-            SUCCESS = new ResourceLocation(MODID, "success");
+            SUCCESS = new ResourceLocation(MODID, "success"),
+            ERROR = new ResourceLocation(MODID, "error"),
+            CLICK = new ResourceLocation(MODID, "click");
 
 
     @SubscribeEvent
@@ -19,5 +21,7 @@ public class GUISounds
     {
         IForgeRegistry<SoundEvent> registry = event.getRegistry();
         registry.register(new SoundEvent(SUCCESS).setRegistryName(SUCCESS));
+        registry.register(new SoundEvent(ERROR).setRegistryName(ERROR));
+        registry.register(new SoundEvent(CLICK).setRegistryName(CLICK));
     }
 }

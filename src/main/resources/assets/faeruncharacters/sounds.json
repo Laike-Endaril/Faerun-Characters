@@ -3,5 +3,15 @@
         "sounds": [
             "faeruncharacters:success"
         ]
+    },
+    "error": {
+        "sounds": [
+            "faeruncharacters:error"
+        ]
+    },
+    "click": {
+        "sounds": [
+            "faeruncharacters:click"
+        ]
     }
 }
