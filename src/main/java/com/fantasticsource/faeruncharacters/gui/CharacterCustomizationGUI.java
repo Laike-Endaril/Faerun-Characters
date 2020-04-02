@@ -1,8 +1,8 @@
 package com.fantasticsource.faeruncharacters.gui;
 
+import com.fantasticsource.faeruncharacters.CCSounds;
 import com.fantasticsource.faeruncharacters.CRace;
 import com.fantasticsource.faeruncharacters.CharacterCustomization;
-import com.fantasticsource.faeruncharacters.GUISounds;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.entity.Camera;
@@ -225,6 +225,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(paddingRelW, yy, tabName, errors.contains(tabName));
             button.addClickActions(() ->
             {
+                SimpleSound.play(CCSounds.CLICK);
                 selectedTab = tabName;
                 switch (tabName)
                 {
@@ -251,11 +252,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         //Done button
         GUIButton button = makeButton(paddingRelW, 1 - paddingRelH - buttonRelH, "Done", errors.size() > 0);
-        button.addClickActions(() ->
-        {
-            SimpleSound.play(GUISounds.SUCCESS);
-            Network.WRAPPER.sendToServer(new Network.LeaveCCPacket());
-        });
+        button.addClickActions(() -> Network.WRAPPER.sendToServer(new Network.LeaveCCPacket()));
 
         root2.add(button);
     }
@@ -320,6 +317,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(paddingRelW + buttonRelW + paddingRelW, yy, optionName, errors.contains(optionName));
             button.addClickActions(() ->
             {
+                SimpleSound.play(CCSounds.CLICK);
                 selectedOption = optionName;
                 recalc();
             });
@@ -523,6 +521,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
             button.addClickActions(() ->
             {
+                SimpleSound.play(CCSounds.CLICK);
                 if (!buttonText.equals(current))
                 {
                     switch (key)
@@ -581,6 +580,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeColorButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonColor);
             button.addClickActions(() ->
             {
+                SimpleSound.play(CCSounds.CLICK);
                 if (buttonColor.equals(current)) ccCompound.removeTag(key);
                 else ccCompound.setInteger(key, buttonColor.color());
                 Network.WRAPPER.sendToServer(new Network.SetCCColorPacket(key, buttonColor.color()));

@@ -8,7 +8,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
 
-public class GUISounds
+public class CCSounds
 {
     public static final ResourceLocation
             SUCCESS = new ResourceLocation(MODID, "success"),

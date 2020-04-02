@@ -53,7 +53,7 @@ public class FaerunCharacters
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
-            MinecraftForge.EVENT_BUS.register(GUISounds.class);
+            MinecraftForge.EVENT_BUS.register(CCSounds.class);
         }
     }
 

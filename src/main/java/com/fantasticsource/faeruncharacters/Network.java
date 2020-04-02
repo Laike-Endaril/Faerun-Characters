@@ -483,6 +483,7 @@ public class Network
                 if (player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
                     if (CharacterCustomization.hasValidCharacter(player)) Teleport.escape(player);
+                    else MCTools.playSimpleSoundOnClient(player, CCSounds.ERROR);
                 }
             });
             return null;
