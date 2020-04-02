@@ -271,7 +271,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 if (packet.races.size() + packet.racesPremium.size() > 1) options.add("Race");
                 if (race.raceVariants.size() + race.premiumRaceVariants.size() > 1) options.add("Race Variant");
                 if (race.tails.size() > 1) options.add("Tail");
-                if (FaerunCharactersConfig.server.bareArmSkinSet.size() > 1) options.add("Bare Arms");
+                if (packet.bareArms.size() > 1) options.add("Bare Arms");
                 if (race.skinColors == null || race.skinColors.size() > 1) options.add("Skin Color");
                 options.add("Body Type");
                 if (race.chestSizes.size() > 1) options.add("Chest");
@@ -303,9 +303,9 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
             case "Accessories":
-                if (FaerunCharactersConfig.server.markingsSet.size() > 1) options.add("Markings");
-                if (FaerunCharactersConfig.server.headAccessorySet.size() > 1) options.add("Accessory (Head)");
-                if (FaerunCharactersConfig.server.faceAccessorySet.size() > 1) options.add("Accessory (Face)");
+                if (packet.markings.size() > 1) options.add("Markings");
+                if (packet.headAccessories.size() > 1) options.add("Accessory (Head)");
+                if (packet.faceAccessories.size() > 1) options.add("Accessory (Face)");
                 options.add("Color 1");
                 options.add("Color 2");
                 break;
