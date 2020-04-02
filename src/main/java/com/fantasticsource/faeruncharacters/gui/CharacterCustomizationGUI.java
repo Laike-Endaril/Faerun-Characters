@@ -91,6 +91,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     protected String selectedTab = "Body", selectedOption = "Race";
     protected CRace race;
     protected HashSet<String> errors = new HashSet<>();
+    protected GUICCCameraController root2;
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
@@ -101,6 +102,7 @@ public class CharacterCustomizationGUI extends GUIScreen
         Minecraft mc = Minecraft.getMinecraft();
         mc.displayGuiScreen(this);
 
+        root2 = addCamControls();
         refresh();
 
         //Set to camera view
@@ -200,16 +202,16 @@ public class CharacterCustomizationGUI extends GUIScreen
         race = packet.races.get(raceString);
         if (race == null) race = packet.racesPremium.get(raceString);
 
-        GUIElement root2 = addCamControls();
+        root2.clear();
         addTabsAndDoneButton(root2);
         addOptions(root2);
         addOptionControls(root2);
     }
 
 
-    protected GUIElement addCamControls()
+    protected GUICCCameraController addCamControls()
     {
-        GUIElement result = new GUICCCameraController(this, 0, 0, 1, 1);
+        GUICCCameraController result = new GUICCCameraController(this, 0, 0, 1, 1);
         root.add(result);
         return result;
     }
@@ -703,7 +705,6 @@ public class CharacterCustomizationGUI extends GUIScreen
     @Override
     protected void recalc()
     {
-        root.clear();
         super.recalc();
 
         refresh();

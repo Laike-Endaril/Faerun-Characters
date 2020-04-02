@@ -1,7 +1,3 @@
--a sound effect for clicking a button would be good, will provide ogg below.
-
-
-
 Character customization render systems for NPCs
 
 
