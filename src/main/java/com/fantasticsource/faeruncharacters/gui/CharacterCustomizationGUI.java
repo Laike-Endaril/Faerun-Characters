@@ -2,6 +2,7 @@ package com.fantasticsource.faeruncharacters.gui;
 
 import com.fantasticsource.faeruncharacters.CRace;
 import com.fantasticsource.faeruncharacters.CharacterCustomization;
+import com.fantasticsource.faeruncharacters.GUISounds;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.entity.Camera;
@@ -10,6 +11,7 @@ import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
 import com.fantasticsource.mctools.gui.element.text.GUIText;
 import com.fantasticsource.mctools.gui.element.textured.GUIImage;
+import com.fantasticsource.mctools.sound.SimpleSound;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -248,7 +250,11 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         //Done button
         GUIButton button = makeButton(paddingRelW, 1 - paddingRelH - buttonRelH, "Done", errors.size() > 0);
-        button.addClickActions(() -> Network.WRAPPER.sendToServer(new Network.LeaveCCPacket()));
+        button.addClickActions(() ->
+        {
+            SimpleSound.play(GUISounds.SUCCESS);
+            Network.WRAPPER.sendToServer(new Network.LeaveCCPacket());
+        });
 
         root2.add(button);
     }

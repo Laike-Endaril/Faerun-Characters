@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +50,11 @@ public class FaerunCharacters
         MinecraftForge.EVENT_BUS.register(BlocksAndItems.class);
 
         updateGlobalOptions();
+
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            MinecraftForge.EVENT_BUS.register(GUISounds.class);
+        }
     }
 
     @SubscribeEvent
