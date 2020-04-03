@@ -85,8 +85,35 @@ public class CharacterTags
         StringBuilder cmdHex = new StringBuilder("#");
         for (int i = 6 - cmdColorHex.length(); i > 0; i--) cmdHex.append("0");
         cmdHex.append(cmdColorHex);
-        server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
 
+        if (key.equals("Hair Color") || key.equals("Skin Color"))
+        {
+            String raceString = getCC(livingBase).getString("Race");
+            CRace race = CRace.RACES.get(raceString);
+            if (race == null) race = CRace.RACES_PREMIUM.get(raceString);
+            if (race == null)
+            {
+                System.err.println(TextFormatting.RED + "Tried to set " + key + " without race, or couldn't find race (Race = " + raceString + ")");
+                System.err.println(TextFormatting.RED + "...for entity..." + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
+                return;
+            }
+
+            if (race.skinColorSetsHairColor)
+            {
+                if (key.equals("Skin Color"))
+                {
+                    server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + COLOR_KEYS.get("Hair Color") + " " + cmdHex);
+                    getCC(livingBase).setInteger("Hair Color", value.color());
+                }
+                else
+                {
+                    server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + COLOR_KEYS.get("Skin Color") + " " + cmdHex);
+                    getCC(livingBase).setInteger("Skin Color", value.color());
+                }
+            }
+        }
+
+        server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
         getCC(livingBase).setInteger(key, value.color());
     }
 
