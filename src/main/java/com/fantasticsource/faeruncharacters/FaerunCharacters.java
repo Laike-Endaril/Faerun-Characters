@@ -28,14 +28,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
-@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034a,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.49.1.527,)")
+@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034a,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.49.1.527,)", acceptableRemoteVersions = "*")
 public class FaerunCharacters
 {
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
 
     public static final String MODID = "faeruncharacters";
     public static final String NAME = "Faerun Characters";
-    public static final String VERSION = "1.12.2.000a";
+    public static final String VERSION = "1.12.2.000b";
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) throws IOException
