@@ -291,7 +291,11 @@ public class CRace extends Component
     public static void init(FMLPreInitializationEvent event) throws IOException
     {
         File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races");
-        if (!file.isDirectory()) return;
+        if (!file.isDirectory())
+        {
+            file.mkdirs();
+            return;
+        }
 
         File[] files = file.listFiles();
         if (files == null) return;
