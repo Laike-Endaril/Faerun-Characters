@@ -379,8 +379,18 @@ public class CharacterTags
         setCCColor(livingBase, key, color);
 
 
-        //Render Modes
+        //Race-Set Render Modes
+        if (race.renderCape) RenderModes.setRenderMode(livingBase, "CapeRace", "On");
+        else RenderModes.setRenderMode(livingBase, "CapeRace", "Off");
 
+        if (race.renderLegArmor) RenderModes.setRenderMode(livingBase, "LegRace", "On");
+        else RenderModes.setRenderMode(livingBase, "LegRace", "Off");
+
+        if (race.renderFootArmor) RenderModes.setRenderMode(livingBase, "FootRace", "On");
+        else RenderModes.setRenderMode(livingBase, "FootRace", "Off");
+
+
+        //Player-Set Render Modes
         value = RenderModes.getRenderMode(livingBase, "Body");
         if (value == null) RenderModes.setRenderMode(livingBase, "Body", Tools.choose("M", "F"));
 
