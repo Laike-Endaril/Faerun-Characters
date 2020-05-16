@@ -33,6 +33,16 @@ public class Commands extends CommandBase
     }
 
     @Override
+    public List<String> getAliases()
+    {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("fc");
+        result.add("fchar");
+        result.add("fchars");
+        return result;
+    }
+
+    @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
         return true;
