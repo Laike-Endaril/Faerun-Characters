@@ -19,6 +19,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -28,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
-@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034a,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.49.1.527,)")
+@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034t,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.49.1.527,)")
 public class FaerunCharacters
 {
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
@@ -169,5 +170,11 @@ public class FaerunCharacters
         if (Minecraft.getMinecraft().world.provider.getDimensionType() != CharacterCustomization.DIMTYPE_CHARACTER_CREATION) return;
 
         event.setCanceled(true);
+    }
+
+    @Mod.EventHandler
+    public static void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new Commands());
     }
 }

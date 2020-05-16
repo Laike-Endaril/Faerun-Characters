@@ -37,7 +37,7 @@ public class BlockCCPortal extends Block
     {
         if (!(player instanceof EntityPlayerMP)) return true;
 
-        CharacterCustomization.go((EntityPlayerMP) player);
+        CharacterCustomization.goToCC((EntityPlayerMP) player);
         return true;
     }
 }

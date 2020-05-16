@@ -33,7 +33,7 @@ public class CharacterCustomization
 
     public static void validate(EntityPlayerMP player)
     {
-        if (!hasValidCharacter(player)) go(player);
+        if (!hasValidCharacter(player)) goToCC(player);
     }
 
 
@@ -151,7 +151,7 @@ public class CharacterCustomization
     }
 
 
-    public static void go(EntityPlayerMP player)
+    public static void goToCC(EntityPlayerMP player)
     {
         if (RenderModes.getRenderMode(player, "Body") == null) RenderModes.setRenderMode(player, "Body", "M");
         if (RenderModes.getRenderMode(player, "Chest") == null) RenderModes.setRenderMode(player, "Chest", "Flat");
