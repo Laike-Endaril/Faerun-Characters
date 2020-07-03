@@ -5,9 +5,6 @@ import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
-import com.fantasticsource.mctools.aw.RenderModes;
-import com.fantasticsource.mctools.event.InventoryChangedEvent;
-import com.fantasticsource.tiamatrpg.api.TiamatRPGAPI;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import net.minecraft.client.Minecraft;
@@ -115,17 +112,6 @@ public class FaerunCharacters
         server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:feet 10");
         server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:wings 10");
         CharacterCustomization.validate(player);
-
-        if (RenderModes.getRenderMode(player, "CapeInvControl") == null)
-        {
-            RenderModes.setRenderMode(player, "CapeInvControl", "On");
-        }
-
-        if (RenderModes.getRenderMode(player, "CapeInvControl").equals("On") && !TiamatRPGAPI.getTiamatPlayerInventory(player).getTiamatArmor().get(1).isEmpty())
-        {
-            RenderModes.setRenderMode(player, "CapeInv", "On");
-        }
-        else RenderModes.setRenderMode(player, "CapeInv", "Off");
     }
 
 
@@ -193,20 +179,5 @@ public class FaerunCharacters
     public static void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new Commands());
-    }
-
-    @SubscribeEvent
-    public static void inventoryChanged(InventoryChangedEvent event)
-    {
-        if (!(event.getEntity() instanceof EntityPlayerMP)) return;
-
-
-        EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-
-        if (RenderModes.getRenderMode(player, "CapeInvControl").equals("On") && !TiamatRPGAPI.getTiamatPlayerInventory(player).getTiamatArmor().get(1).isEmpty())
-        {
-            RenderModes.setRenderMode(player, "CapeInv", "On");
-        }
-        else RenderModes.setRenderMode(player, "CapeInv", "Off");
     }
 }

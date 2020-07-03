@@ -394,9 +394,6 @@ public class CharacterTags
         value = RenderModes.getRenderMode(livingBase, "Body");
         if (value == null) RenderModes.setRenderMode(livingBase, "Body", Tools.choose("M", "F"));
 
-        value = RenderModes.getRenderMode(livingBase, "CapeInv");
-        if (value == null) RenderModes.setRenderMode(livingBase, "CapeInv", "Off");
-
         value = RenderModes.getRenderMode(livingBase, "Chest");
         if (!race.chestSizes.contains(value)) RenderModes.setRenderMode(livingBase, "Chest", Tools.choose(race.chestSizes.toArray(new String[0])));
 

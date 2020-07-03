@@ -155,7 +155,6 @@ public class CharacterCustomization
     {
         if (RenderModes.getRenderMode(player, "Body") == null) RenderModes.setRenderMode(player, "Body", "M");
         if (RenderModes.getRenderMode(player, "Chest") == null) RenderModes.setRenderMode(player, "Chest", "Flat");
-        if (RenderModes.getRenderMode(player, "CapeInv") == null) RenderModes.setRenderMode(player, "CapeInv", "Off");
 
 
         if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", Tools.choose(CRace.RACES.keySet().toArray(new String[0])), false);
