@@ -52,7 +52,7 @@ public class CharacterTags
         COLOR_KEYS.put("Hair Color", "hair");
         COLOR_KEYS.put("Color 1", "misc_1");
         COLOR_KEYS.put("Color 2", "misc_2");
-        COLOR_KEYS.put("Underwear Color", "misc_3");
+        COLOR_KEYS.put("Undershirt Color", "misc_3");
     }
 
     public static void setCC(EntityLivingBase livingBase, NBTTagCompound characterCustomization)
@@ -272,7 +272,7 @@ public class CharacterTags
         if (noPreviousRace) ccCompound.setDouble("Scale", (race.renderScaleMin + race.renderScaleMax) / 2);
         else ccCompound.setDouble("Scale", Tools.min(Tools.max(ccCompound.getDouble("Scale"), race.renderScaleMin), race.renderScaleMax));
 
-        key = "Underwear Color";
+        key = "Undershirt Color";
         color = ccCompound.hasKey(key) ? new Color(ccCompound.getInteger(key)) : new Color(Tools.random(256), Tools.random(256), Tools.random(256), 255);
         setCCColor(livingBase, key, color);
 

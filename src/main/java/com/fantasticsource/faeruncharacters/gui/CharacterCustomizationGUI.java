@@ -276,7 +276,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 options.add("Body Type");
                 if (race.chestSizes.size() > 1) options.add("Chest");
                 options.add("Scale");
-                options.add("Underwear Color");
+                options.add("Undershirt Color");
                 break;
 
 
@@ -376,7 +376,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                         else addHSVSliders(root2, selectedOption);
                         break;
 
-                    case "Underwear Color":
+                    case "Undershirt Color":
                         if (race == null) break;
                         addHSVSliders(root2, selectedOption);
                         break;
