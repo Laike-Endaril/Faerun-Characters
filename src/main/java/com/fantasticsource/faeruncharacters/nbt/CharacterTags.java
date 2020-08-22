@@ -102,18 +102,18 @@ public class CharacterTags
             {
                 if (key.equals("Skin Color"))
                 {
-                    server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + COLOR_KEYS.get("Hair Color") + " " + cmdHex);
+                    server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + COLOR_KEYS.get("Hair Color") + " " + cmdHex);
                     getCC(livingBase).setInteger("Hair Color", value.color());
                 }
                 else
                 {
-                    server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + COLOR_KEYS.get("Skin Color") + " " + cmdHex);
+                    server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + COLOR_KEYS.get("Skin Color") + " " + cmdHex);
                     getCC(livingBase).setInteger("Skin Color", value.color());
                 }
             }
         }
 
-        server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
+        server.commandManager.executeCommand(server, "/armourers wardrobe setColour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
         getCC(livingBase).setInteger(key, value.color());
     }
 
