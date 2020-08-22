@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
-@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.034zr,);required-after:instances@[1.12.2-001b,);required-after:armourers_workshop@[1.12.2-0.50.1.591,)")
+@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.036n,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
 public class FaerunCharacters
 {
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
@@ -106,11 +106,11 @@ public class FaerunCharacters
 
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         String name = player.getName();
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:head 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:chest 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:legs 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:feet 10");
-        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:wings 10");
+        server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:head 10");
+        server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:chest 10");
+        server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:legs 10");
+        server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:feet 10");
+        server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:wings 10");
         CharacterCustomization.validate(player);
     }
 
