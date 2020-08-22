@@ -106,11 +106,11 @@ public class FaerunCharacters
 
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         String name = player.getName();
-        server.commandManager.executeCommand(server, "/armourers set_unlocked_wardrobe_slots " + name + " armourers:head 10");
-        server.commandManager.executeCommand(server, "/armourers set_unlocked_wardrobe_slots " + name + " armourers:chest 10");
-        server.commandManager.executeCommand(server, "/armourers set_unlocked_wardrobe_slots " + name + " armourers:legs 10");
-        server.commandManager.executeCommand(server, "/armourers set_unlocked_wardrobe_slots " + name + " armourers:feet 10");
-        server.commandManager.executeCommand(server, "/armourers set_unlocked_wardrobe_slots " + name + " armourers:wings 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:head 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:chest 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:legs 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:feet 10");
+        server.commandManager.executeCommand(server, "/armourers setUnlockedWardrobeSlots " + name + " armourers:wings 10");
         CharacterCustomization.validate(player);
     }
 
