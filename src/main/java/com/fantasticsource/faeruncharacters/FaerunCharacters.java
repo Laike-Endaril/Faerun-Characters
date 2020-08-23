@@ -169,10 +169,7 @@ public class FaerunCharacters
     @SubscribeEvent
     public static void renderExpBar(RenderGameOverlayEvent.Pre event)
     {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
-        if (Minecraft.getMinecraft().world.provider.getDimensionType() != CharacterCustomization.DIMTYPE_CHARACTER_CREATION) return;
-
-        event.setCanceled(true);
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) event.setCanceled(true);
     }
 
     @Mod.EventHandler
