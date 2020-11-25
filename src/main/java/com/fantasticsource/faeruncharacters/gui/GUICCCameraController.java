@@ -21,7 +21,7 @@ public class GUICCCameraController extends GUIElement
         boolean done = false;
         for (GUIElement child : children) done |= child.mousePressed(button);
 
-        if (!done)
+        if (!done && button == 0)
         {
             if (isMouseWithin()) setActive(true);
 
@@ -35,7 +35,7 @@ public class GUICCCameraController extends GUIElement
     @Override
     public void mouseDrag(int button)
     {
-        if (active)
+        if (active && button == 0)
         {
             double mX = mouseX(), mY = mouseY();
 
