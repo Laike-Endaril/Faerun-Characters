@@ -4,7 +4,6 @@ import com.fantasticsource.faeruncharacters.*;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.entity.Camera;
 import com.fantasticsource.mctools.ClientTickTimer;
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
@@ -682,8 +681,10 @@ public class CharacterCustomizationGUI extends GUIScreen
                 //Sounds
                 if (key.equals("Voice"))
                 {
-                    double pitch = ccCompound.hasKey("Voice Pitch") ? ccCompound.getDouble("Voice Pitch") : (race.pitchMin + race.pitchMax) / 2;
-                    MCTools.playSimpleSoundAtEntityPosition(Tools.choose(VoiceSets.ALL_VOICE_SETS.get(buttonText).values().toArray(new ResourceLocation[0])), null, 16, 0, 1, (float) pitch, SoundCategory.MASTER);
+                    ResourceLocation rl = Tools.choose(VoiceSets.ALL_VOICE_SETS.get(buttonText).values().toArray(new ResourceLocation[0]));
+                    SimpleSound simpleSound = new SimpleSound(rl, SoundCategory.MASTER, Minecraft.getMinecraft().player);
+                    simpleSound.pitch = (float) (ccCompound.hasKey("Voice Pitch") ? ccCompound.getDouble("Voice Pitch") : (race.pitchMin + race.pitchMax) / 2);
+                    Minecraft.getMinecraft().getSoundHandler().playSound(simpleSound);
                 }
                 else SimpleSound.play(CCSounds.CLICK);
             });
@@ -886,10 +887,12 @@ public class CharacterCustomizationGUI extends GUIScreen
         if (Minecraft.getMinecraft().currentScreen instanceof CharacterCustomizationGUI)
         {
             CharacterCustomizationGUI gui = (CharacterCustomizationGUI) Minecraft.getMinecraft().currentScreen;
-            if (gui.selectedOption.equals("Voice Pitch") && ClientTickTimer.currentTick() % 40 == 0)
+            if (gui.selectedOption.equals("Voice Pitch") && ClientTickTimer.currentTick() % 40 == 1) //If this inits ClientTickTimer, I think it may repeat tick 0...so I used an offset for now
             {
-                double pitch = gui.ccCompound.hasKey("Voice Pitch") ? gui.ccCompound.getDouble("Voice Pitch") : (gui.race.pitchMin + gui.race.pitchMax) / 2;
-                MCTools.playSimpleSoundAtEntityPosition(Tools.choose(VoiceSets.ALL_VOICE_SETS.get(gui.ccCompound.getString("Voice")).values().toArray(new ResourceLocation[0])), null, 16, 0, 1, (float) pitch, SoundCategory.MASTER);
+                ResourceLocation rl = Tools.choose(VoiceSets.ALL_VOICE_SETS.get(gui.ccCompound.getString("Voice")).values().toArray(new ResourceLocation[0]));
+                SimpleSound simpleSound = new SimpleSound(rl, SoundCategory.MASTER, Minecraft.getMinecraft().player);
+                simpleSound.pitch = (float) (gui.ccCompound.hasKey("Voice Pitch") ? gui.ccCompound.getDouble("Voice Pitch") : (gui.race.pitchMin + gui.race.pitchMax) / 2);
+                Minecraft.getMinecraft().getSoundHandler().playSound(simpleSound);
             }
         }
     }
