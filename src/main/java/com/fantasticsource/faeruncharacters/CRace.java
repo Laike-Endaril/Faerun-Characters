@@ -251,7 +251,7 @@ public class CRace extends Component
     }
 
 
-    public static void addRace(String name) throws IOException
+    public static boolean addRace(String name) throws IOException
     {
         CRace race = new CRace();
         race.name = name;
@@ -259,7 +259,7 @@ public class CRace extends Component
 
         //Load
         File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races" + File.separator + name + ".txt");
-        if (!file.exists() || file.isDirectory()) return;
+        if (!file.exists() || file.isDirectory()) return false;
 
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
@@ -279,12 +279,13 @@ public class CRace extends Component
 
 
         //Validate
-        if (!race.valid()) return;
+        if (!race.valid()) return false;
 
 
         //Save and return
         if (race.raceVariants.size() == 0) RACES_PREMIUM.put(name, race);
         else RACES.put(name, race);
+        return true;
     }
 
 
@@ -300,7 +301,12 @@ public class CRace extends Component
         File[] files = file.listFiles();
         if (files == null) return;
 
-        for (File raceFile : files) addRace(raceFile.getName().replace(".txt", ""));
+        int i = 0;
+        for (File raceFile : files)
+        {
+            if (addRace(raceFile.getName().replace(".txt", ""))) i++;
+        }
+        System.out.println(TextFormatting.LIGHT_PURPLE + "Loaded " + i + " races");
     }
 
 
