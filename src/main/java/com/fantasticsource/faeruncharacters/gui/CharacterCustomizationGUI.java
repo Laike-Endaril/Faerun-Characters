@@ -265,20 +265,23 @@ public class CharacterCustomizationGUI extends GUIScreen
             }
         }
 
-        if (packet.isPremium)
+        if (race.eyes.size() + race.premiumEyes.size() > 0)
         {
-            if (!race.eyes.contains(ccCompound.getString("Eyes")) && !race.premiumEyes.contains(ccCompound.getString("Eyes")))
+            if (packet.isPremium)
             {
-                errors.add("Head");
-                errors.add("Eyes");
+                if (!race.eyes.contains(ccCompound.getString("Eyes")) && !race.premiumEyes.contains(ccCompound.getString("Eyes")))
+                {
+                    errors.add("Head");
+                    errors.add("Eyes");
+                }
             }
-        }
-        else
-        {
-            if (!race.eyes.contains(ccCompound.getString("Eyes")))
+            else
             {
-                errors.add("Head");
-                errors.add("Eyes");
+                if (!race.eyes.contains(ccCompound.getString("Eyes")))
+                {
+                    errors.add("Head");
+                    errors.add("Eyes");
+                }
             }
         }
 
