@@ -1,11 +1,10 @@
 package com.fantasticsource.faeruncharacters.gui;
 
-import com.fantasticsource.faeruncharacters.CCSounds;
-import com.fantasticsource.faeruncharacters.CRace;
-import com.fantasticsource.faeruncharacters.CharacterCustomization;
-import com.fantasticsource.faeruncharacters.Network;
+import com.fantasticsource.faeruncharacters.*;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.entity.Camera;
+import com.fantasticsource.mctools.ClientTickTimer;
+import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.gui.GUIScreen;
 import com.fantasticsource.mctools.gui.element.GUIElement;
 import com.fantasticsource.mctools.gui.element.other.GUIButton;
@@ -19,7 +18,10 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,11 +90,11 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     public Network.CharacterCustomizationGUIPacket packet;
     public NBTTagCompound ccCompound;
-    protected String selectedTab = "Body", selectedOption = "Race";
-    protected ArrayList<String> options = new ArrayList<>();
-    protected CRace race;
-    protected HashSet<String> errors = new HashSet<>();
-    protected GUICCCameraController root2;
+    public String selectedTab = "Body", selectedOption = "Race";
+    public ArrayList<String> options = new ArrayList<>();
+    public CRace race;
+    public HashSet<String> errors = new HashSet<>();
+    public GUICCCameraController root2;
 
 
     public CharacterCustomizationGUI(Network.CharacterCustomizationGUIPacket packet)
@@ -648,7 +650,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             GUIButton button = makeButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
             button.addClickActions(() ->
             {
-                SimpleSound.play(CCSounds.CLICK);
                 if (!buttonText.equals(current))
                 {
                     switch (key)
@@ -676,6 +677,15 @@ public class CharacterCustomizationGUI extends GUIScreen
 
                     recalc();
                 }
+
+
+                //Sounds
+                if (key.equals("Voice"))
+                {
+                    double pitch = ccCompound.hasKey("Voice Pitch") ? ccCompound.getDouble("Voice Pitch") : (race.pitchMin + race.pitchMax) / 2;
+                    MCTools.playSimpleSoundAtEntityPosition(Tools.choose(VoiceSets.ALL_VOICE_SETS.get(buttonText).values().toArray(new ResourceLocation[0])), null, 16, 0, 1, (float) pitch, SoundCategory.MASTER);
+                }
+                else SimpleSound.play(CCSounds.CLICK);
             });
             if (buttonText.equals(current)) button.setActive(true);
 
@@ -865,5 +875,22 @@ public class CharacterCustomizationGUI extends GUIScreen
     public boolean doesGuiPauseGame()
     {
         return false;
+    }
+
+
+    @SubscribeEvent
+    public static void clientTick(TickEvent.ClientTickEvent event)
+    {
+        if (event.phase != TickEvent.Phase.END) return;
+
+        if (Minecraft.getMinecraft().currentScreen instanceof CharacterCustomizationGUI)
+        {
+            CharacterCustomizationGUI gui = (CharacterCustomizationGUI) Minecraft.getMinecraft().currentScreen;
+            if (gui.selectedOption.equals("Voice Pitch") && ClientTickTimer.currentTick() % 40 == 0)
+            {
+                double pitch = gui.ccCompound.hasKey("Voice Pitch") ? gui.ccCompound.getDouble("Voice Pitch") : (gui.race.pitchMin + gui.race.pitchMax) / 2;
+                MCTools.playSimpleSoundAtEntityPosition(Tools.choose(VoiceSets.ALL_VOICE_SETS.get(gui.ccCompound.getString("Voice")).values().toArray(new ResourceLocation[0])), null, 16, 0, 1, (float) pitch, SoundCategory.MASTER);
+            }
+        }
     }
 }

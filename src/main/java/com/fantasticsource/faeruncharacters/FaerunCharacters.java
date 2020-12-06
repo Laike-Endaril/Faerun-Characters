@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
-@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.043d,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
+@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.043e,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
 public class FaerunCharacters
 {
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
@@ -56,6 +56,7 @@ public class FaerunCharacters
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
             MinecraftForge.EVENT_BUS.register(CCSounds.class);
+            MinecraftForge.EVENT_BUS.register(CharacterCustomizationGUI.class);
         }
     }
 
@@ -114,7 +115,6 @@ public class FaerunCharacters
         server.commandManager.executeCommand(server, "/armourers wardrobe set_unlocked_slots " + name + " armourers:wings 10");
         CharacterCustomization.validate(player);
     }
-
 
     public static void loadSkinNames(LinkedHashSet<String> skinSet, String[] skinStrings, boolean addNoneOption)
     {
