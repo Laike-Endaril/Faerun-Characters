@@ -379,6 +379,31 @@ public class CharacterTags
         setCCColor(livingBase, key, color);
 
 
+        //Other
+
+        if (race.voiceSets.size() + race.premiumVoiceSets.size() == 0)
+        {
+            ccCompound.removeTag("Voice");
+            ccCompound.removeTag("Voice Pitch");
+        }
+        else
+        {
+            key = "Voice";
+            value = ccCompound.getString(key);
+            if (!race.voiceSets.contains(value) && !race.premiumVoiceSets.contains(value))
+            {
+                String[] array = race.voiceSets.size() > 0 ? race.voiceSets.toArray(new String[0]) : race.premiumVoiceSets.toArray(new String[0]);
+                ccCompound.setString(key, Tools.choose(array));
+            }
+
+            key = "Voice Pitch";
+            if (!ccCompound.hasKey(key) || race.pitchMin > ccCompound.getDouble(key) || race.pitchMax < ccCompound.getDouble(key))
+            {
+                ccCompound.setDouble(key, (race.pitchMin + race.pitchMax) / 2);
+            }
+        }
+
+
         //Race-Set Render Modes
         if (race.renderCape) RenderModes.setRenderMode(livingBase, "CapeRace", "On");
         else RenderModes.setRenderMode(livingBase, "CapeRace", "Off");

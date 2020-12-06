@@ -50,8 +50,8 @@ public class CRace extends Component
 
 
     //Other
-//  TODO Voice = Voice/Normal
-//  TODO Voice pitch = 0.8 to 1.2
+    public LinkedHashSet<String> voiceSets = new LinkedHashSet<>(), premiumVoiceSets = new LinkedHashSet<>();
+    public double pitchMin = 0.8, pitchMax = 1.2;
 
 
     protected boolean valid()
@@ -101,15 +101,13 @@ public class CRace extends Component
             return false;
         }
 
-        //Other
-        //TODO
-
         return true;
     }
 
 
     protected void setValue(String key, String value)
     {
+        String[] tokens;
         switch (key)
         {
             //Hidden
@@ -167,7 +165,7 @@ public class CRace extends Component
                 break;
 
             case "scale":
-                String[] tokens = Tools.fixedSplit(value, ",");
+                tokens = Tools.fixedSplit(value, ",");
                 if (tokens.length == 2)
                 {
                     renderScaleMin = Double.parseDouble(tokens[0].trim());
@@ -227,7 +225,22 @@ public class CRace extends Component
 
 
             //Other
-            //TODO
+            case "voice set":
+                for (String s : Tools.fixedSplit(value, ",")) voiceSets.add(s.trim());
+                break;
+
+            case "premium voice set":
+                for (String s : Tools.fixedSplit(value, ",")) premiumVoiceSets.add(s.trim());
+                break;
+
+            case "voice pitch":
+                tokens = Tools.fixedSplit(value, ",");
+                if (tokens.length == 2)
+                {
+                    pitchMin = Double.parseDouble(tokens[0].trim());
+                    pitchMax = Double.parseDouble(tokens[1].trim());
+                }
+                break;
 
 
             default:
@@ -276,6 +289,7 @@ public class CRace extends Component
 
             line = br.readLine();
         }
+        br.close();
 
 
         //Validate

@@ -93,6 +93,15 @@ public class CharacterCustomization
             if (ccCompound.hasKey("Accessory (Head)") && !checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
             if (ccCompound.hasKey("Accessory (Face)") && !checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;
+
+            //Other
+            if (race.voiceSets.size() > 0)
+            {
+                if (!ccCompound.hasKey("Voice") || !checkMultiHashSet(ccCompound.getString("Voice"), race.voiceSets, race.premiumVoiceSets)) return false;
+                d = ccCompound.getDouble("Voice Pitch");
+                if (d < race.pitchMin || d > race.pitchMax) return false;
+            }
+            else ccCompound.removeTag("Voice");
         }
         else //Non-premium
         {
@@ -130,6 +139,15 @@ public class CharacterCustomization
             if (ccCompound.hasKey("Accessory (Head)") && !checkMultiHashSet(ccCompound.getString("Accessory (Head)"), FaerunCharactersConfig.server.headAccessorySet)) return false;
             if (ccCompound.hasKey("Accessory (Face)") && !checkMultiHashSet(ccCompound.getString("Accessory (Face)"), FaerunCharactersConfig.server.faceAccessorySet)) return false;
             if (!ccCompound.hasKey("Color 1") || !ccCompound.hasKey("Color 2")) return false;
+
+            //Other
+            if (race.voiceSets.size() > 0)
+            {
+                if (!ccCompound.hasKey("Voice") || !checkMultiHashSet(ccCompound.getString("Voice"), race.voiceSets)) return false;
+                d = ccCompound.getDouble("Voice Pitch");
+                if (d < race.pitchMin || d > race.pitchMax) return false;
+            }
+            else ccCompound.removeTag("Voice");
         }
 
         return true;
@@ -153,13 +171,15 @@ public class CharacterCustomization
 
     public static void goToCC(EntityPlayerMP player)
     {
+        //Defaults (writing both notes for ctrl+f) also see CharacterTags.setRace()!
+        //Set defaults (writing both notes for ctrl+f) also see CharacterTags.setRace()!
         if (RenderModes.getRenderMode(player, "Body") == null) RenderModes.setRenderMode(player, "Body", "M");
         if (RenderModes.getRenderMode(player, "Chest") == null) RenderModes.setRenderMode(player, "Chest", "Flat");
-
 
         if (!CharacterTags.getCC(player).hasKey("Race")) CharacterTags.setCCSkin(player, "Race", Tools.choose(CRace.RACES.keySet().toArray(new String[0])), false);
 
 
+        //Get reference to existing CC instance, or create a new one
         InstanceData data = InstanceData.get(true, DIMTYPE_CHARACTER_CREATION, "Character_Creation");
         if (!data.exists())
         {
@@ -168,6 +188,7 @@ public class CharacterCustomization
         }
 
 
+        //Go to CC instance
         Teleport.joinTempCopy(player, data.getFullName());
         Teleport.teleport(player, player.dimension, player.posX, player.posY, player.posZ, 0, 0);
         Network.WRAPPER.sendTo(new Network.CharacterCustomizationGUIPacket(player), player);

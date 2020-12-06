@@ -75,7 +75,7 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_SLIDER_SATURATION = new ResourceLocation(MODID, "image/slider_saturation.png"),
             TEX_SLIDER_GRADIENT = new ResourceLocation(MODID, "image/slider_gradient.png");
 
-    protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories"};
+    protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories", "Other"};
 
 
     static
@@ -89,6 +89,7 @@ public class CharacterCustomizationGUI extends GUIScreen
     public Network.CharacterCustomizationGUIPacket packet;
     public NBTTagCompound ccCompound;
     protected String selectedTab = "Body", selectedOption = "Race";
+    protected ArrayList<String> options = new ArrayList<>();
     protected CRace race;
     protected HashSet<String> errors = new HashSet<>();
     protected GUICCCameraController root2;
@@ -136,60 +137,170 @@ public class CharacterCustomizationGUI extends GUIScreen
     {
         errors.clear();
 
-        if (packet.isPremium) return;
 
-
-        if (!packet.races.keySet().contains(ccCompound.getString("Race")))
+        //Body
+        if (packet.isPremium)
         {
-            errors.add("Body");
-            errors.add("Race");
+            if (!packet.races.keySet().contains(ccCompound.getString("Race")) && !packet.racesPremium.keySet().contains(ccCompound.getString("Race")))
+            {
+                errors.add("Body");
+                errors.add("Race");
+            }
+        }
+        else
+        {
+            if (!packet.races.keySet().contains(ccCompound.getString("Race")))
+            {
+                errors.add("Body");
+                errors.add("Race");
+            }
         }
 
 
         CRace race = packet.races.get(ccCompound.getString("Race"));
         if (race == null) race = packet.racesPremium.get(ccCompound.getString("Race"));
 
-        if (!race.raceVariants.contains(ccCompound.getString("Race Variant")))
+        if (packet.isPremium)
         {
-            errors.add("Body");
-            errors.add("Race Variant");
+            if (!race.raceVariants.contains(ccCompound.getString("Race Variant")) && !race.premiumRaceVariants.contains(ccCompound.getString("Race Variant")))
+            {
+                errors.add("Body");
+                errors.add("Race Variant");
+            }
+        }
+        else
+        {
+            if (!race.raceVariants.contains(ccCompound.getString("Race Variant")))
+            {
+                errors.add("Body");
+                errors.add("Race Variant");
+            }
         }
 
 
-        if (!race.hairBase.contains(ccCompound.getString("Hair (Base)")))
+        //Head
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Hair (Base)");
+            if (!race.hairBase.contains(ccCompound.getString("Hair (Base)")) && !race.premiumHairBase.contains(ccCompound.getString("Hair (Base)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Base)");
+            }
+        }
+        else
+        {
+            if (!race.hairBase.contains(ccCompound.getString("Hair (Base)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Base)");
+            }
         }
 
-        if (!race.hairFront.contains(ccCompound.getString("Hair (Front)")))
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Hair (Front)");
+            if (!race.hairFront.contains(ccCompound.getString("Hair (Front)")) && !race.premiumHairFront.contains(ccCompound.getString("Hair (Front)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Front)");
+            }
+        }
+        else
+        {
+            if (!race.hairFront.contains(ccCompound.getString("Hair (Front)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Front)");
+            }
         }
 
-        if (!race.hairBack.contains(ccCompound.getString("Hair (Back)")))
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Hair (Back)");
+            if (!race.hairBack.contains(ccCompound.getString("Hair (Back)")) && !race.premiumHairBack.contains(ccCompound.getString("Hair (Back)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Back)");
+            }
+        }
+        else
+        {
+            if (!race.hairBack.contains(ccCompound.getString("Hair (Back)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Back)");
+            }
         }
 
-        if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 1)")))
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Hair (Top/Overall 1)");
+            if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 1)")) && !race.premiumHairTop.contains(ccCompound.getString("Hair (Top/Overall 1)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Top/Overall 1)");
+            }
+        }
+        else
+        {
+            if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 1)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Top/Overall 1)");
+            }
         }
 
-        if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 2)")))
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Hair (Top/Overall 2)");
+            if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 2)")) && !race.premiumHairTop.contains(ccCompound.getString("Hair (Top/Overall 2)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Top/Overall 2)");
+            }
+        }
+        else
+        {
+            if (!race.hairTop.contains(ccCompound.getString("Hair (Top/Overall 2)")))
+            {
+                errors.add("Head");
+                errors.add("Hair (Top/Overall 2)");
+            }
         }
 
-        if (!race.eyes.contains(ccCompound.getString("Eyes")))
+        if (packet.isPremium)
         {
-            errors.add("Head");
-            errors.add("Eyes");
+            if (!race.eyes.contains(ccCompound.getString("Eyes")) && !race.premiumEyes.contains(ccCompound.getString("Eyes")))
+            {
+                errors.add("Head");
+                errors.add("Eyes");
+            }
+        }
+        else
+        {
+            if (!race.eyes.contains(ccCompound.getString("Eyes")))
+            {
+                errors.add("Head");
+                errors.add("Eyes");
+            }
+        }
+
+
+        //Other
+        if (race.voiceSets.size() + race.premiumVoiceSets.size() > 0)
+        {
+            if (packet.isPremium)
+            {
+                if (!race.voiceSets.contains(ccCompound.getString("Voice")) && !race.premiumVoiceSets.contains(ccCompound.getString("Voice")))
+                {
+                    errors.add("Other");
+                    errors.add("Voice");
+                }
+            }
+            else
+            {
+                if (!race.voiceSets.contains(ccCompound.getString("Voice")))
+                {
+                    errors.add("Other");
+                    errors.add("Voice");
+                }
+            }
         }
     }
 
@@ -229,20 +340,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             {
                 SimpleSound.play(CCSounds.CLICK);
                 selectedTab = tabName;
-                switch (tabName)
-                {
-                    case "Body":
-                        selectedOption = "Race";
-                        break;
-
-                    case "Head":
-                        selectedOption = "Hair (Base)";
-                        break;
-
-                    case "Accessories":
-                        selectedOption = "Markings";
-                        break;
-                }
                 recalc();
             });
             if (tabName.equals(selectedTab)) button.setActive(true);
@@ -262,7 +359,7 @@ public class CharacterCustomizationGUI extends GUIScreen
 
     protected void addOptions(GUIElement root2)
     {
-        ArrayList<String> options = new ArrayList<>();
+        options.clear();
 
 
         switch (selectedTab)
@@ -309,7 +406,15 @@ public class CharacterCustomizationGUI extends GUIScreen
                 options.add("Color 1");
                 options.add("Color 2");
                 break;
+
+
+            case "Other":
+                if (race.voiceSets.size() + race.premiumVoiceSets.size() > 1) options.add("Voice");
+                if (race.voiceSets.size() + race.premiumVoiceSets.size() > 0) options.add("Voice Pitch");
+                break;
         }
+
+        if (!options.contains(selectedOption)) selectedOption = options.get(0);
 
 
         double yy = (1 - buttonRelH * options.size()) / 2;
@@ -336,9 +441,9 @@ public class CharacterCustomizationGUI extends GUIScreen
         switch (selectedTab)
         {
             case "Body":
-                //String selectors
                 switch (selectedOption)
                 {
+                    //String selectors
                     case "Race":
                         addStringSelector(root2, selectedOption, true, packet.races.keySet(), packet.racesPremium.keySet());
                         break;
@@ -478,6 +583,26 @@ public class CharacterCustomizationGUI extends GUIScreen
                         break;
                 }
                 break;
+
+            case "Other":
+
+            case "Voice":
+                switch (selectedOption)
+                {
+                    //String selectors
+                    case "Voice":
+                        if (race == null) break;
+                        addStringSelector(root2, selectedOption, false, race.voiceSets, race.premiumVoiceSets);
+                        break;
+
+
+                    //Sliders
+                    case "Voice Pitch":
+                        if (race == null) break;
+                        addSingleSliderDouble(root2, selectedOption, race.pitchMin, race.pitchMax);
+                        break;
+                }
+                break;
         }
     }
 
@@ -536,6 +661,11 @@ public class CharacterCustomizationGUI extends GUIScreen
                         case "Chest":
                             packet.chest = buttonText;
                             Network.WRAPPER.sendToServer(new Network.SetChestTypePacket(buttonText));
+                            break;
+
+                        case "Voice":
+                            ccCompound.setString(key, buttonText);
+                            Network.WRAPPER.sendToServer(new Network.SetCCStringPacket(key, buttonText));
                             break;
 
                         default:

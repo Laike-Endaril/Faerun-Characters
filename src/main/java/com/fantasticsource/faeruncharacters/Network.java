@@ -42,6 +42,7 @@ public class Network
         WRAPPER.registerMessage(SetCCColorPacketHandler.class, SetCCColorPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCIntPacketHandler.class, SetCCIntPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCDoublePacketHandler.class, SetCCDoublePacket.class, discriminator++, Side.SERVER);
+        WRAPPER.registerMessage(SetCCStringPacketHandler.class, SetCCStringPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(LeaveCCPacketHandler.class, LeaveCCPacket.class, discriminator++, Side.SERVER);
     }
 
@@ -100,14 +101,30 @@ public class Network
             for (Map.Entry<String, CRace> entry : CRace.RACES.entrySet())
             {
                 ByteBufUtils.writeUTF8String(buf, entry.getKey());
-                entry.getValue().write(buf);
+
+                CRace race = entry.getValue();
+                race.write(buf);
+
+                buf.writeInt(race.voiceSets.size());
+                for (String voiceSet : race.voiceSets) ByteBufUtils.writeUTF8String(buf, voiceSet);
+
+                buf.writeInt(race.premiumVoiceSets.size());
+                for (String voiceSet : race.premiumVoiceSets) ByteBufUtils.writeUTF8String(buf, voiceSet);
             }
 
             buf.writeInt(CRace.RACES_PREMIUM.size());
             for (Map.Entry<String, CRace> entry : CRace.RACES_PREMIUM.entrySet())
             {
                 ByteBufUtils.writeUTF8String(buf, entry.getKey());
-                entry.getValue().write(buf);
+
+                CRace race = entry.getValue();
+                race.write(buf);
+
+                buf.writeInt(race.voiceSets.size());
+                for (String voiceSet : race.voiceSets) ByteBufUtils.writeUTF8String(buf, voiceSet);
+
+                buf.writeInt(race.premiumVoiceSets.size());
+                for (String voiceSet : race.premiumVoiceSets) ByteBufUtils.writeUTF8String(buf, voiceSet);
             }
         }
 
@@ -142,17 +159,26 @@ public class Network
             for (int i = buf.readInt(); i > 0; i--) headAccessories.add(ByteBufUtils.readUTF8String(buf));
 
             int size = buf.readInt();
+            CRace race;
             races = new LinkedHashMap<>(size);
             for (int i = 0; i < size; i++)
             {
-                races.put(ByteBufUtils.readUTF8String(buf), new CRace().read(buf));
+                race = new CRace();
+                races.put(ByteBufUtils.readUTF8String(buf), race.read(buf));
+
+                for (int i2 = buf.readInt(); i2 > 0; i2--) race.voiceSets.add(ByteBufUtils.readUTF8String(buf));
+                for (int i2 = buf.readInt(); i2 > 0; i2--) race.premiumVoiceSets.add(ByteBufUtils.readUTF8String(buf));
             }
 
             size = buf.readInt();
             racesPremium = new LinkedHashMap<>(size);
             for (int i = 0; i < size; i++)
             {
-                racesPremium.put(ByteBufUtils.readUTF8String(buf), new CRace().read(buf));
+                race = new CRace();
+                racesPremium.put(ByteBufUtils.readUTF8String(buf), race.read(buf));
+
+                for (int i2 = buf.readInt(); i2 > 0; i2--) race.voiceSets.add(ByteBufUtils.readUTF8String(buf));
+                for (int i2 = buf.readInt(); i2 > 0; i2--) race.premiumVoiceSets.add(ByteBufUtils.readUTF8String(buf));
             }
         }
     }
@@ -452,6 +478,53 @@ public class Network
                 if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
                     CharacterTags.getCC(ctx.getServerHandler().player).setDouble(packet.key, packet.value);
+                }
+            });
+            return null;
+        }
+    }
+
+
+    public static class SetCCStringPacket implements IMessage
+    {
+        String key, value;
+
+        public SetCCStringPacket()
+        {
+            //Required
+        }
+
+        public SetCCStringPacket(String key, String value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, key);
+            ByteBufUtils.writeUTF8String(buf, value);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            key = ByteBufUtils.readUTF8String(buf);
+            value = ByteBufUtils.readUTF8String(buf);
+        }
+    }
+
+    public static class SetCCStringPacketHandler implements IMessageHandler<SetCCStringPacket, IMessage>
+    {
+        @Override
+        public IMessage onMessage(SetCCStringPacket packet, MessageContext ctx)
+        {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
+            {
+                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                {
+                    CharacterTags.getCC(ctx.getServerHandler().player).setString(packet.key, packet.value);
                 }
             });
             return null;
