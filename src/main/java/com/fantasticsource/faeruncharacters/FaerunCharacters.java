@@ -47,7 +47,7 @@ public class FaerunCharacters
 
     public static final String MODID = "faeruncharacters";
     public static final String NAME = "Faerun Characters";
-    public static final String VERSION = "1.12.2.000r";
+    public static final String VERSION = "1.12.2.000s";
 
     public static final Class MCLINK_API_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.API"), MCLINK_AUTHENTICATION_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.Authentication");
     public static final Method MCLINK_API_GET_AUTHORIZATION_METHOD = MCLINK_API_CLASS == null ? null : ReflectionTool.getMethod(MCLINK_API_CLASS, new Class[]{Table.class, UUID[].class}, "getAuthorization");
