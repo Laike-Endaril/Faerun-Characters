@@ -430,14 +430,13 @@ public class CharacterTags
 
     protected static class SkinSlotting
     {
+        String name, skinType;
+        int indexWithinType;
         protected SkinSlotting(String name, String skinType, int indexWithinType)
         {
             this.name = name;
             this.skinType = skinType;
             this.indexWithinType = indexWithinType;
         }
-
-        String name, skinType;
-        int indexWithinType;
     }
 }

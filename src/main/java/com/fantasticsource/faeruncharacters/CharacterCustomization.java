@@ -7,7 +7,6 @@ import com.fantasticsource.instances.Instances;
 import com.fantasticsource.instances.server.Teleport;
 import com.fantasticsource.instances.world.InstanceHandler;
 import com.fantasticsource.instances.world.dimensions.template.WorldProviderTemplate;
-import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
@@ -39,7 +38,7 @@ public class CharacterCustomization
 
     public static boolean hasValidCharacter(EntityPlayerMP player)
     {
-        if (MCTools.isWhitelisted(player)) return hasValidCharacter(player, true);
+        if (FaerunCharacters.isPlayerPremium(player)) return hasValidCharacter(player, true);
 
         if (hasValidCharacter(player, false)) return true;
 

@@ -53,6 +53,63 @@ public class CRace extends Component
     public LinkedHashSet<String> voiceSets = new LinkedHashSet<>(), premiumVoiceSets = new LinkedHashSet<>();
     public double pitchMin = 0.8, pitchMax = 1.2;
 
+    public static boolean addRace(String name) throws IOException
+    {
+        CRace race = new CRace();
+        race.name = name;
+
+
+        //Load
+        File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races" + File.separator + name + ".txt");
+        if (!file.exists() || file.isDirectory()) return false;
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line = br.readLine();
+        while (line != null)
+        {
+            int commentIndex = line.indexOf('#');
+            if (commentIndex != -1) line = line.substring(0, commentIndex);
+
+            String[] tokens = Tools.fixedSplit(line, "=");
+            if (tokens.length == 2)
+            {
+                race.setValue(tokens[0].trim().toLowerCase(), tokens[1].trim());
+            }
+
+            line = br.readLine();
+        }
+        br.close();
+
+
+        //Validate
+        if (!race.valid()) return false;
+
+
+        //Save and return
+        if (race.raceVariants.size() == 0) RACES_PREMIUM.put(name, race);
+        else RACES.put(name, race);
+        return true;
+    }
+
+    public static void init(FMLPreInitializationEvent event) throws IOException
+    {
+        File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races");
+        if (!file.isDirectory())
+        {
+            file.mkdirs();
+            return;
+        }
+
+        File[] files = file.listFiles();
+        if (files == null) return;
+
+        int i = 0;
+        for (File raceFile : files)
+        {
+            if (addRace(raceFile.getName().replace(".txt", ""))) i++;
+        }
+        System.out.println(TextFormatting.LIGHT_PURPLE + "Loaded " + i + " races");
+    }
 
     protected boolean valid()
     {
@@ -103,7 +160,6 @@ public class CRace extends Component
 
         return true;
     }
-
 
     protected void setValue(String key, String value)
     {
@@ -262,67 +318,6 @@ public class CRace extends Component
 
         return colorSet;
     }
-
-
-    public static boolean addRace(String name) throws IOException
-    {
-        CRace race = new CRace();
-        race.name = name;
-
-
-        //Load
-        File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races" + File.separator + name + ".txt");
-        if (!file.exists() || file.isDirectory()) return false;
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line = br.readLine();
-        while (line != null)
-        {
-            int commentIndex = line.indexOf('#');
-            if (commentIndex != -1) line = line.substring(0, commentIndex);
-
-            String[] tokens = Tools.fixedSplit(line, "=");
-            if (tokens.length == 2)
-            {
-                race.setValue(tokens[0].trim().toLowerCase(), tokens[1].trim());
-            }
-
-            line = br.readLine();
-        }
-        br.close();
-
-
-        //Validate
-        if (!race.valid()) return false;
-
-
-        //Save and return
-        if (race.raceVariants.size() == 0) RACES_PREMIUM.put(name, race);
-        else RACES.put(name, race);
-        return true;
-    }
-
-
-    public static void init(FMLPreInitializationEvent event) throws IOException
-    {
-        File file = new File(MCTools.getConfigDir() + MODID + File.separator + "races");
-        if (!file.isDirectory())
-        {
-            file.mkdirs();
-            return;
-        }
-
-        File[] files = file.listFiles();
-        if (files == null) return;
-
-        int i = 0;
-        for (File raceFile : files)
-        {
-            if (addRace(raceFile.getName().replace(".txt", ""))) i++;
-        }
-        System.out.println(TextFormatting.LIGHT_PURPLE + "Loaded " + i + " races");
-    }
-
 
     @Override
     public CRace write(ByteBuf buf)

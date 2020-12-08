@@ -13,12 +13,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Camera extends ClientEntity
 {
+    protected static Camera camera = null;
+
     static
     {
         MinecraftForge.EVENT_BUS.register(Camera.class);
     }
 
-    protected static Camera camera = null;
+    protected boolean active = false;
+    protected int oMode;
+    protected Camera(World worldIn)
+    {
+        super(worldIn);
+        forceSpawn = true;
+    }
 
     public static Camera getCamera()
     {
@@ -26,15 +34,24 @@ public class Camera extends ClientEntity
         return camera;
     }
 
-
-    protected boolean active = false;
-    protected int oMode;
-
-
-    protected Camera(World worldIn)
+    @SubscribeEvent
+    public static void renderPlayerPre(RenderPlayerEvent.Pre event)
     {
-        super(worldIn);
-        forceSpawn = true;
+        Minecraft mc = Minecraft.getMinecraft();
+        if (getCamera().active && event.getEntityPlayer() == mc.player)
+        {
+            mc.getRenderManager().renderViewEntity = mc.player;
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderPlayerPost(RenderPlayerEvent.Post event)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (getCamera().active && event.getEntityPlayer() == mc.player)
+        {
+            mc.getRenderManager().renderViewEntity = getCamera();
+        }
     }
 
     public void activate(World world, double x, double y, double z, float yaw, float pitch)
@@ -156,26 +173,5 @@ public class Camera extends ClientEntity
     public float getEyeHeight()
     {
         return 0;
-    }
-
-
-    @SubscribeEvent
-    public static void renderPlayerPre(RenderPlayerEvent.Pre event)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        if (getCamera().active && event.getEntityPlayer() == mc.player)
-        {
-            mc.getRenderManager().renderViewEntity = mc.player;
-        }
-    }
-
-    @SubscribeEvent
-    public static void renderPlayerPost(RenderPlayerEvent.Post event)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        if (getCamera().active && event.getEntityPlayer() == mc.player)
-        {
-            mc.getRenderManager().renderViewEntity = getCamera();
-        }
     }
 }

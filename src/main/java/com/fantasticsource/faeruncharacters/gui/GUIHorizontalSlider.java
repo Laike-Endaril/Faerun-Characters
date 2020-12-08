@@ -100,6 +100,11 @@ public class GUIHorizontalSlider extends GUIImage
         knob.x = (1 - knob.width) * percent;
     }
 
+    public double getValue()
+    {
+        return value;
+    }
+
     public void setValue(double value)
     {
         double percent = Tools.min(Tools.max((value - minValue) / (maxValue - minValue), 0), 1);
@@ -107,12 +112,6 @@ public class GUIHorizontalSlider extends GUIImage
         this.value = minValue + (maxValue - minValue) * percent;
         knob.x = (1 - knob.width) * percent;
     }
-
-    public double getValue()
-    {
-        return value;
-    }
-
 
     public void addDragActions(Runnable... actions)
     {

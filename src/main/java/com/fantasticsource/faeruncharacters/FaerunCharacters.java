@@ -7,6 +7,9 @@ import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Table;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,6 +20,7 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -27,7 +31,10 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 @Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.043h,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
 public class FaerunCharacters
@@ -36,7 +43,7 @@ public class FaerunCharacters
 
     public static final String MODID = "faeruncharacters";
     public static final String NAME = "Faerun Characters";
-    public static final String VERSION = "1.12.2.000p";
+    public static final String VERSION = "1.12.2.000q";
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) throws IOException
@@ -177,5 +184,34 @@ public class FaerunCharacters
     public static void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new Commands());
+    }
+
+
+    public static int getPlayerPatreonCents(EntityPlayerMP player)
+    {
+        if (!Loader.isModLoaded("mclink")) return 0;
+
+        //Used fully qualified references to prevent crash from import on client-side due to missing MCLink mod
+        try
+        {
+            Table<String, String, List<String>> table = HashBasedTable.create();
+            ArrayList<String> list = new ArrayList<>();
+            list.add("0");
+            table.put("zAshvkqlObjTVWze0B9Q7dbDOx71ajow", "Patreon", list);
+            ImmutableMultimap<UUID, net.dries007.mclink.api.Authentication> map = net.dries007.mclink.api.API.getAuthorization(table, player.getPersistentID());
+            if (map.isEmpty()) return 0;
+
+            return Integer.parseInt(map.values().iterator().next().extra.values().iterator().next());
+        }
+        catch (IOException | net.dries007.mclink.api.APIException e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static boolean isPlayerPremium(EntityPlayerMP player)
+    {
+        return getPlayerPatreonCents(player) >= 100;
     }
 }

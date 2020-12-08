@@ -46,16 +46,6 @@ public class CharacterCustomizationGUI extends GUIScreen
 
 
     public static final LinkedHashSet<String> bodyTypes = new LinkedHashSet<>();
-    public static double internalScaling, buttonRelW, buttonRelH, paddingRelW, paddingRelH, sliderRelH;
-
-    public static Color
-            activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
-            hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverButtonColor, true),
-            idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true),
-            activePremiumButtonColor = new Color(FaerunCharactersConfig.client.activePremiumButtonColor, true),
-            hoverPremiumButtonColor = new Color(FaerunCharactersConfig.client.hoverPremiumButtonColor, true),
-            idlePremiumButtonColor = new Color(FaerunCharactersConfig.client.idlePremiumButtonColor, true);
-
     public static final ResourceLocation
             TEX_BUTTON_IDLE = new ResourceLocation(MODID, "image/button_idle.png"),
             TEX_BUTTON_HOVER = new ResourceLocation(MODID, "image/button_hover.png"),
@@ -75,9 +65,15 @@ public class CharacterCustomizationGUI extends GUIScreen
             TEX_SLIDER_HUE = new ResourceLocation(MODID, "image/slider_hue.png"),
             TEX_SLIDER_SATURATION = new ResourceLocation(MODID, "image/slider_saturation.png"),
             TEX_SLIDER_GRADIENT = new ResourceLocation(MODID, "image/slider_gradient.png");
-
     protected static final String[] TAB_NAMES = new String[]{"Body", "Head", "Accessories", "Other"};
-
+    public static double internalScaling, buttonRelW, buttonRelH, paddingRelW, paddingRelH, sliderRelH;
+    public static Color
+            activeButtonColor = new Color(FaerunCharactersConfig.client.activeButtonColor, true),
+            hoverButtonColor = new Color(FaerunCharactersConfig.client.hoverButtonColor, true),
+            idleButtonColor = new Color(FaerunCharactersConfig.client.idleButtonColor, true),
+            activePremiumButtonColor = new Color(FaerunCharactersConfig.client.activePremiumButtonColor, true),
+            hoverPremiumButtonColor = new Color(FaerunCharactersConfig.client.hoverPremiumButtonColor, true),
+            idlePremiumButtonColor = new Color(FaerunCharactersConfig.client.idlePremiumButtonColor, true);
 
     static
     {
@@ -112,6 +108,23 @@ public class CharacterCustomizationGUI extends GUIScreen
         Camera.getCamera().activate(player.world, player.posX, player.posY + player.height / 2, player.posZ, 180, 0);
     }
 
+    @SubscribeEvent
+    public static void clientTick(TickEvent.ClientTickEvent event)
+    {
+        if (event.phase != TickEvent.Phase.END) return;
+
+        if (Minecraft.getMinecraft().currentScreen instanceof CharacterCustomizationGUI)
+        {
+            CharacterCustomizationGUI gui = (CharacterCustomizationGUI) Minecraft.getMinecraft().currentScreen;
+            if (gui.selectedOption.equals("Voice Pitch") && ClientTickTimer.currentTick() % 40 == 1) //If this inits ClientTickTimer, I think it may repeat tick 0...so I used an offset for now
+            {
+                ResourceLocation rl = Tools.choose(VoiceSets.ALL_VOICE_SETS.get(gui.ccCompound.getString("Voice")).values().toArray(new ResourceLocation[0]));
+                SimpleSound simpleSound = new SimpleSound(rl, SoundCategory.MASTER, Minecraft.getMinecraft().player);
+                simpleSound.pitch = (float) (gui.ccCompound.hasKey("Voice Pitch") ? gui.ccCompound.getDouble("Voice Pitch") : (gui.race.pitchMin + gui.race.pitchMax) / 2);
+                Minecraft.getMinecraft().getSoundHandler().playSound(simpleSound);
+            }
+        }
+    }
 
     protected void preCalc()
     {
@@ -323,14 +336,12 @@ public class CharacterCustomizationGUI extends GUIScreen
         addOptionControls(root2);
     }
 
-
     protected GUICCCameraController addCamControls()
     {
         GUICCCameraController result = new GUICCCameraController(this, 0, 0, 1, 1);
         root.add(result);
         return result;
     }
-
 
     protected void addTabsAndDoneButton(GUIElement root2)
     {
@@ -359,7 +370,6 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         root2.add(button);
     }
-
 
     protected void addOptions(GUIElement root2)
     {
@@ -438,7 +448,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             yy += buttonRelH;
         }
     }
-
 
     protected void addOptionControls(GUIElement root2)
     {
@@ -610,7 +619,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-
     protected void addStringSelector(GUIElement root2, String key, boolean fileNames, Collection<String> selections)
     {
         addStringSelector(root2, key, fileNames, selections, new LinkedHashSet<>());
@@ -698,7 +706,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-
     protected void addSingleSliderDouble(GUIElement root2, String key, double min, double max)
     {
         GUIHorizontalSlider slider = new GUIHorizontalSlider(this, 1 - paddingRelW - buttonRelW, (1 - sliderRelH) / 2, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, min, max, TEX_SLIDER_BAR, TEX_SLIDER_KNOB);
@@ -711,7 +718,6 @@ public class CharacterCustomizationGUI extends GUIScreen
 
         root2.add(slider);
     }
-
 
     protected void addColorSelector(GUIElement root2, String key, Color... colors)
     {
@@ -739,7 +745,6 @@ public class CharacterCustomizationGUI extends GUIScreen
             if (i % 2 == 1) yy += buttonRelH;
         }
     }
-
 
     protected void addHSVSliders(GUIElement root2, String key)
     {
@@ -785,7 +790,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         root2.addAll(hueSlider, satSlider, valSlider);
     }
 
-
     protected GUIButton makeButton(double x, double y, String text, boolean error)
     {
         return makeButton(x, y, text, error, false);
@@ -827,7 +831,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         }
     }
 
-
     protected GUIButton makeColorButton(double x, double y, Color color)
     {
         GUIImage active = new GUIImage(this, ELEMENT_W * internalScaling, ELEMENT_H * internalScaling, TEX_BUTTON_ACTIVE);
@@ -845,7 +848,6 @@ public class CharacterCustomizationGUI extends GUIScreen
         return new GUIButton(this, x, y, idle, hover, active, true);
     }
 
-
     @Override
     protected void recalc()
     {
@@ -856,13 +858,11 @@ public class CharacterCustomizationGUI extends GUIScreen
         root.recalc(0);
     }
 
-
     @Override
     public String title()
     {
         return "Character Customization";
     }
-
 
     @Override
     public void onClosed()
@@ -879,24 +879,5 @@ public class CharacterCustomizationGUI extends GUIScreen
     public boolean doesGuiPauseGame()
     {
         return false;
-    }
-
-
-    @SubscribeEvent
-    public static void clientTick(TickEvent.ClientTickEvent event)
-    {
-        if (event.phase != TickEvent.Phase.END) return;
-
-        if (Minecraft.getMinecraft().currentScreen instanceof CharacterCustomizationGUI)
-        {
-            CharacterCustomizationGUI gui = (CharacterCustomizationGUI) Minecraft.getMinecraft().currentScreen;
-            if (gui.selectedOption.equals("Voice Pitch") && ClientTickTimer.currentTick() % 40 == 1) //If this inits ClientTickTimer, I think it may repeat tick 0...so I used an offset for now
-            {
-                ResourceLocation rl = Tools.choose(VoiceSets.ALL_VOICE_SETS.get(gui.ccCompound.getString("Voice")).values().toArray(new ResourceLocation[0]));
-                SimpleSound simpleSound = new SimpleSound(rl, SoundCategory.MASTER, Minecraft.getMinecraft().player);
-                simpleSound.pitch = (float) (gui.ccCompound.hasKey("Voice Pitch") ? gui.ccCompound.getDouble("Voice Pitch") : (gui.race.pitchMin + gui.race.pitchMax) / 2);
-                Minecraft.getMinecraft().getSoundHandler().playSound(simpleSound);
-            }
-        }
     }
 }
