@@ -5,9 +5,11 @@ import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
+import com.fantasticsource.tools.ReflectionTool;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Table;
 import net.minecraft.client.Minecraft;
@@ -31,6 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -44,6 +48,10 @@ public class FaerunCharacters
     public static final String MODID = "faeruncharacters";
     public static final String NAME = "Faerun Characters";
     public static final String VERSION = "1.12.2.000r";
+
+    public static final Class MCLINK_API_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.API"), MCLINK_AUTHENTICATION_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.Authentication");
+    public static final Method MCLINK_API_GET_AUTHORIZATION_METHOD = MCLINK_API_CLASS == null ? null : ReflectionTool.getMethod(MCLINK_API_CLASS, new Class[]{Table.class, UUID[].class}, "getAuthorization");
+    public static final Field MCLINK_AUTHENTICATION_EXTRA_FIELD = MCLINK_AUTHENTICATION_CLASS == null ? null : ReflectionTool.getField(MCLINK_AUTHENTICATION_CLASS, "extra");
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) throws IOException
@@ -197,13 +205,14 @@ public class FaerunCharacters
             Table<String, String, List<String>> table = HashBasedTable.create();
             ArrayList<String> list = new ArrayList<>();
             list.add("0");
-            table.put("zAshvkqlObjTVWze0B9Q7dbDOx71ajow", "Patreon", list);
-            ImmutableMultimap<UUID, net.dries007.mclink.api.Authentication> map = net.dries007.mclink.api.API.getAuthorization(table, player.getPersistentID());
+            table.put(FaerunCharactersConfig.server.patreonCreatorAccessToken, "Patreon", list);
+            ImmutableMultimap map = (ImmutableMultimap) ReflectionTool.invoke(MCLINK_API_GET_AUTHORIZATION_METHOD, null, table, new UUID[]{player.getPersistentID()});
             if (map.isEmpty()) return 0;
 
-            return Integer.parseInt(map.values().iterator().next().extra.values().iterator().next());
+            ImmutableMap<String, String> extra = (ImmutableMap<String, String>) ReflectionTool.get(MCLINK_AUTHENTICATION_EXTRA_FIELD, map.values().iterator().next());
+            return Integer.parseInt(extra.values().iterator().next());
         }
-        catch (IOException | net.dries007.mclink.api.APIException e)
+        catch (Exception e)
         {
             e.printStackTrace();
             return 0;

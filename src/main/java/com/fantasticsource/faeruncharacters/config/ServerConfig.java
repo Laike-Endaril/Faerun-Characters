@@ -27,4 +27,7 @@ public class ServerConfig
 
     @Config.Name("Face Accessories")
     public String[] faceAccessories = new String[]{};
+
+    @Config.Name("Patreon Creator Access Token")
+    public String patreonCreatorAccessToken = "";
 }
