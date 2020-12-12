@@ -30,4 +30,7 @@ public class ServerConfig
 
     @Config.Name("Patreon Creator Access Token")
     public String patreonCreatorAccessToken = "";
+
+    @Config.Name("Additional Premium Players")
+    public String[] additionalPremiumPlayers = new String[0];
 }

@@ -221,6 +221,7 @@ public class FaerunCharacters
 
     public static boolean isPlayerPremium(EntityPlayerMP player)
     {
+        if (Tools.contains(FaerunCharactersConfig.server.additionalPremiumPlayers, player.getPersistentID().toString())) return true;
         return getPlayerPatreonCents(player) >= 500;
     }
 }
