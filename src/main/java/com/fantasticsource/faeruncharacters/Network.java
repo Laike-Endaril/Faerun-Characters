@@ -64,7 +64,7 @@ public class Network
 
         public CharacterCustomizationGUIPacket(EntityPlayerMP player)
         {
-            isPremium = FaerunCharacters.isPlayerPremium(player);
+            isPremium = PatreonHandler.isPlayerPremium(player);
 
             bodyType = RenderModes.getRenderMode(player, "Body");
             if (bodyType != null) bodyType = bodyType.equals("M") ? "Masculine" : "Feminine";

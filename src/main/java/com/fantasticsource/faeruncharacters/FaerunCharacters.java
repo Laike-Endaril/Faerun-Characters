@@ -5,13 +5,8 @@ import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
-import com.fantasticsource.tools.ReflectionTool;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Table;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,7 +17,6 @@ import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -33,12 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.UUID;
 
 @Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.043j,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
 public class FaerunCharacters
@@ -48,10 +37,6 @@ public class FaerunCharacters
     public static final String MODID = "faeruncharacters";
     public static final String NAME = "Faerun Characters";
     public static final String VERSION = "1.12.2.000t";
-
-    public static final Class MCLINK_API_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.API"), MCLINK_AUTHENTICATION_CLASS = ReflectionTool.getClassByName("net.dries007.mclink.api.Authentication");
-    public static final Method MCLINK_API_GET_AUTHORIZATION_METHOD = MCLINK_API_CLASS == null ? null : ReflectionTool.getMethod(MCLINK_API_CLASS, new Class[]{Table.class, UUID[].class}, "getAuthorization");
-    public static final Field MCLINK_AUTHENTICATION_EXTRA_FIELD = MCLINK_AUTHENTICATION_CLASS == null ? null : ReflectionTool.getField(MCLINK_AUTHENTICATION_CLASS, "extra");
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) throws IOException
@@ -65,6 +50,7 @@ public class FaerunCharacters
         CRace.init(event);
 
         MinecraftForge.EVENT_BUS.register(BlocksAndItems.class);
+        MinecraftForge.EVENT_BUS.register(PatreonHandler.class);
 
         updateGlobalOptions();
 
@@ -192,36 +178,5 @@ public class FaerunCharacters
     public static void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new Commands());
-    }
-
-
-    public static int getPlayerPatreonCents(EntityPlayerMP player)
-    {
-        if (!Loader.isModLoaded("mclink")) return 0;
-
-        //Used fully qualified references to prevent crash from import on client-side due to missing MCLink mod
-        try
-        {
-            Table<String, String, List<String>> table = HashBasedTable.create();
-            ArrayList<String> list = new ArrayList<>();
-            list.add("0");
-            table.put(FaerunCharactersConfig.server.patreonCreatorAccessToken, "Patreon", list);
-            ImmutableMultimap map = (ImmutableMultimap) ReflectionTool.invoke(MCLINK_API_GET_AUTHORIZATION_METHOD, null, table, new UUID[]{player.getPersistentID()});
-            if (map.isEmpty()) return 0;
-
-            ImmutableMap<String, String> extra = (ImmutableMap<String, String>) ReflectionTool.get(MCLINK_AUTHENTICATION_EXTRA_FIELD, map.values().iterator().next());
-            return Integer.parseInt(extra.values().iterator().next());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    public static boolean isPlayerPremium(EntityPlayerMP player)
-    {
-        if (Tools.contains(FaerunCharactersConfig.server.additionalPremiumPlayers, player.getPersistentID().toString())) return true;
-        return getPlayerPatreonCents(player) >= 500;
     }
 }

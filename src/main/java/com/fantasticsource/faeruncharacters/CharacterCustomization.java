@@ -38,7 +38,7 @@ public class CharacterCustomization
 
     public static boolean hasValidCharacter(EntityPlayerMP player)
     {
-        if (FaerunCharacters.isPlayerPremium(player)) return hasValidCharacter(player, true);
+        if (PatreonHandler.isPlayerPremium(player)) return hasValidCharacter(player, true);
 
         if (hasValidCharacter(player, false)) return true;
 
