@@ -9,13 +9,14 @@ import com.fantasticsource.mctools.aw.AWSkinGenerator;
 import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.LinkedHashMap;
 
@@ -47,12 +48,12 @@ public class CharacterTags
         SKIN_SLOTTINGS.put("Race Variant", new SkinSlotting("Race Variant", "armourers:outfit", 0));
 
 
-        COLOR_KEYS.put("Skin Color", "skin");
-        COLOR_KEYS.put("Eye Color", "eye");
-        COLOR_KEYS.put("Hair Color", "hair");
-        COLOR_KEYS.put("Color 1", "misc_1");
-        COLOR_KEYS.put("Color 2", "misc_2");
-        COLOR_KEYS.put("Undershirt Color", "misc_3");
+        COLOR_KEYS.put("Skin Color", "SKIN");
+        COLOR_KEYS.put("Eye Color", "EYE");
+        COLOR_KEYS.put("Hair Color", "HAIR");
+        COLOR_KEYS.put("Color 1", "MISC_1");
+        COLOR_KEYS.put("Color 2", "MISC_2");
+        COLOR_KEYS.put("Undershirt Color", "MISC_3");
     }
 
     public static void setCC(EntityLivingBase livingBase, NBTTagCompound characterCustomization)
@@ -71,20 +72,14 @@ public class CharacterTags
     public static void setCCColor(EntityLivingBase livingBase, String key, Color value)
     {
         //These are wardrobe color channels, and should always have a paint type of 255 (alpha channel used for paint type)
-        String cmdKey = COLOR_KEYS.get(key);
-        if (cmdKey == null)
+        String awKey = COLOR_KEYS.get(key);
+        if (awKey == null)
         {
             System.err.println(TextFormatting.RED + "Tried to set invalid color key (" + key + ")");
             System.err.println(TextFormatting.RED + "...for entity..." + livingBase.getName() + " (" + livingBase.getClass().getName() + ")");
             return;
         }
 
-        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        int cmdColor = (value.r() << 16) | (value.g() << 8) | value.b();
-        String cmdColorHex = Integer.toHexString(cmdColor);
-        StringBuilder cmdHex = new StringBuilder("#");
-        for (int i = 6 - cmdColorHex.length(); i > 0; i--) cmdHex.append("0");
-        cmdHex.append(cmdColorHex);
 
         if (key.equals("Hair Color") || key.equals("Skin Color"))
         {
@@ -102,18 +97,39 @@ public class CharacterTags
             {
                 if (key.equals("Skin Color"))
                 {
-                    server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + COLOR_KEYS.get("Hair Color") + " " + cmdHex);
+                    IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
+                    if (wardrobeCap != null)
+                    {
+                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Hair Color")), value.color());
+                        if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+                        wardrobeCap.syncToAllTracking();
+                    }
+
                     getCC(livingBase).setInteger("Hair Color", value.color());
                 }
                 else
                 {
-                    server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + COLOR_KEYS.get("Skin Color") + " " + cmdHex);
+                    IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
+                    if (wardrobeCap != null)
+                    {
+                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Skin Color")), value.color());
+                        if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+                        wardrobeCap.syncToAllTracking();
+                    }
+
                     getCC(livingBase).setInteger("Skin Color", value.color());
                 }
             }
         }
 
-        server.commandManager.executeCommand(server, "/armourers wardrobe set_colour " + livingBase.getName() + " " + cmdKey + " " + cmdHex);
+        IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
+        if (wardrobeCap != null)
+        {
+            wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(awKey), value.color());
+            if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+            wardrobeCap.syncToAllTracking();
+        }
+
         getCC(livingBase).setInteger(key, value.color());
     }
 
@@ -432,6 +448,7 @@ public class CharacterTags
     {
         String name, skinType;
         int indexWithinType;
+
         protected SkinSlotting(String name, String skinType, int indexWithinType)
         {
             this.name = name;
