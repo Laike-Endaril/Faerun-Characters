@@ -81,6 +81,8 @@ public class CharacterTags
         }
 
 
+        int rgb = value.color() >>> 8;
+
         if (key.equals("Hair Color") || key.equals("Skin Color"))
         {
             String raceString = getCC(livingBase).getString("Race");
@@ -100,7 +102,7 @@ public class CharacterTags
                     IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
                     if (wardrobeCap != null)
                     {
-                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Hair Color")), value.color());
+                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Hair Color")), rgb);
                         if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
                         wardrobeCap.syncToAllTracking();
                     }
@@ -112,7 +114,7 @@ public class CharacterTags
                     IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
                     if (wardrobeCap != null)
                     {
-                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Skin Color")), value.color());
+                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Skin Color")), rgb);
                         if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
                         wardrobeCap.syncToAllTracking();
                     }
@@ -125,7 +127,7 @@ public class CharacterTags
         IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
         if (wardrobeCap != null)
         {
-            wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(awKey), value.color());
+            wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(awKey), rgb);
             if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
             wardrobeCap.syncToAllTracking();
         }
