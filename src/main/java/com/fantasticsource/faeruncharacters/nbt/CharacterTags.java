@@ -10,8 +10,7 @@ import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.Tools;
 import com.fantasticsource.tools.datastructures.Color;
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
-import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -21,6 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.LinkedHashMap;
 
 import static com.fantasticsource.faeruncharacters.FaerunCharacters.MODID;
+import static moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap.PLAYER_WARDROBE_CAP;
 
 public class CharacterTags
 {
@@ -81,7 +81,14 @@ public class CharacterTags
         }
 
 
-        int rgb = value.color() >>> 8;
+        int rgb = (255 << 24) | (value.color() >>> 8);
+
+        IPlayerWardrobeCap playerWardrobeCap = livingBase.getCapability(PLAYER_WARDROBE_CAP, null);
+        if (playerWardrobeCap == null)
+        {
+            System.err.println(TextFormatting.RED + "Could not get AW wardrobe capability for entity: " + livingBase);
+            return;
+        }
 
         if (key.equals("Hair Color") || key.equals("Skin Color"))
         {
@@ -99,38 +106,26 @@ public class CharacterTags
             {
                 if (key.equals("Skin Color"))
                 {
-                    IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
-                    if (wardrobeCap != null)
-                    {
-                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Hair Color")), rgb);
-                        if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
-                        wardrobeCap.syncToAllTracking();
-                    }
+                    playerWardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Hair Color")), rgb);
+                    if (livingBase instanceof EntityPlayerMP) playerWardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+                    playerWardrobeCap.syncToAllTracking();
 
                     getCC(livingBase).setInteger("Hair Color", value.color());
                 }
                 else
                 {
-                    IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
-                    if (wardrobeCap != null)
-                    {
-                        wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Skin Color")), rgb);
-                        if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
-                        wardrobeCap.syncToAllTracking();
-                    }
+                    playerWardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(COLOR_KEYS.get("Skin Color")), rgb);
+                    if (livingBase instanceof EntityPlayerMP) playerWardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+                    playerWardrobeCap.syncToAllTracking();
 
                     getCC(livingBase).setInteger("Skin Color", value.color());
                 }
             }
         }
 
-        IWardrobeCap wardrobeCap = WardrobeCap.get(livingBase);
-        if (wardrobeCap != null)
-        {
-            wardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(awKey), rgb);
-            if (livingBase instanceof EntityPlayerMP) wardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
-            wardrobeCap.syncToAllTracking();
-        }
+        playerWardrobeCap.getExtraColours().setColour(IExtraColours.ExtraColourType.valueOf(awKey), rgb);
+        if (livingBase instanceof EntityPlayerMP) playerWardrobeCap.syncToPlayer((EntityPlayerMP) livingBase);
+        playerWardrobeCap.syncToAllTracking();
 
         getCC(livingBase).setInteger(key, value.color());
     }
