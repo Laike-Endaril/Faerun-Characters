@@ -15,6 +15,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -172,6 +173,13 @@ public class FaerunCharacters
     public static void renderExpBar(RenderGameOverlayEvent.Pre event)
     {
         if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void livingHurt(LivingHurtEvent event)
+    {
+        EntityLivingBase livingBase = event.getEntityLiving();
+        if (livingBase instanceof EntityPlayerMP && livingBase.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) event.setCanceled(true);
     }
 
     @Mod.EventHandler
