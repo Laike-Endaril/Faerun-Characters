@@ -409,6 +409,11 @@ public class CRace extends Component
         }
 
 
+        //Other
+        buf.writeDouble(pitchMin);
+        buf.writeDouble(pitchMax);
+
+
         return this;
     }
 
@@ -501,6 +506,11 @@ public class CRace extends Component
             eyeColors = new LinkedHashSet<>();
             for (int i = buf.readInt(); i > 0; i--) eyeColors.add(new Color(buf.readInt()));
         }
+
+
+        //Other
+        pitchMin = buf.readDouble();
+        pitchMax = buf.readDouble();
 
 
         return this;
