@@ -656,6 +656,7 @@ public class CharacterCustomizationGUI extends GUIScreen
                 buttonShortText = Tools.fixFileSeparators(buttonShortText);
                 buttonShortText = buttonShortText.substring(buttonShortText.lastIndexOf(File.separator) + 1);
             }
+            buttonShortText = buttonShortText.replaceAll("@.*", "");
 
             GUIButton button = makeButton(i % 2 == 0 ? 1 - paddingRelW - buttonRelW * 2 : 1 - paddingRelW - buttonRelW, yy, buttonShortText, !packet.isPremium && i >= selections.size(), i >= selections.size());
             button.addClickActions(() ->
