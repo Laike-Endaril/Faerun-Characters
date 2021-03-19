@@ -33,4 +33,7 @@ public class ServerConfig
 
     @Config.Name("Additional Premium Players")
     public String[] additionalPremiumPlayers = new String[0];
+
+    @Config.Name("Cents For Premium Access")
+    public int centsForPremium = 500;
 }
