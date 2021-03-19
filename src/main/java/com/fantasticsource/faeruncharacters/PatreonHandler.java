@@ -51,6 +51,12 @@ public class PatreonHandler
             }
 
             ImmutableMap<String, String> extra = (ImmutableMap<String, String>) ReflectionTool.get(MCLINK_AUTHENTICATION_EXTRA_FIELD, map.values().iterator().next());
+            if (extra.isEmpty())
+            {
+                playerCents.put(player.getPersistentID(), 0);
+                return 0;
+            }
+
             result = Integer.parseInt(extra.values().iterator().next());
             playerCents.put(player.getPersistentID(), result);
             return result;
