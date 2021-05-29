@@ -1,7 +1,9 @@
 package com.fantasticsource.faeruncharacters.entity;
 
+import com.fantasticsource.faeruncharacters.CharacterCustomization;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.mctools.MCTools;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,6 +59,7 @@ public class EntityRenderTweaks
 
         double scale = ENTITY_SCALES.getOrDefault(entity.getUniqueID(), 1d);
         GlStateManager.pushMatrix();
+        if (Minecraft.getMinecraft().world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION) GlStateManager.translate(0, (scale - 1) * 0.875, 0); //Bandaid for render bug while in CC
         GlStateManager.scale(scale, scale, scale);
     }
 
