@@ -1,5 +1,0 @@
-Race lore
-
-
-
-Blood config (on/off), in file only, not in config GUI
