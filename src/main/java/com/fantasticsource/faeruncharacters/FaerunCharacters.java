@@ -2,6 +2,7 @@ package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.faeruncharacters.blocksanditems.BlocksAndItems;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.entity.EntityRenderTweaks;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.MCTools;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
-@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.043j,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000q,);required-after:armourers_workshop@[1.12.2-0.50.5.636,)")
+@Mod(modid = FaerunCharacters.MODID, name = FaerunCharacters.NAME, version = FaerunCharacters.VERSION, dependencies = "required-after:fantasticlib@[1.12.2.044zzzzj,);required-after:fantasticaw@[1.12.2.000d,);required-after:instances@[1.12.2-001b,);required-after:tiamatinventory@[1.12.2-000zzf,);required-after:armourers_workshop@[1.12.2-0.51.0.659,)")
 public class FaerunCharacters
 {
     public static final String AW_SKIN_LIBRARY_DIR = MCTools.getConfigDir() + ".." + File.separator + "armourers_workshop" + File.separator + "skin-library" + File.separator;
@@ -44,6 +45,7 @@ public class FaerunCharacters
     {
         Network.init();
         CharacterCustomization.init();
+        MinecraftForge.EVENT_BUS.register(EntityRenderTweaks.class);
 
         FLibAPI.attachNBTCapToEntityIf(MODID, entity -> entity instanceof EntityLivingBase);
         MinecraftForge.EVENT_BUS.register(FaerunCharacters.class);

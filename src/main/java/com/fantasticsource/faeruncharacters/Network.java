@@ -1,6 +1,7 @@
 package com.fantasticsource.faeruncharacters;
 
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.entity.EntityRenderTweaks;
 import com.fantasticsource.faeruncharacters.gui.CharacterCustomizationGUI;
 import com.fantasticsource.faeruncharacters.nbt.CharacterTags;
 import com.fantasticsource.instances.server.Teleport;
@@ -9,10 +10,12 @@ import com.fantasticsource.mctools.aw.RenderModes;
 import com.fantasticsource.tools.datastructures.Color;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -44,6 +47,8 @@ public class Network
         WRAPPER.registerMessage(SetCCDoublePacketHandler.class, SetCCDoublePacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(SetCCStringPacketHandler.class, SetCCStringPacket.class, discriminator++, Side.SERVER);
         WRAPPER.registerMessage(LeaveCCPacketHandler.class, LeaveCCPacket.class, discriminator++, Side.SERVER);
+
+        WRAPPER.registerMessage(CharacterScalePacketHandler.class, CharacterScalePacket.class, discriminator++, Side.CLIENT);
     }
 
 
@@ -473,11 +478,13 @@ public class Network
         @Override
         public IMessage onMessage(SetCCDoublePacket packet, MessageContext ctx)
         {
+            EntityPlayerMP player = ctx.getServerHandler().player;
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() ->
             {
-                if (ctx.getServerHandler().player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
+                if (player.world.provider.getDimensionType() == CharacterCustomization.DIMTYPE_CHARACTER_CREATION)
                 {
-                    CharacterTags.getCC(ctx.getServerHandler().player).setDouble(packet.key, packet.value);
+                    CharacterTags.getCC(player).setDouble(packet.key, packet.value);
+                    if (packet.key.equals("Scale")) EntityRenderTweaks.refreshScale(player);
                 }
             });
             return null;
@@ -558,6 +565,60 @@ public class Network
                     if (CharacterCustomization.hasValidCharacter(player)) Teleport.escape(player);
                     else MCTools.playSimpleSoundForSpecific(CCSounds.ERROR, player);
                 }
+            });
+            return null;
+        }
+    }
+
+
+    public static class CharacterScalePacket implements IMessage
+    {
+        public int entityID;
+        public double scale;
+
+        public CharacterScalePacket()
+        {
+            //Required
+        }
+
+        public CharacterScalePacket(EntityLivingBase entity)
+        {
+            entityID = entity.getEntityId();
+            scale = CharacterTags.getCC(entity).getDouble("Scale");
+            if (scale == 0) scale = 1;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buf)
+        {
+            buf.writeInt(entityID);
+            buf.writeDouble(scale);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf)
+        {
+            entityID = buf.readInt();
+            scale = buf.readDouble();
+        }
+    }
+
+    public static class CharacterScalePacketHandler implements IMessageHandler<CharacterScalePacket, IMessage>
+    {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IMessage onMessage(CharacterScalePacket packet, MessageContext ctx)
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.addScheduledTask(() ->
+            {
+                World world = mc.world;
+                if (world == null) return;
+
+                EntityLivingBase entity = (EntityLivingBase) world.getEntityByID(packet.entityID);
+                if (entity == null) return;
+
+                EntityRenderTweaks.ENTITY_SCALES.put(entity.getUniqueID(), packet.scale);
             });
             return null;
         }

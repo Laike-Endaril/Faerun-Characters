@@ -3,6 +3,7 @@ package com.fantasticsource.faeruncharacters.nbt;
 import com.fantasticsource.faeruncharacters.CRace;
 import com.fantasticsource.faeruncharacters.Network;
 import com.fantasticsource.faeruncharacters.config.FaerunCharactersConfig;
+import com.fantasticsource.faeruncharacters.entity.EntityRenderTweaks;
 import com.fantasticsource.fantasticlib.api.FLibAPI;
 import com.fantasticsource.mctools.GlobalInventory;
 import com.fantasticsource.mctools.aw.AWSkinGenerator;
@@ -284,6 +285,8 @@ public class CharacterTags
 
         if (noPreviousRace) ccCompound.setDouble("Scale", (race.renderScaleMin + race.renderScaleMax) / 2);
         else ccCompound.setDouble("Scale", Tools.min(Tools.max(ccCompound.getDouble("Scale"), race.renderScaleMin), race.renderScaleMax));
+        if (!livingBase.world.isRemote) EntityRenderTweaks.refreshScale(livingBase);
+
 
         key = "Undershirt Color";
         color = ccCompound.hasKey(key) ? new Color(ccCompound.getInteger(key)) : new Color(Tools.random(256), Tools.random(256), Tools.random(256), 255);
