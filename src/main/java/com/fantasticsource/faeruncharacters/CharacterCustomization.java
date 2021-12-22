@@ -170,6 +170,13 @@ public class CharacterCustomization
 
     public static void goToCC(EntityPlayerMP player)
     {
+        if (CRace.RACES.size() == 0)
+        {
+            System.err.println(TextFormatting.RED + "No races are set up; not sending " + player.getName() + " to character creation");
+            return;
+        }
+
+
         //Defaults (writing both notes for ctrl+f) also see CharacterTags.setRace()!
         //Set defaults (writing both notes for ctrl+f) also see CharacterTags.setRace()!
         if (RenderModes.getRenderMode(player, "Body") == null) RenderModes.setRenderMode(player, "Body", "M");
